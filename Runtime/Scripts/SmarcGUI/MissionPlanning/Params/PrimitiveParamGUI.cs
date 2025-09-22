@@ -42,6 +42,18 @@ namespace SmarcGUI.MissionPlanning.Params
                     ChoiceDropdown.AddOptions(new List<string>{"True", "False"});
                     ChoiceDropdown.onValueChanged.AddListener(OnChoiceChanged);
                     break;
+                case double d:
+                    InputField.gameObject.SetActive(true);
+                    InputField.text = d.ToString();
+                    InputField.contentType = TMP_InputField.ContentType.DecimalNumber;
+                    InputField.onEndEdit.AddListener(OnInputFieldChanged);
+                    break;
+                case long l:
+                    InputField.gameObject.SetActive(true);
+                    InputField.text = l.ToString();
+                    InputField.contentType = TMP_InputField.ContentType.IntegerNumber;
+                    InputField.onEndEdit.AddListener(OnInputFieldChanged);
+                    break;
                 default:
                     InputField.gameObject.SetActive(true);
                     InputField.text = $"Non-primitive type: {paramValue.GetType()}";

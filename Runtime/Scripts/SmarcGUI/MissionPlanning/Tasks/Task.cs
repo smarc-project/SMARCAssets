@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using Newtonsoft.Json;
 using SmarcGUI.MissionPlanning.Params;
 using System;
+using UnityEngine;
 
 namespace SmarcGUI.MissionPlanning.Tasks
 {
@@ -63,7 +64,7 @@ namespace SmarcGUI.MissionPlanning.Tasks
             {
                 var paramValue = param.Value;
                 Type paramType = null;
-                if(param.Key == "waypoint" || param.Key == "search_center")
+                if(param.Key == "waypoint" || param.Key.Contains("position"))
                 {
                     switch(Name)
                     {
@@ -71,6 +72,9 @@ namespace SmarcGUI.MissionPlanning.Tasks
                             paramType = typeof(GeoPoint);
                             break;
                         case "alars-search":
+                            paramType = typeof(GeoPoint);
+                            break;
+                        case "alars-recover":
                             paramType = typeof(GeoPoint);
                             break;
                         case "auv-depth-move-to":
@@ -86,7 +90,7 @@ namespace SmarcGUI.MissionPlanning.Tasks
                             break;
                     }
                 }
-                else if(param.Key == "waypoints" || param.Key == "rope_points")
+                else if(param.Key == "waypoints")
                 {
                     switch(Name)
                     {
@@ -102,9 +106,6 @@ namespace SmarcGUI.MissionPlanning.Tasks
                         case "auv-hydrobatic-move-path":
                             paramType = typeof(List<AuvHydrobaticPoint>);
                             break;
-                        case "alars-recover":
-                            paramType = typeof(List<GeoPoint>);
-                            break;
                         default:
                             break;
                     }
@@ -118,10 +119,12 @@ namespace SmarcGUI.MissionPlanning.Tasks
                 else
                 {
                     // nothing specially handled, primitive types are handled by default
-                    if (paramValue is string || paramValue is int || paramValue is float || paramValue is bool) continue;
+                    if (paramValue is string || paramValue is int || paramValue is float || paramValue is bool || paramValue is double || paramValue is long) continue;
                     
+
                     // not handled specially, and not a primitive...
                     // We don't know what this is... so we turn it into a string and show it
+                    Debug.Log($"[Task] Unknown param type for param {param.Key} in task {Name}, turning into string. Type was: {paramValue.GetType()}");
                     paramUpdates.Add(param.Key, paramValue.ToString());
                 }
             }
