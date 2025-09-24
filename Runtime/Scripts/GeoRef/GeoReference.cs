@@ -6,7 +6,6 @@ namespace GeoRef
     public class GeoReference: MonoBehaviour
     {
         public double Lat, Lon;
-        public bool UseWebMercator = false;
 
         GlobalReferencePoint globalRef;
 
@@ -18,7 +17,7 @@ namespace GeoRef
                 Debug.LogWarning("No GlobalReferencePoint found in the scene!");
                 return;
             }
-            var (x,z) = globalRef.GetUnityXZFromLatLon(Lat, Lon, UseWebMercator);
+            var (x,z) = globalRef.GetUnityXZFromLatLon(Lat, Lon);
             var e = 0.001f;
             var xdif = Mathf.Abs(x-transform.position.x);
             var zdif = Mathf.Abs(z-transform.position.z);
@@ -36,7 +35,7 @@ namespace GeoRef
                 Debug.LogWarning("No GlobalReferencePoint found in the scene!");
                 return;
             }
-            var (x,z) = globalRef.GetUnityXZFromLatLon(Lat, Lon, UseWebMercator);
+            var (x,z) = globalRef.GetUnityXZFromLatLon(Lat, Lon);
             transform.position = new Vector3(x, 0, z);
         }
 

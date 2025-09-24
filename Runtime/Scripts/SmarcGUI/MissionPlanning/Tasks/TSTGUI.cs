@@ -12,20 +12,18 @@ namespace SmarcGUI.MissionPlanning.Tasks
 {
     public class TSTGUI : MonoBehaviour, IPointerExitHandler, IPointerEnterHandler, IPointerClickHandler, IListItem, IPathInWorld, IParamChangeListener
     {
-        public TaskSpecTree tst{get; private set;}
+        public TaskSpecTree tst { get; private set; }
 
         [Header("UI Elements")]
         public TMP_InputField DescriptionField;
         public TMP_InputField TimeoutField;
         public Toggle DrawPathToggle;
-        public Toggle UseWebMercatorToggle;
         public RectTransform HighlightRT;
         public RectTransform SelectedHighlightRT;
-        public LineRenderer PathLineRenderer;        
+        public LineRenderer PathLineRenderer;
 
         bool isSelected = false;
         List<TaskGUI> taskGUIs = new();
-        public bool PlanInWebMercator => UseWebMercatorToggle.isOn;
 
 
         MissionPlanStore missionPlanStore;
@@ -52,14 +50,14 @@ namespace SmarcGUI.MissionPlanning.Tasks
 
         void OnDescriptionChanged(string desc)
         {
-            if(tst == null) return;
+            if (tst == null) return;
             tst.Description = desc;
         }
 
         void OnTimeoutChanged(string timeout)
         {
-            if(tst == null) return;
-            if(float.TryParse(timeout, out float parsedTimeout))
+            if (tst == null) return;
+            if (float.TryParse(timeout, out float parsedTimeout))
             {
                 tst.Params["timeout"] = parsedTimeout;
             }
@@ -82,13 +80,13 @@ namespace SmarcGUI.MissionPlanning.Tasks
 
         public void OnPointerClick(PointerEventData eventData)
         {
-            if(eventData.button == PointerEventData.InputButton.Right)
+            if (eventData.button == PointerEventData.InputButton.Right)
             {
                 var contextMenu = guiState.CreateContextMenu();
                 contextMenu.SetItem(eventData.position, this);
             }
 
-            if(eventData.button == PointerEventData.InputButton.Left)
+            if (eventData.button == PointerEventData.InputButton.Left)
             {
                 isSelected = !isSelected;
                 OnSelectionChanged();
@@ -105,7 +103,7 @@ namespace SmarcGUI.MissionPlanning.Tasks
         public void OnTaskAdded(TaskSpec taskSpec)
         {
             Task newTask = missionPlanStore.CreateTask(taskSpec.Name);
-            if(newTask == null) return;
+            if (newTask == null) return;
             tst.Children.Add(newTask);
             CreateTaskGUI(newTask);
             OnParamChanged();
@@ -114,7 +112,7 @@ namespace SmarcGUI.MissionPlanning.Tasks
         void CreateTaskGUI(Task task)
         {
             // sometimes this is called before awake is called /shrug
-            if(missionPlanStore == null) missionPlanStore = FindFirstObjectByType<MissionPlanStore>();
+            if (missionPlanStore == null) missionPlanStore = FindFirstObjectByType<MissionPlanStore>();
             var taskGO = Instantiate(missionPlanStore.TaskPrefab, missionPlanStore.TasksScrollContent);
             var taskGUI = taskGO.GetComponent<TaskGUI>();
             taskGUI.SetTask(task, this);
@@ -137,9 +135,9 @@ namespace SmarcGUI.MissionPlanning.Tasks
         public void MoveTaskUp(TaskGUI taskgui)
         {
             var index = tst.Children.IndexOf(taskgui.task);
-            if(index == 0) return;
+            if (index == 0) return;
             tst.Children.RemoveAt(index);
-            tst.Children.Insert(index-1, taskgui.task);
+            tst.Children.Insert(index - 1, taskgui.task);
             // Swap the two TaskGUI objects
             var guiIndex = taskgui.transform.GetSiblingIndex();
             taskgui.transform.SetSiblingIndex(guiIndex - 1);
@@ -147,16 +145,16 @@ namespace SmarcGUI.MissionPlanning.Tasks
             // and then do the same thing in our taskguis list
             var guiIndexInList = taskGUIs.IndexOf(taskgui);
             taskGUIs.RemoveAt(guiIndexInList);
-            taskGUIs.Insert(guiIndexInList-1, taskgui);
+            taskGUIs.Insert(guiIndexInList - 1, taskgui);
             OnParamChanged();
         }
 
         public void MoveTaskDown(TaskGUI taskgui)
         {
             var index = tst.Children.IndexOf(taskgui.task);
-            if(index == tst.Children.Count-1) return;
+            if (index == tst.Children.Count - 1) return;
             tst.Children.RemoveAt(index);
-            tst.Children.Insert(index+1, taskgui.task);
+            tst.Children.Insert(index + 1, taskgui.task);
             // Swap the two TaskGUI objects
             var guiIndex = taskgui.transform.GetSiblingIndex();
             taskgui.transform.SetSiblingIndex(guiIndex + 1);
@@ -164,7 +162,7 @@ namespace SmarcGUI.MissionPlanning.Tasks
             // and then do the same thing in our taskguis list
             var guiIndexInList = taskGUIs.IndexOf(taskgui);
             taskGUIs.RemoveAt(guiIndexInList);
-            taskGUIs.Insert(guiIndexInList+1, taskgui);
+            taskGUIs.Insert(guiIndexInList + 1, taskgui);
 
             OnParamChanged();
         }
@@ -172,17 +170,17 @@ namespace SmarcGUI.MissionPlanning.Tasks
         void UpdateTasksGUI()
         {
             // maybe the first time creating this gui
-            if(taskGUIs.Count == 0)
+            if (taskGUIs.Count == 0)
             {
-                foreach(var task in tst.Children) CreateTaskGUI(task);
+                foreach (var task in tst.Children) CreateTaskGUI(task);
             }
 
-            foreach(Transform child in missionPlanStore.TasksScrollContent)
+            foreach (Transform child in missionPlanStore.TasksScrollContent)
             {
                 child.gameObject.SetActive(false);
             }
-            if(!isSelected) return;
-            foreach(var taskGUI in taskGUIs)
+            if (!isSelected) return;
+            foreach (var taskGUI in taskGUIs)
             {
                 taskGUI.gameObject.SetActive(true);
             }
@@ -201,14 +199,14 @@ namespace SmarcGUI.MissionPlanning.Tasks
 
         public void Deselect()
         {
-            if(!isSelected) return;
+            if (!isSelected) return;
             isSelected = false;
             OnSelectionChanged();
         }
 
         public void Select()
         {
-            if(isSelected) return;
+            if (isSelected) return;
             isSelected = true;
             OnSelectionChanged();
         }
@@ -231,7 +229,7 @@ namespace SmarcGUI.MissionPlanning.Tasks
         public List<Vector3> GetWorldPath()
         {
             var path = new List<Vector3>();
-            foreach(var taskGUI in taskGUIs)
+            foreach (var taskGUI in taskGUIs)
             {
                 path.AddRange(taskGUI.GetWorldPath());
             }
@@ -249,6 +247,11 @@ namespace SmarcGUI.MissionPlanning.Tasks
         {
             DrawWorldPath();
             tst.OnTSTModified();
+        }
+
+        public void OnProjectionChanged()
+        {
+            foreach (var taskGUI in taskGUIs) taskGUI.OnParamChanged();
         }
 
     }

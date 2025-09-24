@@ -19,6 +19,10 @@ namespace VehicleComponents
         [Tooltip("Rotate the object with respect to the attached link after attaching.")]
         public float roll = 0f, pitch = 0f, yaw = 0f;
 
+        [Tooltip("Should the orientation of the object be fixed, even if the link moves?")]
+        public bool FixedRotation = false;
+        Quaternion initialRotation;
+
         protected GameObject attachedLink;
         protected ArticulationBody parentArticulationBody;
         protected ArticulationBody articulationBody;
@@ -63,6 +67,7 @@ namespace VehicleComponents
             }
 
             transform.SetParent(attachedLink.transform);
+            initialRotation = transform.rotation;
 
             GetMixedBody();
         }
@@ -89,9 +94,10 @@ namespace VehicleComponents
         }
 
 
-        void FixedUpdate()
+        protected void FixedUpdate()
         {
-            if(attachedLink == null && retryUntilSuccess) Attach();
+            if (attachedLink == null && retryUntilSuccess) Attach();
+            if (FixedRotation) transform.rotation = initialRotation;
         }
 
         void OnDrawGizmosSelected()

@@ -5,7 +5,7 @@ using UnityEngine;
 using Unity.Robotics.Core; //Clock
 using DefaultNamespace.Water; // WaterQueryModel
 using Icosphere = DefaultNamespace.IcoSphere;
-using VehicleComponents.ROS.Core;
+using ROS.Core;
 using SmarcGUI;
 using DefaultNamespace;
 

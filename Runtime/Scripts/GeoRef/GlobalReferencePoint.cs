@@ -10,10 +10,18 @@ namespace GeoRef
         UTM
     }
 
+    public enum UnityCoordinateFrame
+    {
+        UTM,
+        WebMercator
+    }
+
     public class GlobalReferencePoint : MonoBehaviour
     {
         [Tooltip("Use Lat/Lon or UTM as the origin and set the other values accordingly")]
         public OriginMode OriginMode = OriginMode.LatLon;
+        [Tooltip("The global reference frame we assume the easting/norting of Unity to be in.")]
+        public UnityCoordinateFrame UnityCoordinateFrame = UnityCoordinateFrame.UTM;
 
         [Header("Lat/lon in decimal degrees")]
         public double Lon = 17.596178; // asko bottom left defaults
@@ -117,9 +125,9 @@ namespace GeoRef
             return (obj_easting, obj_northing, obj_lat, obj_lon);
         }
 
-        public (float x, float z) GetUnityXZFromLatLon(double lat, double lon, bool useWebMercator = false)
+        public (float x, float z) GetUnityXZFromLatLon(double lat, double lon)
         {
-            if (useWebMercator)
+            if (UnityCoordinateFrame == UnityCoordinateFrame.WebMercator)
             {
                 elWeb ??= new(EagerLoadType.WebMercator);
                 var latlon = new Coordinate(lat, lon, elWeb);
@@ -144,9 +152,9 @@ namespace GeoRef
 
 
 
-        public (double lat, double lon) GetLatLonFromUnityXZ(float x, float z, bool useWebMercator = false)
+        public (double lat, double lon) GetLatLonFromUnityXZ(float x, float z)
         {
-            if (useWebMercator)
+            if (UnityCoordinateFrame == UnityCoordinateFrame.WebMercator)
             {
                 elWeb ??= new(EagerLoadType.WebMercator);
                 var eastingDiff = x - transform.position.x;
@@ -174,7 +182,7 @@ namespace GeoRef
             var webmerc = latlon.WebMercator;
             return (webmerc.Easting, webmerc.Northing);
         }
-        
+
         public (double lat, double lon) GetLatLonFromWebMercator(double easting, double northing)
         {
             elWeb ??= new(EagerLoadType.WebMercator);

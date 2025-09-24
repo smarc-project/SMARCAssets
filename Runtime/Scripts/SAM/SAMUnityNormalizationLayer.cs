@@ -12,7 +12,15 @@ namespace Force
         public Propeller propeller1Control;
         public Propeller propeller2Control;
 
-
+        public float VBSFeedback()
+        {
+            return vbsControl.GetCurrentValue() / 100f;
+        }
+        
+        public float LCGFeedback()
+        {
+            return batteryControl.GetCurrentValue() / 100f;
+        }
         public void SetRpm1(double rpm)
         {
             propeller1Control.SetRpm((float)rpm * propeller1Control.RPMMax);

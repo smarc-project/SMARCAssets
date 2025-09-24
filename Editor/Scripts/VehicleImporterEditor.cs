@@ -1,5 +1,4 @@
-﻿using Importer;
-using UnityEditor;
+﻿using UnityEditor;
 using UnityEngine;
 
 namespace Editor.Scripts

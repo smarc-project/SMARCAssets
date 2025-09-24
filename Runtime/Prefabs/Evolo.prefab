@@ -434,7 +434,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   topic: /tf
-  Suffix: 
   BaseLinkName: base_link
   Frequency: 10
 --- !u!1 &1357718168921322021
@@ -1364,7 +1363,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: -1283809961070412945, guid: 2b1bf022f6d1f04449ed02bbc32fbcad, type: 3}
+  - {fileID: 2100000, guid: c6d11bf554617d14a9099fb32fb39bc9, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0

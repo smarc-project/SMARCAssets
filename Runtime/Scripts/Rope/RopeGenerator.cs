@@ -1,5 +1,5 @@
 using UnityEngine;
-using VehicleComponents.ROS.Publishers;
+using ROS.Publishers;
 using Utils = DefaultNamespace.Utils;
 
 namespace Rope
@@ -9,6 +9,7 @@ namespace Rope
         [Header("Prefab of the rope parts")]
         public GameObject RopeLinkPrefab;
         public GameObject BuoyPrefab;
+        public Material RopeMaterial;
 
         [Header("Connected Body")]
         [Tooltip("What should the first link in the rope connect to? rope_link in SAM.")]
@@ -89,14 +90,15 @@ namespace Rope
         void CreateLineRenderer()
         {
             ropeLineRenderer = RopeContainer.AddComponent<LineRenderer>();
-            ropeLineRenderer.material = new Material(Shader.Find("Sprites/Default"));
+            ropeLineRenderer.material = RopeMaterial;
             ropeLineRenderer.startColor = RopeColor;
             ropeLineRenderer.endColor = RopeColor;
             ropeLineRenderer.startWidth = RopeDiameter;
             ropeLineRenderer.endWidth = RopeDiameter;
-            ropeLineRenderer.positionCount = NumSegments+1;
+            ropeLineRenderer.positionCount = NumSegments + 1;
             ropeLineRenderer.useWorldSpace = true;
-            ropeLineRenderer.receiveShadows = false;
+            ropeLineRenderer.receiveShadows = true;
+            ropeLineRenderer.generateLightingData = true;
         }
 
 
@@ -136,7 +138,8 @@ namespace Rope
                 RopeContainer.transform.SetParent(gameObject.transform);
                 RopeContainer.transform.SetPositionAndRotation(VehicleRopeLink.transform.position, VehicleRopeLink.transform.rotation);
                 var ropetf = RopeContainer.AddComponent<ROSTransformTreePublisher>();
-                ropetf.BaseLinkName = RopeContainer.name;
+                ropetf.NotARobot = true;
+                ropetf.SetBaseLinkName(RopeContainer.name);
             }
 
             InstantiateAllLinks();

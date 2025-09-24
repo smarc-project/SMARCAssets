@@ -58,6 +58,9 @@ MeshRenderer:
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 2
   m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
+  m_SmallMeshCulling: 1
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -175,6 +178,9 @@ MeshRenderer:
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 2
   m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
+  m_SmallMeshCulling: 1
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -247,6 +253,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ConnectedArticulationBody: {fileID: 0}
   ConnectedRigidbody: {fileID: 2453692462447050752}
+  MaxWaterQueryFrequency: 50
   VolumeObject: {fileID: 6502671150740987231}
   VolumeMesh: {fileID: 0}
   Volume: 0
@@ -258,13 +265,14 @@ MonoBehaviour:
   AirDrag: 0.1
   AirAngularDrag: 0
   IsUnderwater: 0
+  IsSubmerged: 0
+  CurrentDepth: 0
   AddGravity: 0
   AutomaticCenterOfGravity: 0
   Mass: 0
   DrawForces: 0
-  GizmoSize: 0.01
-  AppliedBuoyancyForce: 0
-  AppliedGravityForce: 0
+  AppliedBuoyancyForce: {x: 0, y: 0, z: 0}
+  AppliedGravityForce: {x: 0, y: 0, z: 0}
   ApplyCustomForce: 0
   CustomForce: {x: 0, y: 0, z: 0}
 --- !u!135 &4876152612544120068
@@ -346,6 +354,9 @@ MeshRenderer:
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 2
   m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
+  m_SmallMeshCulling: 1
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -418,24 +429,26 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ConnectedArticulationBody: {fileID: 0}
   ConnectedRigidbody: {fileID: 2453692462447050752}
+  MaxWaterQueryFrequency: 50
   VolumeObject: {fileID: 6502671150740987231}
   VolumeMesh: {fileID: 0}
   Volume: 0
-  WaterDensity: 997
-  DepthBeforeSubmerged: 0.03
+  WaterDensity: 200
+  DepthBeforeSubmerged: 0.1
   MaxBuoyancyForce: 0.1
   UnderwaterDrag: 1
   UnderwaterAngularDrag: 0
   AirDrag: 0.1
   AirAngularDrag: 0
   IsUnderwater: 0
+  IsSubmerged: 0
+  CurrentDepth: 0
   AddGravity: 0
   AutomaticCenterOfGravity: 0
   Mass: 0
   DrawForces: 0
-  GizmoSize: 0.01
-  AppliedBuoyancyForce: 0
-  AppliedGravityForce: 0
+  AppliedBuoyancyForce: {x: 0, y: 0, z: 0}
+  AppliedGravityForce: {x: 0, y: 0, z: 0}
   ApplyCustomForce: 0
   CustomForce: {x: 0, y: 0, z: 0}
 --- !u!135 &5890788663254625585
@@ -473,7 +486,7 @@ GameObject:
   - component: {fileID: 1080205937504706963}
   - component: {fileID: 2453692462447050752}
   - component: {fileID: 3607058454141938631}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: RopeLink
   m_TagString: rope
   m_Icon: {fileID: 0}
@@ -531,10 +544,10 @@ CapsuleCollider:
   m_Material: {fileID: 13400000, guid: 532fd262430ec4d1b8f47d01daecd2eb, type: 2}
   m_IncludeLayers:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 128
   m_ExcludeLayers:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 55
   m_LayerOverridePriority: 0
   m_IsTrigger: 0
   m_ProvidesContacts: 0
@@ -591,13 +604,13 @@ ConfigurableJoint:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8527497976637253487}
+  serializedVersion: 4
   m_ConnectedBody: {fileID: 0}
   m_ConnectedArticulationBody: {fileID: 0}
   m_Anchor: {x: 0, y: 0, z: -0}
   m_Axis: {x: 1, y: 0, z: 0}
   m_AutoConfigureConnectedAnchor: 1
   m_ConnectedAnchor: {x: 0, y: 0, z: 0}
-  serializedVersion: 3
   m_SecondaryAxis: {x: 0, y: 1, z: 0}
   m_XMotion: 0
   m_YMotion: 0

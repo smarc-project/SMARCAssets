@@ -44,7 +44,7 @@ namespace Evolo
 
         void OnValidate()
         {
-            Debug.LogWarning("This is OnValidate on EvoloBehaviourScript. It needs to be cleaned up and inspected. Use at your own risk!");
+            if (gameObject.scene.IsValid() && enabled) Debug.LogWarning("This is OnValidate on EvoloBehaviourScript. It needs to be cleaned up and inspected. Use at your own risk!");
             // the topic switching is weird?!
             // Unity control and ROS Control in the same script?!?!?!
             // Unity control not using input manager?!?!!?!?!?!?!?!?!?

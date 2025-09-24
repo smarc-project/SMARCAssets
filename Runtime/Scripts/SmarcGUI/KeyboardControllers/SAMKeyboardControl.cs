@@ -1,6 +1,5 @@
 ﻿using UnityEngine;
 using UnityEngine.InputSystem;
-
 using Hinge = VehicleComponents.Actuators.Hinge;
 using Propeller = VehicleComponents.Actuators.Propeller;
 using VBS = VehicleComponents.Actuators.VBS;
@@ -10,7 +9,6 @@ namespace SmarcGUI.KeyboardControllers
 {
     public class SAMKeyboardControl : KeyboardControllerBase
     {
-
         public GameObject yawHingeGo;
         public GameObject pitchHingeGo;
         public GameObject frontPropGo;
@@ -29,8 +27,7 @@ namespace SmarcGUI.KeyboardControllers
 
 
         InputAction forwardAction, tvAction, vbsAction, lcgAction, rollAction;
-        
-        
+
 
         void Awake()
         {
@@ -40,7 +37,10 @@ namespace SmarcGUI.KeyboardControllers
             backProp = backPropGo.GetComponent<Propeller>();
             vbs = vbsGo.GetComponent<VBS>();
             lcg = lcgGo.GetComponent<Prismatic>();
+        }
 
+        void Start()
+        {
             forwardAction = InputSystem.actions.FindAction("Robot/Forward");
             tvAction = InputSystem.actions.FindAction("Robot/ThrustVector");
             vbsAction = InputSystem.actions.FindAction("Robot/UpDown");
@@ -52,7 +52,7 @@ namespace SmarcGUI.KeyboardControllers
         {
             var rpm = forwardAction.ReadValue<float>() * moveRpms;
             var rollValue = rollAction.ReadValue<float>();
-            if(rollValue == 0)
+            if (rollValue == 0)
             {
                 frontProp.SetRpm(rpm);
                 backProp.SetRpm(rpm);
@@ -68,12 +68,10 @@ namespace SmarcGUI.KeyboardControllers
             pitch.SetAngle(-tv.y * 0.1f);
 
             var vbsValue = vbsAction.ReadValue<float>();
-            vbs.SetPercentage(100 - ((vbsValue+1)/2*100));
+            vbs.SetPercentage(100 - ((vbsValue + 1) / 2 * 100));
 
             var lcgValue = lcgAction.ReadValue<float>();
-            lcg.SetPercentage(100 - (lcgValue+1)/2*100);
-
-
+            lcg.SetPercentage(100 - (lcgValue + 1) / 2 * 100);
         }
 
         public override void OnReset()
@@ -85,6 +83,5 @@ namespace SmarcGUI.KeyboardControllers
             vbs.SetPercentage(0);
             lcg.SetPercentage(0);
         }
-
     }
 }

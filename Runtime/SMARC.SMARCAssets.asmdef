@@ -1,0 +1,27 @@
+{
+    "name": "SMARC.SMARCAssets",
+    "rootNamespace": "",
+    "references": [
+        "Unity.Robotics.ROSTCPConnector",
+        "Unity.Mathematics",
+        "Unity.Burst",
+        "Unity.Robotics.ROSTCPConnector.Messages",
+        "Unity.Robotics.ROSTCPConnector.MessageGeneration",
+        "Unity.TextMeshPro",
+        "Unity.InputSystem",
+        "Unity.RenderPipelines.HighDefinition.Runtime",
+        "Unity.RenderPipelines.HighDefinition.Config.Runtime",
+        "Unity.RenderPipelines.Core.Runtime",
+        "Unity.Rendering.LightTransport.Runtime",
+        "Unity.Robotics.UrdfImporter"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": true,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

@@ -2,11 +2,12 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using Importer;
 using Unity.Robotics.UrdfImporter;
 using UnityEditor;
 using UnityEngine;
 
-namespace Importer
+namespace Editor.Scripts
 {
     public class VehicleImporter : MonoBehaviour
     {
@@ -62,7 +63,7 @@ namespace Importer
 
             baseLink.transform.localPosition = Vector3.zero;
             baseLink.transform.localRotation = Quaternion.Euler(Vector3.zero);
-            
+
             SetActiveObject(baseLink);
             yield return createRobot; // Yield the enumerator to allow the activation to take effect.
             DestroyImmediate(loadedRobot); // Destroy the unnecessary intermediate sam_auv gameObject after it has been unselected.

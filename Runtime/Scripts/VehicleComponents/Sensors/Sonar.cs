@@ -229,31 +229,24 @@ namespace VehicleComponents.Sensors
         [HideInInspector] public List<float> BeamProfile;
 
 
-        new void OnValidate()
+        new protected void OnValidate()
         {
-            if(Type == SonarType.SSS) NumBeams = 2;
-            if(Type == SonarType.MBES)
+            base.OnValidate();
+            if (Type == SonarType.SSS) NumBeams = 2;
+            if (Type == SonarType.MBES)
             {
                 NumBeams = 1;  
                 TiltAngleDeg = -1;
-            } 
-            if(NumRaysPerBeam <= 0) NumRaysPerBeam = 1;
-
-            if(Period < Time.fixedDeltaTime)
-            {
-                Debug.LogWarning($"[{transform.name}] Sensor update frequency set to {frequency}Hz but Unity updates physics at {1f/Time.fixedDeltaTime}Hz. Setting sensor period to Unity's fixedDeltaTime!");
-                frequency = 1f/Time.fixedDeltaTime;
             }
+            if (NumRaysPerBeam <= 0) NumRaysPerBeam = 1;
         }
 
-        new void Awake()
+        new protected void Awake()
         {
-            // since we are over-writing the awake of LinkAttachment, we gotta
-            // attach ourselves here
-            Attach();
+            base.Awake();
             InitHits();
             InitBeamProfileSimple();
-            if(Type == SonarType.SSS) InitSidescanBuckets();
+            if (Type == SonarType.SSS) InitSidescanBuckets();
         }
 
         void InitSidescanBuckets()

@@ -58,10 +58,13 @@ MeshRenderer:
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 2
   m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
+  m_SmallMeshCulling: 1
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: -6478536213147159724, guid: 982c4d158e289562aa45be9f01a615a1, type: 3}
+  - {fileID: 2100000, guid: 26bbab7733c52ba43accdcce9c5853b3, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -148,24 +151,26 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ConnectedArticulationBody: {fileID: 0}
   ConnectedRigidbody: {fileID: 5350459715123617840}
+  MaxWaterQueryFrequency: 50
   VolumeObject: {fileID: 2126975242162296386}
   VolumeMesh: {fileID: 0}
   Volume: 0
-  WaterDensity: 997
-  DepthBeforeSubmerged: 0.1
+  WaterDensity: 200
+  DepthBeforeSubmerged: 0.5
   MaxBuoyancyForce: 1000
   UnderwaterDrag: 50
   UnderwaterAngularDrag: 5
-  AirDrag: 5
+  AirDrag: 20
   AirAngularDrag: 5
   IsUnderwater: 0
+  IsSubmerged: 0
+  CurrentDepth: 0
   AddGravity: 0
   AutomaticCenterOfGravity: 0
   Mass: 0
   DrawForces: 0
-  GizmoSize: 0
-  AppliedBuoyancyForce: 0
-  AppliedGravityForce: 0
+  AppliedBuoyancyForce: {x: 0, y: 0, z: 0}
+  AppliedGravityForce: {x: 0, y: 0, z: 0}
   ApplyCustomForce: 0
   CustomForce: {x: 0, y: 0, z: 0}
 --- !u!135 &9133454180898049926
@@ -223,13 +228,13 @@ CharacterJoint:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8815314036595629783}
+  serializedVersion: 3
   m_ConnectedBody: {fileID: 0}
   m_ConnectedArticulationBody: {fileID: 0}
   m_Anchor: {x: 0, y: 0, z: 0}
   m_Axis: {x: 1, y: 0, z: 0}
   m_AutoConfigureConnectedAnchor: 1
   m_ConnectedAnchor: {x: 0, y: 0, z: 0}
-  serializedVersion: 2
   m_SwingAxis: {x: 0, y: 1, z: 0}
   m_TwistLimitSpring:
     spring: 0

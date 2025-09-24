@@ -1,0 +1,3 @@
+[submodule "Runtime/Scripts/DJI/SMARC_DJI_Controller_Design"]
+	path = Runtime/Scripts/DJI/SMARC_DJI_Controller_Design
+	url = https://github.com/OBishop2/SMARC_DJI_Controller_Design.git

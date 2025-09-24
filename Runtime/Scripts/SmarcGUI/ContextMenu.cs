@@ -1,6 +1,5 @@
 using SmarcGUI.MissionPlanning;
 using SmarcGUI.WorldSpace;
-using Unity.Robotics.UrdfImporter;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;

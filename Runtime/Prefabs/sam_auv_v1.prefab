@@ -408,7 +408,7 @@ ArticulationBody:
   m_Enabled: 1
   serializedVersion: 5
   m_Mass: 0.24925
-  m_ParentAnchorPosition: {x: 0, y: -0.0125, z: -0.273}
+  m_ParentAnchorPosition: {x: 0, y: -0.012500001, z: -0.273}
   m_ParentAnchorRotation: {x: 0, y: -0.7071068, z: 0, w: 0.7071068}
   m_AnchorPosition: {x: 0, y: 0, z: 0}
   m_AnchorRotation: {x: 0, y: -0.7071068, z: 0, w: 0.7071068}
@@ -425,7 +425,7 @@ ArticulationBody:
     upperLimit: 0.05
     stiffness: 2000
     damping: 6000
-    forceLimit: 5
+    forceLimit: 20
     target: 0
     targetVelocity: 0
     driveType: 0
@@ -1008,6 +1008,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   topic: teleport
+  NotARobot: 0
   Target: {fileID: 3567068247855063146}
   TeleportFrame: 0
   UseDebugInput: 0
@@ -1026,9 +1027,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   topic: /tf
-  Suffix: 
-  BaseLinkName: base_link
-  Frequency: 10
+  NotARobot: 0
+  frequency: 10
 --- !u!1 &1163357502922114015
 GameObject:
   m_ObjectHideFlags: 0
@@ -1500,7 +1500,7 @@ ArticulationBody:
     upperLimit: 0
     stiffness: 1000
     damping: 500
-    forceLimit: 10
+    forceLimit: 40
     target: 0
     targetVelocity: 0
     driveType: 0
@@ -5561,6 +5561,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Rate: 0.5
+  PublishFakeTasks: 0
 --- !u!114 &6993112317582732504
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5576,6 +5577,7 @@ MonoBehaviour:
   robotRB: {fileID: 0}
   robotAB: {fileID: 9003205820621429434}
   Rate: 5
+  PositionInWebMercator: 1
 --- !u!114 &7582556236442776389
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6469,6 +6471,18 @@ PrefabInstance:
       value: SAMActuators
       objectReference: {fileID: 0}
     - target: {fileID: 1515345754070337021, guid: 291054a015d1f5af39631330ea79023b, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 0.07
+      objectReference: {fileID: 0}
+    - target: {fileID: 1515345754070337021, guid: 291054a015d1f5af39631330ea79023b, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 0.07
+      objectReference: {fileID: 0}
+    - target: {fileID: 1515345754070337021, guid: 291054a015d1f5af39631330ea79023b, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 0.15
+      objectReference: {fileID: 0}
+    - target: {fileID: 1515345754070337021, guid: 291054a015d1f5af39631330ea79023b, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0.305
       objectReference: {fileID: 0}
@@ -6546,6 +6560,12 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 6492752199017079265, guid: 291054a015d1f5af39631330ea79023b, type: 3}
       insertIndex: -1
       addedObject: {fileID: 8423936744277782986}
+    - targetCorrespondingSourceObject: {fileID: 6134472343779380878, guid: 291054a015d1f5af39631330ea79023b, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 2830227022120306441}
+    - targetCorrespondingSourceObject: {fileID: 6134472343779380878, guid: 291054a015d1f5af39631330ea79023b, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 8368452765575737541}
   m_SourcePrefab: {fileID: 100100000, guid: 291054a015d1f5af39631330ea79023b, type: 3}
 --- !u!1 &76338378229991087 stripped
 GameObject:
@@ -6572,6 +6592,59 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 6134472343779380878, guid: 291054a015d1f5af39631330ea79023b, type: 3}
   m_PrefabInstance: {fileID: 2808937576513340765}
   m_PrefabAsset: {fileID: 0}
+--- !u!33 &2830227022120306441
+MeshFilter:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8347808729843796947}
+  m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!23 &8368452765575737541
+MeshRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8347808729843796947}
+  m_Enabled: 0
+  m_CastShadows: 1
+  m_ReceiveShadows: 1
+  m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 2
+  m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
+  m_SmallMeshCulling: 1
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_Materials:
+  - {fileID: 2100000, guid: adb7cc33bb0a71547845a50bd7651390, type: 2}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 1
+  m_SelectedEditorRenderState: 3
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_AdditionalVertexStreams: {fileID: 0}
 --- !u!1 &8709042751690872882 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 6784644159264955759, guid: 291054a015d1f5af39631330ea79023b, type: 3}
@@ -6590,6 +6663,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   topic: core/thrust_vector_yaw_fb
+  NotARobot: 0
   frequency: 10
   ignoreSensorState: 0
 --- !u!1 &8998678514108441788 stripped
@@ -6610,6 +6684,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   topic: core/thrust_vector_pitch_fb
+  NotARobot: 0
   frequency: 10
   ignoreSensorState: 0
 --- !u!1001 &2841809645452090941

@@ -1,8 +1,6 @@
 using UnityEngine;
 using Force;  // MixedBody is in the Force namespace
-
-
-using VehicleComponents.ROS.Core;
+using ROS.Core;
 
 namespace VehicleComponents.Actuators
 {
@@ -23,6 +21,7 @@ namespace VehicleComponents.Actuators
         public float RPMMax = 100000;
         public float RPMMin = 0;
         public float RPMToForceMultiplier = 0.005f;
+        public float RPMReverseMultiplier = 0.6f;
 
         [Header("Drone Propeller")]
         [Tooltip("If set, the propeller will try to hover at a default RPM when started. Assumes the props are all equally distant to the center of mass! If this is not the case, the drone will likely flip around :)")]
@@ -54,22 +53,30 @@ namespace VehicleComponents.Actuators
             //if(hoverdefault) Debug.Log("setting rpm to: " + rpm);
         }
 
-        void Start()
+        new void Awake()
         {
+            base.Awake();
             baseLinkMixedBody = new MixedBody(baseLinkArticulationBody, baseLinkRigidBody);
             if (HoverDefault) InitializeRPMToStayAfloat();
         }
 
-        void FixedUpdate()
+        new void FixedUpdate()
+        {
+            base.FixedUpdate();
+            if (Physics.simulationMode == SimulationMode.FixedUpdate) DoUpdate();
+        }
+
+        public void DoUpdate()
         {
             if (Mathf.Abs(rpm) < RPMMin) rpm = 0;
 
-            float r = rpm * RPMToForceMultiplier;
+
+            float r = rpm * RPMToForceMultiplier * (rpm < 0 ? RPMReverseMultiplier : 1f);
 
             Vector3 forceDirection = orientation == PropellerOrientation.ZForward ? parentMixedBody.transform.forward : parentMixedBody.transform.up;
             parentMixedBody.AddForceAtPosition(r * forceDirection,
-                                                   parentMixedBody.transform.position,
-                                                   ForceMode.Force);
+                parentMixedBody.transform.position,
+                ForceMode.Force);
 
             // Dont spin the props (which lets physics handle the torques and such) if we are applying manual
             // torque. This is useful for drones or vehicles where numerical things are known
@@ -129,6 +136,5 @@ namespace VehicleComponents.Actuators
         {
             return true;
         }
-
     }
 }

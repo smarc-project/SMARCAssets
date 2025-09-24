@@ -7,13 +7,9 @@ If you:
 - Want to avoid installation
 - Just want a quick demo of the project
 
-I suggest starting with one of the pre-configured projects:
-- [HDRP](https://github.com/smarc-project/SMARCUnityHDRP)
-  - Better graphical fidelity, heavier on the GPU.
-  - Includes the Unity Water Simulation, water is dynamic and waves exist.
-- [Standard](https://github.com/smarc-project/SMARCUnityStandard)
-  - Lesser graphical fidelity, but runs easier.
-  - Does not have Unity Water Simulation (water is a plane).
+We suggest starting with the pre-configured project: [Standard](https://github.com/smarc-project/SMARCUnityStandard)
+
+If you wish to add higher graphical fidelity, [enable HDRP](Runtime/HDRP/README.md) 
 
 You can find more detailed instructions on using all available vehicles, sensors, connections, UIs etc. [here](./Documentation/README.md).
 

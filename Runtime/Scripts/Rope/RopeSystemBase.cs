@@ -70,20 +70,20 @@ namespace Rope
         {
             Rigidbody baseRB = GetComponent<Rigidbody>();
 
-            GameObject rope = new GameObject($"Rope_{transform.name}--{load.transform.name}");
+            GameObject rope = new($"Rope_{transform.name}--{load.transform.name}");
             ropeParts.Add(rope);
             rope.transform.parent = transform.parent;
-            rope.transform.position = transform.position;
-            rope.transform.rotation = transform.rotation;
+            rope.transform.SetPositionAndRotation(transform.position, transform.rotation);
             var ropeRB = AddIneffectiveRB(rope);
             
+
             var ropeJoint = rope.AddComponent<SpringJoint>();
             ropeJoint.enablePreprocessing = false;
             ropeJoint.enableCollision = false;
-            ropeJoint.autoConfigureConnectedAnchor = false;
+            ropeJoint.autoConfigureConnectedAnchor = true;
             ropeJoint.connectedBody = baseRB;
-            ropeJoint.anchor = Vector3.zero;
-            ropeJoint.connectedAnchor = Vector3.zero;
+            // ropeJoint.anchor = Vector3.zero;
+            // ropeJoint.connectedAnchor = Vector3.zero;
             ropeJoint.spring = 5000;
             ropeJoint.damper = 500;
             ropeJoint.maxDistance = RopeLength;
@@ -92,20 +92,19 @@ namespace Rope
             var loadConnector = new GameObject($"Connector_{transform.name}--{load.transform.name}");
             ropeParts.Add(loadConnector);
             loadConnector.transform.parent = transform.parent;
-            loadConnector.transform.position = load.position;
-            loadConnector.transform.rotation = load.rotation;
+            loadConnector.transform.SetPositionAndRotation(load.position, load.rotation);
             var loadConRB = AddIneffectiveRB(loadConnector);
             
             var connectorToRopeJoint = loadConnector.AddComponent<FixedJoint>();
             connectorToRopeJoint.connectedBody = ropeRB;
-            connectorToRopeJoint.autoConfigureConnectedAnchor = false;
-            connectorToRopeJoint.anchor = Vector3.zero;
-            connectorToRopeJoint.connectedAnchor = Vector3.zero;
+            connectorToRopeJoint.autoConfigureConnectedAnchor = true;
+            // connectorToRopeJoint.anchor = Vector3.zero;
+            // connectorToRopeJoint.connectedAnchor = Vector3.zero;
 
             var loadJoint = loadConnector.AddComponent<CharacterJoint>();
             loadJoint.enablePreprocessing = false;
             loadJoint.enableCollision = false;
-            loadJoint.anchor = Vector3.zero;
+            // loadJoint.anchor = Vector3.zero;
             loadJoint.autoConfigureConnectedAnchor = false;
             load.ConnectToJoint(loadJoint);
             loadJoint.connectedAnchor = Vector3.zero;

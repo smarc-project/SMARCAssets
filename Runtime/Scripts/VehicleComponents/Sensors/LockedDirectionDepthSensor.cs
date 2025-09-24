@@ -19,6 +19,7 @@ namespace VehicleComponents.Sensors
         private NormalDistribution noiseGenerator;
         public float maxRaycastDistance = 30f;
         private WaterQueryModel _waterModel;
+        public bool usingWater;
 
         public Vector3 sensingDirection = Vector3.down;
 
@@ -42,6 +43,7 @@ namespace VehicleComponents.Sensors
             if (Physics.Raycast(rayOrigin, rayDirection, out hit, maxRaycastDistance))
             {
                 depth = -(hit.point.y - transform.position.y);
+                usingWater = false;
             }
             else
             {
@@ -50,6 +52,7 @@ namespace VehicleComponents.Sensors
                 float waterSurfaceLevel = _waterModel.GetWaterLevelAt(transform.position);
                 // Debug.Log("y: " + transform.position.y);
                 depth = -(waterSurfaceLevel - transform.position.y);
+                usingWater = true;
             }
             //Add gaussian noise
             float noise = (float)noiseGenerator.Sample();

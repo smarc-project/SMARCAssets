@@ -1,10 +1,6 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-
 using Force;
-using Utils = DefaultNamespace.Utils;
-using System;
+
 
 namespace Rope
 {
@@ -227,15 +223,15 @@ namespace Rope
 
         void OnDrawGizmos()
         {
-            if(!generator.DrawGizmos) return;
+            if (generator == null || !generator.DrawGizmos) return;
 
-            Gizmos.color = isTightTowardsVehicle? Color.blue : Color.green;
-            var p = transform.position + transform.forward*segmentLength/3;
-            Gizmos.DrawSphere(p, ropeDiameter*1.1f);
-            
-            Gizmos.color = isTightTowardsBuoy? Color.red : Color.green;
-            p = transform.position + transform.forward*segmentLength*2/3;
-            Gizmos.DrawSphere(p, ropeDiameter*1.1f);
+            Gizmos.color = isTightTowardsVehicle ? Color.blue : Color.green;
+            var p = transform.position + transform.forward * segmentLength / 3;
+            Gizmos.DrawSphere(p, ropeDiameter * 1.1f);
+
+            Gizmos.color = isTightTowardsBuoy ? Color.red : Color.green;
+            p = transform.position + transform.forward * segmentLength * 2 / 3;
+            Gizmos.DrawSphere(p, ropeDiameter * 1.1f);
         }
         
         

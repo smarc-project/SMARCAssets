@@ -81,7 +81,7 @@ namespace SmarcGUI.MissionPlanning.Params
                     return (0, 0);
                 }
             }
-            return globalReferencePoint.GetLatLonFromUnityXZ(x, z, taskgui.tstGUI.PlanInWebMercator);
+            return globalReferencePoint.GetLatLonFromUnityXZ(x, z);
         }
 
         protected (float x, float z) GetUnityXZFromLatLon(double lat, double lon)
@@ -95,7 +95,7 @@ namespace SmarcGUI.MissionPlanning.Params
                     return (0, 0);
                 }
             }
-            return globalReferencePoint.GetUnityXZFromLatLon(lat, lon, taskgui.tstGUI.PlanInWebMercator);
+            return globalReferencePoint.GetUnityXZFromLatLon(lat, lon);
         }
 
         public void SetParam(IDictionary paramsDict, string paramKey, TaskGUI taskgui)

@@ -12,6 +12,7 @@ namespace SmarcGUI.MissionPlanning.Tasks
             Description = "Search for an AUV and then follow it in the water";
             Params.Add("search_center", new GeoPoint());
             Params.Add("keep_following", true);
+            Params.Add("home_height_from_water", 1.0f);
         }
     }
 

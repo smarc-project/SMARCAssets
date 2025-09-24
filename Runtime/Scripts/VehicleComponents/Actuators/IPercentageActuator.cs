@@ -1,4 +1,4 @@
-using VehicleComponents.ROS.Core;
+using ROS.Core;
 
 namespace VehicleComponents.Actuators
 {

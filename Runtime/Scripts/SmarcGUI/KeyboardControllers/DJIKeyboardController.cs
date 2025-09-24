@@ -25,20 +25,30 @@ namespace SmarcGUI.KeyboardControllers
         void Update()
         {
             var forwardValue = forwardAction.ReadValue<float>();
-            var strafeValue = strafeAction.ReadValue<float>();
+            var strafeValue = -strafeAction.ReadValue<float>();
             var verticalValue = verticalAction.ReadValue<float>();
+
+            if (dji.MotorsOff && verticalValue > 0)
+            {
+                dji.MotorsOff = false;
+                dji.TakeOff();
+            }
+            
+            if(dji.IsTakingOff || dji.IsLanding){
+                return;
+            }
 
             // FLU and ENU are aligned when X is forward and East, so no need to transform the values here.
             // the controller should be responsible for transforming the values wrt to pose of drone.
-            var max = dji.controllerType == ControllerType.FLU_Velocity ? maxCmdVelocity : maxCmdPosition;
+            var max = dji.ControllerType == ControllerType.FLU_Velocity ? maxCmdVelocity : maxCmdPosition;
             var cmd = new Vector3(forwardValue, strafeValue, verticalValue);
-            dji.commandVelocityFLU = Vector3.ClampMagnitude(cmd, max);
+            dji.CommandVelocityFLU = Vector3.ClampMagnitude(cmd, max);
         }
 
         public override void OnReset()
         {
-            dji.commandVelocityFLU = Vector3.zero;
-            dji.commandPositionENU = Vector3.zero;
+            dji.CommandVelocityFLU = Vector3.zero;
+            dji.CommandPositionENU = Vector3.zero;
         }
 
     }

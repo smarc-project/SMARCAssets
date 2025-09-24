@@ -77,6 +77,10 @@ namespace SmarcGUI
             var robot = Utils.FindParentWithTag(c.gameObject, "robot", false);
             if(robot == null)
             {
+                if (c.transform.parent == null)
+                {
+                    return c.name;
+                }
                 return $"{c.transform.parent.name}/{c.name}";
             }
             else

@@ -27,6 +27,7 @@ namespace Rope
         public bool AttachToRopeLinkAfterStart = false;
         public RopeLinkBuoy RopeLinkBuoy;
 
+<<<<<<< HEAD
         void Start()
         {
             // Add TF publisher for the hook
@@ -35,6 +36,9 @@ namespace Rope
             Debug.Log($"Hook TF frame set: {HookTFFrame}");
         }
 
+=======
+        bool connectedToBuoy = false;
+>>>>>>> upstream/master
 
         void FixedUpdate()
         {
@@ -48,36 +52,6 @@ namespace Rope
                 Destroy(PulleyGO);
                 Destroy(gameObject);
             }
-        }
-
-        
-
-        bool TestRopeGrab(Collision collision)
-        {
-            if (collision.gameObject.TryGetComponent(out RopeLink rl))
-            {
-                // we want to ignore collisions with the rope depending on the "up" direction of the
-                // hook and the velocity of the collision
-                // essentially, only grab the rope if it's moving in the same direction as the hook
-                // and the rope is "above" the hook
-                // both of these should be true if the force on the collider is
-                // towards the "down" direction of the hook
-                Vector3 hookUp = transform.up;
-                Vector3 forceDirection = collision.impulse.normalized;
-
-                if (DrawForces)
-                {
-                    Debug.DrawRay(collision.contacts[0].point, forceDirection, Color.red, 1.0f);
-                    Debug.DrawRay(collision.contacts[0].point, hookUp, Color.green, 1.0f);
-                }
-
-                var dot = Vector3.Dot(forceDirection, hookUp);
-                if (Mathf.Abs(dot) > 0.5f)
-                {
-                    return true;
-                }
-            }
-            return false;
         }
 
         void AttachDroneToRopeLink(RopeLinkBuoy rlb)
@@ -99,36 +73,11 @@ namespace Rope
 
         void OnCollisionStay(Collision collision)
         {
-            if(TestRopeGrab(collision))
+            if (!connectedToBuoy && collision.gameObject.TryGetComponent(out RopeLinkBuoy rlb))
             {
-                var rl = collision.gameObject.GetComponent<RopeLink>();
-                var generator = rl.GetGenerator();
-                var RLBuoys = generator.RopeContainer.GetComponentsInChildren<RopeLinkBuoy>();
-                if(RLBuoys.Length == 0) return;
-                var RLBuoy = RLBuoys[0];
-                if(RLBuoy == null) return;
-                var buoyRB = RLBuoy.gameObject.GetComponent<Rigidbody>();
-                var pulley = PulleyGO.GetComponent<Pulley>();
-                pulley.LoadOneRB = buoyRB;
-                pulley.LoadTwoRB = generator.VehicleRopeLink.gameObject.GetComponent<Rigidbody>();
-                pulley.LoadTwoAB = generator.VehicleRopeLink.gameObject.GetComponent<ArticulationBody>();
-                pulley.RopeLength = generator.RopeLength;
-                pulley.RopeDiameter = generator.RopeDiameter;
-                pulley.Setup();
-                generator.DestroyRope(keepBuoy: true);
-                return; // only grab things one at a time...
-            }
-
-            if (collision.gameObject.TryGetComponent(out RopeLinkBuoy rlb))
-            {
-                AttachDroneToRopeLink(rlb);
-                // hopefully we are doing this after a pulley has been attached to the hook
-                // so we can destroy the pulley and the buoy
-                var pulley = PulleyGO.GetComponent<Pulley>();
-                pulley.UnSetup();
-                Destroy(PulleyGO);
-                Destroy(rlb.gameObject);
-                Destroy(gameObject);
+                var jointToBuoy = gameObject.AddComponent<CharacterJoint>();
+                jointToBuoy.connectedBody = rlb.GetComponent<Rigidbody>();
+                connectedToBuoy = true;
             }
         }
 

@@ -684,15 +684,15 @@ MonoBehaviour:
   pitch: 0
   yaw: 0
   reverse: 0
+  orientation: 0
   rpm: 0
   RPMMax: 1200
   RPMMin: 150
   RPMToForceMultiplier: 0.5
   HoverDefault: 0
-  NumPropellers: 4
-  ApplyTorque: 0
-  TorqueUp: 0
   DefaultHoverRPM: 0
+  ApplyManualTorque: 0
+  ManualTorqueUp: 0
   baseLinkArticulationBody: {fileID: 0}
   baseLinkRigidBody: {fileID: 0}
 --- !u!114 &4886665786387676753
@@ -869,15 +869,15 @@ MonoBehaviour:
   pitch: 0
   yaw: 0
   reverse: 1
+  orientation: 0
   rpm: 0
   RPMMax: 1200
   RPMMin: 150
   RPMToForceMultiplier: 0.5
   HoverDefault: 0
-  NumPropellers: 4
-  ApplyTorque: 0
-  TorqueUp: 0
   DefaultHoverRPM: 0
+  ApplyManualTorque: 0
+  ManualTorqueUp: 0
   baseLinkArticulationBody: {fileID: 0}
   baseLinkRigidBody: {fileID: 0}
 --- !u!114 &2457523893279256373
@@ -1362,15 +1362,15 @@ MonoBehaviour:
   pitch: 0
   yaw: 0
   reverse: 0
+  orientation: 0
   rpm: 0
   RPMMax: 3000
   RPMMin: 150
   RPMToForceMultiplier: 0.02
   HoverDefault: 0
-  NumPropellers: 4
-  ApplyTorque: 0
-  TorqueUp: 0
   DefaultHoverRPM: 0
+  ApplyManualTorque: 0
+  ManualTorqueUp: 0
   baseLinkArticulationBody: {fileID: 0}
   baseLinkRigidBody: {fileID: 0}
 --- !u!114 &8407507649167833396
@@ -1562,15 +1562,15 @@ MonoBehaviour:
   pitch: 0
   yaw: 0
   reverse: 1
+  orientation: 0
   rpm: 0
   RPMMax: 3000
   RPMMin: 150
   RPMToForceMultiplier: 0.02
   HoverDefault: 0
-  NumPropellers: 4
-  ApplyTorque: 0
-  TorqueUp: 0
   DefaultHoverRPM: 0
+  ApplyManualTorque: 0
+  ManualTorqueUp: 0
   baseLinkArticulationBody: {fileID: 0}
   baseLinkRigidBody: {fileID: 0}
 --- !u!114 &2290992789141833621
@@ -1834,15 +1834,15 @@ MonoBehaviour:
   pitch: 0
   yaw: 0
   reverse: 1
+  orientation: 0
   rpm: 0
   RPMMax: 3000
   RPMMin: 150
   RPMToForceMultiplier: 0.02
   HoverDefault: 0
-  NumPropellers: 4
-  ApplyTorque: 0
-  TorqueUp: 0
   DefaultHoverRPM: 0
+  ApplyManualTorque: 0
+  ManualTorqueUp: 0
   baseLinkArticulationBody: {fileID: 0}
   baseLinkRigidBody: {fileID: 0}
 --- !u!114 &4993027437543517855
@@ -1932,7 +1932,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2847617453144484023}
   - component: {fileID: 5348409612150169442}
-  - component: {fileID: 350234130137443497}
+  - component: {fileID: 936509013869384171}
   m_Layer: 0
   m_Name: Battery
   m_TagString: Untagged
@@ -1980,7 +1980,7 @@ MonoBehaviour:
   maxVoltage: 36.5
   minVoltage: 30
   currentVoltage: 36.5
---- !u!114 &350234130137443497
+--- !u!114 &936509013869384171
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1989,12 +1989,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 2504781816490657809}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b53b4caa09486ed69afd7310efb6dbaf, type: 3}
+  m_Script: {fileID: 11500000, guid: 0805bcd44159412bf9d9ee2da135138b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   topic: smarc/battery_percent
   frequency: 10
-  ignoreSensorState: 0
 --- !u!1 &2736854850070752478
 GameObject:
   m_ObjectHideFlags: 0
@@ -2986,7 +2985,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &5797510638496293541
 Transform:
   m_ObjectHideFlags: 0
@@ -3000,6 +2999,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 3463689014951376640}
   - {fileID: 2847617453144484023}
   - {fileID: 7371121713186684512}
   - {fileID: 4052675816299463117}
@@ -3063,15 +3063,15 @@ MonoBehaviour:
   pitch: 0
   yaw: 0
   reverse: 0
+  orientation: 0
   rpm: 0
   RPMMax: 3000
   RPMMin: 150
   RPMToForceMultiplier: 0.02
   HoverDefault: 0
-  NumPropellers: 4
-  ApplyTorque: 0
-  TorqueUp: 0
   DefaultHoverRPM: 0
+  ApplyManualTorque: 0
+  ManualTorqueUp: 0
   baseLinkArticulationBody: {fileID: 0}
   baseLinkRigidBody: {fileID: 0}
 --- !u!114 &4267018064263481766
@@ -5431,7 +5431,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   topic: /tf
-  Suffix: 
   BaseLinkName: base_link
   Frequency: 10
 --- !u!1 &7181258836340888077
@@ -6234,6 +6233,117 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   IsBaseLink: 0
+--- !u!1 &8642146000540334482
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3463689014951376640}
+  - component: {fileID: 5473815856951729664}
+  - component: {fileID: 891414964784375500}
+  - component: {fileID: 9209486207209949454}
+  m_Layer: 0
+  m_Name: SideScanSonar
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3463689014951376640
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8642146000540334482}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -955.84094, y: 0.034999996, z: -2447.06}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 5797510638496293541}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &5473815856951729664
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8642146000540334482}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c3b6288b40e80267dbb708af626d7c9c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  linkName: sidescan_link
+  retryUntilSuccess: 1
+  rotateForROSCamera: 0
+  roll: 0
+  pitch: 0
+  yaw: 0
+  frequency: 20
+  hasNewData: 0
+  Type: 1
+  NumRaysPerBeam: 256
+  BeamBreadthDeg: 45
+  NumBeams: 2
+  MaxRange: 100
+  BeamBreadth3DecibelsDeg: 60
+  TiltAngleDeg: 45
+  FLSFOVDeg: 30
+  NumBucketsPerBeam: 1000
+  isInterferometric: 0
+  MultGain: 1
+  UseAdditiveNoise: 1
+  AddNoiseStd: 1
+  AddNoiseMean: 0
+  Buckets: 
+  BucketsAngleHigh: 
+  BucketsAngleLow: 
+  HitsMinHeight: Infinity
+  HitsMaxHeight: 0
+  TimeShareInFixedUpdate: 0
+  BeamProfile: []
+--- !u!114 &891414964784375500
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8642146000540334482}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4d48e31a385b4944483627b44fcd43e4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  topic: payload/sidescan
+  frequency: 20
+  ignoreSensorState: 0
+--- !u!114 &9209486207209949454
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8642146000540334482}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 435e0ca92f45ace5794321756f92eaef, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  DrawRays: 1
+  RayMaterial: {fileID: -6478536213147159724, guid: 982c4d158e289562aa45be9f01a615a1, type: 3}
+  RayThickness: 0.05
+  DrawHits: 1
+  DrawEveryNthFrame: 10
+  UseRainbow: 1
+  HitsSize: 0.1
+  HitsLifetime: 1
+  MaxParticlesMultiplier: 10
 --- !u!1 &8704122288650613366
 GameObject:
   m_ObjectHideFlags: 0

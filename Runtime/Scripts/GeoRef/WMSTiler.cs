@@ -32,12 +32,12 @@ namespace GeoRef
 
         GlobalReferencePoint refPt;
 
-        void Awake()
+        public void Awake()
         {
             refPt = GetComponent<GlobalReferencePoint>();
         }
 
-        void Start()
+        public void Start()
         {
             string settingsStoragePath = Path.Combine(GUIState.GetStoragePath(), "Settings");
             Directory.CreateDirectory(settingsStoragePath);

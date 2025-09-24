@@ -6,12 +6,9 @@ using MathNet.Numerics.LinearAlgebra.Double;
 // using MinimumSnapTrajectory = Trajectory.MinimumSnapTrajectory;
 
 // Directives for publishing messages
-using Unity.Robotics.ROSTCPConnector;
-using StdMessages = RosMessageTypes.Std;
 using VehicleComponents.Actuators;
-using Unity.Robotics.ROSTCPConnector.ROSGeometry;
 using DefaultNamespace.LookUpTable;
-using DefaultNamespace;
+using Unity.Robotics.ROSTCPConnector.ROSGeometry;
 
 namespace DroneController
 {
@@ -132,14 +129,6 @@ namespace DroneController
         Vector<double> targetAngularVelocity_prev;
 
 
-        [Header("Controller Debug Logging")]
-        [Tooltip("By setting to true controller errors will be broadcast over ROS")]
-        public bool debugLoggingController = false;
-
-        // Message Publishing
-        ROSConnection ros;
-        string topicName;
-
         [Header("Velocity control params")]
         public Vector3 TargetVelocity = Vector3.zero;
         Vector3 TargetAccel = Vector3.zero;
@@ -181,16 +170,6 @@ namespace DroneController
             targetAngularVelocity_prev = DenseVector.OfArray(new double[] { 0, 0, 0 });
 
             dt = Time.fixedDeltaTime;
-
-
-            // Message Publishing Setup if debugging is enabled
-            if (debugLoggingController)
-            {
-                ros = ROSConnection.GetOrCreateInstance();
-                var robotGO = Utils.FindParentWithTag(BaseLink, "robot", false);
-                topicName = $"/{robotGO.name}/controller_tuning/error";
-                ros.RegisterPublisher<StdMessages.Float64MultiArrayMsg>(topicName);
-            }
         }
         
 
@@ -237,22 +216,8 @@ namespace DroneController
 
             float[] currPropellerRPMs = ComputeRPMs(f, M);
             ApplyRPMs(currPropellerRPMs);
-
-            if (debugLoggingController)
-            {
-                PublishTopicMessage(controllerError);
-            }
         }
 
-        /// <summary>
-        /// Logs out messages to ROS topic for further post processing
-        /// </summary>
-        void PublishTopicMessage(ControllerError controllerError)
-        {
-            StdMessages.Float64MultiArrayMsg msg = new StdMessages.Float64MultiArrayMsg();
-            msg.data = controllerError.ReturnMessageFormat();
-            ros.Publish(topicName, msg);
-        }
 
         /// <summary>
         /// Tracking controller is implemented per "Geometric tracking control of a quadrotor UAV on SE(3)"

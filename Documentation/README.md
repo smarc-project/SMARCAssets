@@ -100,6 +100,7 @@
     - [MQTT](#mqtt)
     - [ROS](#ros-1)
 - [Developer Environment Setup](#developer-environment-setup)
+  - [Configuring HDRP](#configuring-hdrp)
   - [CSharp SDK and LSP Setup](#csharp-sdk-and-lsp-setup)
 
 
