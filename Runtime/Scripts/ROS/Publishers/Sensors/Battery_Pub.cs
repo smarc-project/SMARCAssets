@@ -10,6 +10,7 @@ namespace ROS.Publishers
     [RequireComponent(typeof(SensorBattery))]
     class Battery_Pub: ROSSensorPublisher<BatteryStateMsg, SensorBattery>
     {
+        public bool PercentAsDecimal = false;
         protected override void InitPublisher()
         {
             ROSMsg.header.frame_id = $"{robot_name}/{DataSource.linkName}";
@@ -18,7 +19,10 @@ namespace ROS.Publishers
         protected override void UpdateMessage()
         {
             ROSMsg.voltage = DataSource.currentVoltage;
-            ROSMsg.percentage = DataSource.currentPercent;
+            if (PercentAsDecimal)
+                ROSMsg.percentage = DataSource.currentPercent / 100f;
+            else
+                ROSMsg.percentage = DataSource.currentPercent;
             ROSMsg.header.stamp = new TimeStamp(Clock.time);
         }
     }
