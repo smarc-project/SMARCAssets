@@ -214,14 +214,13 @@ namespace SmarcGUI.MissionPlanning.Tasks
             {
                 WarningRT.gameObject.SetActive(false);
                 RunButtonImage.color = Color.gray;
-                RunButtonText.text = "NoRobot";
+                RunButtonText.text = SelectedRobotGUI == null ? "NoRobot" : "NoTasks";
             }
             else
             {
                 // warning highlight if the selected robot does not have this task available
                 if(SelectedRobotGUI.InfoSource == InfoSource.SIM) WarningRT.gameObject.SetActive(false);
-                else if (SelectedRobotGUI.TasksAvailableNames == null || !SelectedRobotGUI.TasksAvailableNames.Contains(task.Name))
-                    WarningRT.gameObject.SetActive(true);
+                else if (!SelectedRobotGUI.TasksAvailableNames.Contains(task.Name)) WarningRT.gameObject.SetActive(true);
 
                 // make the RUN button green if it is already running this task
                 // use the task uuid to check this, since many tasks of the same type can be running
