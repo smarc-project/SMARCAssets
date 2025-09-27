@@ -210,7 +210,7 @@ namespace SmarcGUI.MissionPlanning.Tasks
         public void OnRobotSelectionChange(RobotGUI SelectedRobotGUI)
         {
             RunButton.interactable = SelectedRobotGUI != null;
-            if(SelectedRobotGUI == null)
+            if(SelectedRobotGUI == null || SelectedRobotGUI.TasksAvailableNames == null)
             {
                 WarningRT.gameObject.SetActive(false);
                 RunButtonImage.color = Color.gray;
@@ -220,7 +220,7 @@ namespace SmarcGUI.MissionPlanning.Tasks
             {
                 // warning highlight if the selected robot does not have this task available
                 if(SelectedRobotGUI.InfoSource == InfoSource.SIM) WarningRT.gameObject.SetActive(false);
-                else if(SelectedRobotGUI.TasksAvailableNames == null || !SelectedRobotGUI.TasksAvailableNames.Contains(task.Name))
+                else if (SelectedRobotGUI.TasksAvailableNames == null || !SelectedRobotGUI.TasksAvailableNames.Contains(task.Name))
                     WarningRT.gameObject.SetActive(true);
 
                 // make the RUN button green if it is already running this task
