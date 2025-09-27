@@ -19,6 +19,11 @@ namespace ROS.Core
         public bool NeedsTick(double now)
         {
             if (frequency <= 0) return true;
+            if (lastUpdate == 0f)
+            {
+                lastUpdate = now;
+                return true;
+            }
             return now - lastUpdate >= period;
         }
 
@@ -31,6 +36,11 @@ namespace ROS.Core
         public bool ExhaustTicks(double now)
         {
             if (frequency <= 0) return true;
+            if (lastUpdate == 0f)
+            {
+                lastUpdate = now;
+                return true;
+            }
             var timeToTick = now - lastUpdate;
             var numTicks = (int)(timeToTick / period);
             lastUpdate += numTicks * period;

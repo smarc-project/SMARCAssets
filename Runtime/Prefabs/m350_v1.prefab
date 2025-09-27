@@ -4090,7 +4090,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5b6639050ad5a83f6a4f0de5e9d7e935, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  topic: gimbal_camera/image
+  topic: gimbal_camera/image_raw
   NotARobot: 0
   frequency: 30
   ignoreSensorState: 0
