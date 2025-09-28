@@ -53,12 +53,15 @@ namespace ROS.Core
         /// </summary>
         void FixedUpdate()
         {
+            int i = 0;
             while (timer.NeedsTick(Clock.Now))
             {
                 UpdateMessage();
                 rosCon.Publish(topic, ROSMsg);
                 timer.Tick();
+                i++;
             }
+            if (i>50) Debug.LogError($"[ROSPublisher<{typeof(RosMsgType)}>] Published {i} messages on topic {topic} for robot {robot_name} at {Clock.Now}. This is a very large number of messages to publish in one FixedUpdate. Consider reducing the frequency of the publisher or check if your network is congested.");
         }
 
     }

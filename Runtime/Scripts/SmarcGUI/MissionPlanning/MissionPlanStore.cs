@@ -268,7 +268,7 @@ namespace SmarcGUI.MissionPlanning
         {
             return paramValue switch
             {
-                string or int or float or bool => PrimitiveParamPrefab,
+                string or int or float or bool or double or long => PrimitiveParamPrefab,
                 GeoPoint => GeoPointParamPrefab,
                 IList => ListParamPrefab,
                 LatLon => LatLonParamPrefab,
