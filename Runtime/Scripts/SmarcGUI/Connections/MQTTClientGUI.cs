@@ -74,22 +74,26 @@ namespace SmarcGUI.Connections
 
         void Start()
         {
+            bool connectNow = false;
+
             string settingsStoragePath = Path.Combine(GUIState.GetStoragePath(), "Settings");
             Directory.CreateDirectory(settingsStoragePath);
             string settingsFile = Path.Combine(settingsStoragePath, "MQTTSettings.yaml");
-            if(File.Exists(settingsFile))
+            if (File.Exists(settingsFile))
             {
                 var settings = File.ReadAllText(settingsFile);
                 var deserializer = new YamlDotNet.Serialization.Deserializer();
                 var settingsDict = deserializer.Deserialize<Dictionary<string, string>>(settings);
-                if(settingsDict.ContainsKey("BrokerAddress")) ServerAddressInput.text = settingsDict["BrokerAddress"];
-                if(settingsDict.ContainsKey("BrokerPort")) PortInput.text = settingsDict["BrokerPort"];
-                if(settingsDict.ContainsKey("Context")) ContextInput.text = settingsDict["Context"];
-                if(settingsDict.ContainsKey("SubToReal")) SubToRealToggle.isOn = bool.Parse(settingsDict["SubToReal"]);
-                if(settingsDict.ContainsKey("SubToSim")) SubToSimToggle.isOn = bool.Parse(settingsDict["SubToSim"]);
-                if(settingsDict.ContainsKey("TLS")) TLSToggle.isOn = bool.Parse(settingsDict["TLS"]);
-                if(settingsDict.ContainsKey("Username")) UserNameInput.text = settingsDict["Username"];
-                if(settingsDict.ContainsKey("Password")) PasswordInput.text = settingsDict["Password"];
+                if (settingsDict.ContainsKey("BrokerAddress")) ServerAddressInput.text = settingsDict["BrokerAddress"];
+                if (settingsDict.ContainsKey("BrokerPort")) PortInput.text = settingsDict["BrokerPort"];
+                if (settingsDict.ContainsKey("Context")) ContextInput.text = settingsDict["Context"];
+                if (settingsDict.ContainsKey("SubToReal")) SubToRealToggle.isOn = bool.Parse(settingsDict["SubToReal"]);
+                if (settingsDict.ContainsKey("SubToSim")) SubToSimToggle.isOn = bool.Parse(settingsDict["SubToSim"]);
+                if (settingsDict.ContainsKey("TLS")) TLSToggle.isOn = bool.Parse(settingsDict["TLS"]);
+                if (settingsDict.ContainsKey("Username")) UserNameInput.text = settingsDict["Username"];
+                if (settingsDict.ContainsKey("Password")) PasswordInput.text = settingsDict["Password"];
+                if (settingsDict.ContainsKey("ConnectOnStart")) connectNow = settingsDict["ConnectOnStart"].ToLower() == "true";
+
             }
             else
             {
@@ -103,7 +107,8 @@ namespace SmarcGUI.Connections
                     { "SubToSim", "true" },
                     { "TLS", "false" },
                     { "Username", "" },
-                    { "Password", "" }
+                    { "Password", "" },
+                    { "ConnectOnStart", "false" }
                 };
                 var serializer = new YamlDotNet.Serialization.Serializer();
                 var settingsYaml = serializer.Serialize(settingsDict);
@@ -121,6 +126,8 @@ namespace SmarcGUI.Connections
 
             ConnectButton.onClick.AddListener(ToggleConnection);
             ConnectionInputsInteractable(true);
+
+            if (connectNow) ToggleConnection();
         }
 
         void ConnectionInputsInteractable(bool interactable)
