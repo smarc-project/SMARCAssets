@@ -115,6 +115,7 @@ namespace SmarcGUI.MissionPlanning.Params
             LatField.text = latitude.ToString();
             LonField.text = longitude.ToString();
             AltField.text = altitude.ToString();
+            ToleranceField.text = tolerance.ToString();
         }
 
         void OnToleranceChanged(string s)

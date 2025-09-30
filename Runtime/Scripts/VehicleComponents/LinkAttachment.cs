@@ -13,7 +13,7 @@ namespace VehicleComponents
         [Tooltip("If true, will try on FixedUpdates to attach, if false attach only on Awake")]
         public bool retryUntilSuccess = true;
 
-        [Tooltip("If ROS uses a different camera refenrece frame.")]
+        [Tooltip("ROS uses a different camera reference frame than Unity, this rotates the Unity camera to match that.")]
         public bool rotateForROSCamera = false;
 
         [Tooltip("Rotate the object with respect to the attached link after attaching.")]
@@ -97,6 +97,7 @@ namespace VehicleComponents
         protected void FixedUpdate()
         {
             if (attachedLink == null && retryUntilSuccess) Attach();
+
             if (FixedRotation) transform.rotation = initialRotation;
         }
 

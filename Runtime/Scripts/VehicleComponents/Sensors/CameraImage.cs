@@ -1,7 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using Utils = DefaultNamespace.Utils;
 
 namespace VehicleComponents.Sensors
 {
@@ -23,6 +20,8 @@ namespace VehicleComponents.Sensors
         RenderTexture renderedTexture;
         Camera cam;
 
+
+
         void Start()
         {
             renderedTexture = new RenderTexture(textureWidth, textureHeight, 0, RenderTextureFormat.ARGB32);
@@ -40,8 +39,8 @@ namespace VehicleComponents.Sensors
             
             // gotta read from the ARGB32 render into RGB24 (which is rgb8 in ros... THANK YOU.)
             RenderTexture.active = renderedTexture;
-            image.ReadPixels (new Rect (0, 0, textureWidth, textureHeight), 0, 0);
-            image.Apply ();
+            image.ReadPixels(new Rect (0, 0, textureWidth, textureHeight), 0, 0, false);
+            image.Apply(false, false);
             RenderTexture.active = null;
             return true;
         }

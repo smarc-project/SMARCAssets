@@ -209,6 +209,7 @@ namespace SmarcGUI.MissionPlanning.Tasks
 
         public void OnRobotSelectionChange(RobotGUI SelectedRobotGUI)
         {
+            if (task == null) return;
             RunButton.interactable = SelectedRobotGUI != null;
             if(SelectedRobotGUI == null || SelectedRobotGUI.TasksAvailableNames == null)
             {
