@@ -199,6 +199,7 @@ GameObject:
   - component: {fileID: 8205656881797901549}
   - component: {fileID: 1478194395349108320}
   - component: {fileID: 4333922878063932765}
+  - component: {fileID: 6286577310385780153}
   m_Layer: 0
   m_Name: WinchToHook
   m_TagString: Untagged
@@ -304,6 +305,29 @@ MonoBehaviour:
   gizmoType: 0
   radius: 0.03
   color: {r: 0.8587642, g: 0, b: 1, a: 0.27450982}
+--- !u!114 &6286577310385780153
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3506910256720658690}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a55151a7d68c9914aaf583ac1f6d4848, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  linkName: 
+  retryUntilSuccess: 0
+  rotateForROSCamera: 0
+  roll: 0
+  pitch: 0
+  yaw: 0
+  FixedRotation: 0
+  frequency: 10
+  hasNewData: 0
+  Force: 0
+  Weight: 0
 --- !u!1 &4039007730990099910
 GameObject:
   m_ObjectHideFlags: 0
@@ -462,7 +486,7 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6040559385985837056}
   serializedVersion: 4
-  m_Mass: 0.5
+  m_Mass: 0.3
   m_Drag: 0.3
   m_AngularDrag: 0.1
   m_CenterOfMass: {x: 0, y: 0, z: 0}
@@ -495,7 +519,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ConnectedArticulationBody: {fileID: 0}
   ConnectedRigidbody: {fileID: 2855852348665451609}
-  MaxWaterQueryFrequency: 50
+  WaterQueryFrequency: -1
   VolumeObject: {fileID: 0}
   VolumeMesh: {fileID: 0}
   Volume: 0
