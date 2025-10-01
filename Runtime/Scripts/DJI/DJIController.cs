@@ -82,6 +82,7 @@ namespace dji
         PsdkTakeoffService takeoff_srv = null;
         PsdkLandingService landing_srv = null;
         LockedDirectionDepthSensor depthSensor = null;
+        LoadCell loadCell = null;
 
 
         //Used for altitude controller
@@ -109,6 +110,19 @@ namespace dji
         float prev_yaw_output = 0;
         float yaw_error;
         float yaw_output;
+
+        // Used for altitude controls
+        //Larger makes faster
+        //Larger makes mores stable (between 0 and 1)
+        //Larger makes "more aggressive", faster with more overshoot (between 0 and 1)
+        [Header("Position controller parameters")]
+        float k_alt_pos_noload = 2712f; // tuned for 0g winch weight
+        float k_alt_pos_300g = 2812f; // tuned for 300g winch weight
+        float k_alt_pos_1800g = 12000f; // tuned for 1800g winch weight
+        float z_alt_pos_noload = .999263f;
+        float p_alt_pos_noload = .9937f; // tuned for 0g winch weight
+        float p_alt_pos_300g = .9987f; // tuned for 300g winch weight
+        float p_alt_pos_1800g = .999f; // tuned for 1800g winch weight
 
         //Metrics for forward speed controller 
         [Header("Velocity Controller Tuning")]
@@ -171,20 +185,17 @@ namespace dji
             BR.RPMMax = MaxRPM;
         }
 
-        void Start(){
-            if(!enabled){
-                return;
-            }
-            if(takeoff_srv == null){
-                takeoff_srv = GetComponentInChildren<PsdkTakeoffService>();
-            }
-            if(landing_srv == null){
-                landing_srv = GetComponentInChildren<PsdkLandingService>();
-            }
-            if(depthSensor == null){
-                depthSensor = GetComponentInChildren<LockedDirectionDepthSensor>();
-            }
-            if(log_data){
+        void Start()
+        {
+            if (!enabled) return;
+
+            if (takeoff_srv == null) takeoff_srv = GetComponentInChildren<PsdkTakeoffService>();
+            if (landing_srv == null) landing_srv = GetComponentInChildren<PsdkLandingService>();
+            if (depthSensor == null) depthSensor = GetComponentInChildren<LockedDirectionDepthSensor>();
+            if (loadCell == null) loadCell = GetComponentInChildren<LoadCell>();
+
+            if (log_data)
+            {
                 DateTime localDate = DateTime.Now;
                 DateTime utcDate = DateTime.UtcNow;
                 if (!File.Exists(data_path))
@@ -196,8 +207,10 @@ namespace dji
                         sw.WriteLine("Time, Roll, Pitch, Yaw, Target Roll, Target Pitch, Target Yaw, VelForw, VelLeft, VelUp, Target VelForw, Target VelLeft, Target VelUp, FL, FR, BL, BR, Target Pitch, Target Roll");
                     }
                 }
-                else{
-                    using (StreamWriter sw = File.AppendText(data_path)){
+                else
+                {
+                    using (StreamWriter sw = File.AppendText(data_path))
+                    {
                         sw.WriteLine("NEW, {0}", localDate.ToString(new CultureInfo("en-GB")));
                         sw.WriteLine("Time, Roll, Pitch, Yaw, Target Roll, Target Pitch, Target Yaw, VelForw, VelLeft, VelUp, Target VelForw, Target VelLeft, Target VelUp, FL, FR, BL, BR, Target Pitch, Target Roll");
                     }
@@ -207,7 +220,8 @@ namespace dji
 
         public bool TakeOff()
         {
-            if(ControllerType != ControllerType.FLU_Velocity || Position.y >= TakeOffAltitude - TakeOffError){
+            if (ControllerType != ControllerType.FLU_Velocity || Position.y >= TakeOffAltitude - TakeOffError)
+            {
                 Debug.Log("Can't take off. Either not in velocity control mode or already above takeoff altitude");
                 return false;
             }
@@ -221,7 +235,8 @@ namespace dji
 
         public bool Land()
         {
-            if(ControllerType != ControllerType.FLU_Velocity){
+            if (ControllerType != ControllerType.FLU_Velocity)
+            {
                 Debug.Log("Can't land. Not in velocity control mode");
                 return false;
             }
@@ -233,10 +248,7 @@ namespace dji
  
         void FixedUpdate()
         {
-            if(!enabled)
-            {
-                return;
-            }
+            if (!enabled) return;
             
             //Current rotation about the center of mass
             comPitch = ComAB.transform.rotation.eulerAngles.z;
@@ -264,17 +276,19 @@ namespace dji
             vel_counter++;
             pos_counter++;
 
-            if(takeoff_srv == null) takeoff_srv = GetComponentInChildren<PsdkTakeoffService>();
-            if(landing_srv == null) landing_srv = GetComponentInChildren<PsdkLandingService>();
-            if(depthSensor == null) depthSensor = GetComponentInChildren<LockedDirectionDepthSensor>();
+            if (takeoff_srv == null) takeoff_srv = GetComponentInChildren<PsdkTakeoffService>();
+            if (landing_srv == null) landing_srv = GetComponentInChildren<PsdkLandingService>();
+            if (depthSensor == null) depthSensor = GetComponentInChildren<LockedDirectionDepthSensor>();
+            if (loadCell == null) loadCell = GetComponentInChildren<LoadCell>();
 
             target_yaw = CommandYaw; //target and command angles are split so that the same attitude control can be used for velocity. For yaw, these are currently always equivalent.
 
-            if(ControllerType == ControllerType.ENU_RelativePosition) TargetAlt = CommandPositionENU.z;
+            if (ControllerType == ControllerType.ENU_RelativePosition) TargetAlt = CommandPositionENU.z;
+            
             
             //Vertical Controllers
             float alt_output;
-            if(ControllerType == ControllerType.FLU_Attitude || ControllerType == ControllerType.ENU_RelativePosition || IsTakingOff || IsLanding)
+            if (ControllerType == ControllerType.FLU_Attitude || ControllerType == ControllerType.ENU_RelativePosition || IsTakingOff || IsLanding)
             {
                 //Altitude Controller. This is used either in Attitude Control Mode or while taking off or landing.
                 alt_error_pos = TargetAlt - altitude;
@@ -282,11 +296,29 @@ namespace dji
                 //Larger makes faster
                 //Larger makes mores stable (between 0 and 1)
                 //Larger makes "more aggressive", faster with more overshoot (between 0 and 1)
-                // float k_alt_pos = 2712f; // tuned for 0g hook weight
-                float k_alt_pos = 2812f; // tuned for 300g hook weight
-                float z_alt_pos = .999263f;
-                // float p_alt_pos = .9937f; // tuned for 0g hook weight
-                float p_alt_pos = .9987f; // tuned for 300g hook weight, bit aggressive at 0g
+                // we use the load cell to adjust the altitude controller based on the weight of the hook
+                // tuned for 0g hook weight
+                float k_alt_pos = k_alt_pos_noload;
+                float z_alt_pos = z_alt_pos_noload;
+                float p_alt_pos = p_alt_pos_noload;
+
+                if (loadCell != null)
+                {
+                    if (loadCell.Weight > 0.3f && loadCell.Weight < 1.8f)
+                    {
+                        // Interpolate between 300g and 1800g controller parameters based on weight
+                        float t = (loadCell.Weight - 0.3f) / (1.8f - 0.3f);
+                        k_alt_pos = Mathf.Lerp(k_alt_pos_300g, k_alt_pos_1800g, t);
+                        p_alt_pos = Mathf.Lerp(p_alt_pos_300g, p_alt_pos_1800g, t);
+                    }
+                    else if (loadCell.Weight >= 1.8f)
+                    {
+                        // tuned for 1800g hook weight
+                        k_alt_pos = k_alt_pos_1800g;
+                        p_alt_pos = p_alt_pos_1800g;
+                    }
+                }
+                
 
                 alt_output = k_alt_pos * alt_error_pos - k_alt_pos * z_alt_pos * prev_alt_error_pos + p_alt_pos * prev_alt_output_pos; //Using a lead/lag controller with the defined gain, k, zero, z, and pole, p.
                 if(alt_output > MaxControllerOutputAltitude)
@@ -361,7 +393,9 @@ namespace dji
                 pos_in_FLU.x = Mathf.Cos(yaw_rad) * CommandPositionENU.x - Mathf.Sin(yaw_rad) * CommandPositionENU.y;
                 pos_in_FLU.y = Mathf.Cos(yaw_rad) * CommandPositionENU.y + Mathf.Sin(yaw_rad) * CommandPositionENU.x;
 
-                float k_pos = .5f;
+                // different from the dji captain, because the physics are _just a little_ different between
+                // real and sim...
+                float k_pos = .7f;
                 float r_sigma = .9f;
 
                 ENU_pos_output = pos_in_FLU * k_pos;

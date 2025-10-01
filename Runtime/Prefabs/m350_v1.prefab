@@ -352,7 +352,9 @@ MonoBehaviour:
   MaxControllerOutputAltitude: 2000
   MaxControllerOutputPitchRoll: 2000
   MaxENUSpeed: 0.8
-  K_VelForw: 30
+  k_alt_pos_1800g: 3150
+  p_alt_pos_1800g: 0.9987
+  K_VelForw: 4.7
   Z_VelForw: 0.3
   P_VelForw: 0.8
   K_VelLeft: 7
