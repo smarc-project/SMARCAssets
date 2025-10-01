@@ -11,6 +11,13 @@ namespace SmarcGUI.Connections
 {
     public class ROSClientGUI : MonoBehaviour
     {
+        [Header("Connection Settings")]
+        [Tooltip("If true, the default settings below will override any saved settings file.")]
+        public bool OverrideSettingsFile = false;
+        public string DefaultServerAddress = "localhost";
+        public int DefaultPort = 10000;
+        public bool ConnectOnStart = false;
+
         [Header("UI Elements")]
         public TMP_InputField ServerAddressInput;
         public TMP_InputField PortInput;
@@ -87,6 +94,12 @@ namespace SmarcGUI.Connections
                 rosCon.ConnectOnStart = false;
             }
 
+            if (OverrideSettingsFile)
+            {
+                ServerAddressInput.text = DefaultServerAddress;
+                PortInput.text = DefaultPort.ToString();
+                connectNow = ConnectOnStart;
+            }
 
             ConnectButton.onClick.AddListener(ToggleConnection);
             if (joyPub != null) PublishControllerToRosToggle.onValueChanged.AddListener(value => joyPub.enabled = value);

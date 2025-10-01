@@ -13,7 +13,6 @@ using System.Collections.Generic;
 using SmarcGUI.MissionPlanning.Params;
 using System.Security.Authentication;
 using System.IO;
-using YamlDotNet;
 
 namespace SmarcGUI.Connections
 {
@@ -36,6 +35,19 @@ namespace SmarcGUI.Connections
 
     public class MQTTClientGUI : MonoBehaviour
     {
+        [Header("Connection Settings")]
+        [Tooltip("If true, the default settings below will override any saved settings file.")]
+        public bool OverrideSettingsFile = false;
+        public string DefaultServerAddress = "localhost";
+        public int DefaultPort = 1889;
+        public bool DefaultConnectOnStart = false;
+        public string DefaultUsername = "noname";
+        public string DefaultPassword = "nopass";
+        public string DefaultContext = "smarcsim";
+        public bool DefaultSubToReal = true;
+        public bool DefaultSubToSim = true;
+        public bool DefaultTLS = false;
+
         [Header("UI Elements")]
         public TMP_InputField ServerAddressInput;
         public TMP_InputField PortInput;
@@ -122,6 +134,19 @@ namespace SmarcGUI.Connections
                 TLSToggle.isOn = false;
                 UserNameInput.text = "";
                 PasswordInput.text = "";
+            }
+
+            if (OverrideSettingsFile)
+            {
+                ServerAddressInput.text = DefaultServerAddress;
+                PortInput.text = DefaultPort.ToString();
+                ContextInput.text = DefaultContext;
+                SubToRealToggle.isOn = DefaultSubToReal;
+                SubToSimToggle.isOn = DefaultSubToSim;
+                TLSToggle.isOn = DefaultTLS;
+                UserNameInput.text = DefaultUsername;
+                PasswordInput.text = DefaultPassword;
+                connectNow = DefaultConnectOnStart;
             }
 
             ConnectButton.onClick.AddListener(ToggleConnection);
