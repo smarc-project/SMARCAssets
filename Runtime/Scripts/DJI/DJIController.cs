@@ -233,7 +233,8 @@ namespace dji
  
         void FixedUpdate()
         {
-            if(!enabled){
+            if(!enabled)
+            {
                 return;
             }
             
@@ -252,7 +253,8 @@ namespace dji
             altitude = Position.y;
 
 
-            if(MotorsOff){
+            if(MotorsOff)
+            {
                 FL.SetRpm(0);
                 FR.SetRpm(0);
                 BL.SetRpm(0);
@@ -262,54 +264,59 @@ namespace dji
             vel_counter++;
             pos_counter++;
 
-            if(takeoff_srv == null){
-                takeoff_srv = GetComponentInChildren<PsdkTakeoffService>();
-            }
-            if(landing_srv == null){
-                landing_srv = GetComponentInChildren<PsdkLandingService>();
-            }
-            if(depthSensor == null){
-                depthSensor = GetComponentInChildren<LockedDirectionDepthSensor>();
-            }
+            if(takeoff_srv == null) takeoff_srv = GetComponentInChildren<PsdkTakeoffService>();
+            if(landing_srv == null) landing_srv = GetComponentInChildren<PsdkLandingService>();
+            if(depthSensor == null) depthSensor = GetComponentInChildren<LockedDirectionDepthSensor>();
 
             target_yaw = CommandYaw; //target and command angles are split so that the same attitude control can be used for velocity. For yaw, these are currently always equivalent.
 
-            if(ControllerType == ControllerType.ENU_RelativePosition){
-                TargetAlt = CommandPositionENU.z;
-            }
+            if(ControllerType == ControllerType.ENU_RelativePosition) TargetAlt = CommandPositionENU.z;
+            
             //Vertical Controllers
             float alt_output;
-            if(ControllerType == ControllerType.FLU_Attitude || ControllerType == ControllerType.ENU_RelativePosition || IsTakingOff || IsLanding){
+            if(ControllerType == ControllerType.FLU_Attitude || ControllerType == ControllerType.ENU_RelativePosition || IsTakingOff || IsLanding)
+            {
                 //Altitude Controller. This is used either in Attitude Control Mode or while taking off or landing.
                 alt_error_pos = TargetAlt - altitude;
 
-                float k_alt_pos = 2712f; 
+                //Larger makes faster
+                //Larger makes mores stable (between 0 and 1)
+                //Larger makes "more aggressive", faster with more overshoot (between 0 and 1)
+                // float k_alt_pos = 2712f; // tuned for 0g hook weight
+                float k_alt_pos = 2812f; // tuned for 300g hook weight
                 float z_alt_pos = .999263f;
-                float p_alt_pos = .9937f;
+                // float p_alt_pos = .9937f; // tuned for 0g hook weight
+                float p_alt_pos = .9987f; // tuned for 300g hook weight, bit aggressive at 0g
 
                 alt_output = k_alt_pos * alt_error_pos - k_alt_pos * z_alt_pos * prev_alt_error_pos + p_alt_pos * prev_alt_output_pos; //Using a lead/lag controller with the defined gain, k, zero, z, and pole, p.
-                if(alt_output > MaxControllerOutputAltitude){
+                if(alt_output > MaxControllerOutputAltitude)
+                {
                     alt_output = MaxControllerOutputAltitude;
                 }
-                else if(alt_output < -100){
+                else if(alt_output < -100)
+                {
                     alt_output = -100;
                 }
                 prev_alt_error_pos = alt_error_pos;
                 prev_alt_output_pos = alt_output;
 
-                if(IsTakingOff){ //Checks if done taking off
+                if(IsTakingOff)
+                { //Checks if done taking off
                     if(altitude > TakeOffAltitude - TakeOffError){
                         IsTakingOff = false;
                         Debug.Log("Setting takeoff to false");
                     }
                 }
 
-                if(IsLanding){
+                if(IsLanding)
+                {
                     Debug.Log("Depth: " + depthSensor.depth + " landingError: " + LandingError);
-                    if(depthSensor.depth > LandingError){
+                    if(depthSensor.depth > LandingError)
+                    {
                         TargetAlt = altitude - depthSensor.depth;
                     }
-                    else{
+                    else
+                    {
                         IsLanding = false;
                         Debug.Log("Setting landing to false");
                         if(!depthSensor.usingWater){
@@ -319,8 +326,8 @@ namespace dji
                     }
                 }
             }
-
-            else{
+            else
+            {
                 //Vertical Speed controller 
                 alt_error_vel = CommandVelocityFLU.z - FLUVel.z;
 
