@@ -1,7 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using Utils = DefaultNamespace.Utils;
 
 namespace VehicleComponents.Sensors
 {

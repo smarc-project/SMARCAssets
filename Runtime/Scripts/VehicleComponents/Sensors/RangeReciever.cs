@@ -1,10 +1,6 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using System.IO; // For file operations
-using Utils = DefaultNamespace.Utils;
 using NormalDistribution  = DefaultNamespace.NormalDistribution;
-using DefaultNamespace.Water;
+
 
 namespace VehicleComponents.Sensors
 {

@@ -7,7 +7,7 @@ namespace VehicleComponents
     public class LinkAttachment : MonoBehaviour
     {
         [Header("Link attachment")] 
-        [Tooltip("The name of the link the sensor should be attached to.")]
+        [Tooltip("The name of the link the sensor should be attached to. Leave empty to not attach to anything.")]
         public string linkName = "";
 
         [Tooltip("If true, will try on FixedUpdates to attach, if false attach only on Awake")]
@@ -36,6 +36,15 @@ namespace VehicleComponents
 
         protected void Attach()
         {
+            if (linkName == "")
+            {
+                // dont attach to anything, but still try to get mixedbody
+                attachedLink = gameObject;
+                initialRotation = transform.rotation;
+                GetMixedBody();
+                return;
+            }
+
             var theRobot = Utils.FindParentWithTag(gameObject, "robot", false);
             if (theRobot == null)
             {
