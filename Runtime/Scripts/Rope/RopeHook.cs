@@ -1,5 +1,6 @@
 using DefaultNamespace;
 using UnityEngine;
+using VehicleComponents.ROS.Publishers; // Needed for TF publishing
 
 
 namespace Rope
@@ -15,6 +16,10 @@ namespace Rope
         public GameObject PulleyGO;
 
 
+        [Header("TF Settings")]
+        [Tooltip("TF frame name for the hook.")]
+        public string HookTFFrame = "Hook";
+
         [Header("Debug")]
         public bool DrawForces = false;
 
@@ -22,7 +27,18 @@ namespace Rope
         public bool AttachToRopeLinkAfterStart = false;
         public RopeLinkBuoy RopeLinkBuoy;
 
+<<<<<<< HEAD
+        void Start()
+        {
+            // Add TF publisher for the hook
+            var tfPub = gameObject.AddComponent<ROSTransformTreePublisher>();
+            tfPub.BaseLinkName = HookTFFrame; // "Hook"
+            Debug.Log($"Hook TF frame set: {HookTFFrame}");
+        }
+
+=======
         bool connectedToBuoy = false;
+>>>>>>> upstream/master
 
         void FixedUpdate()
         {

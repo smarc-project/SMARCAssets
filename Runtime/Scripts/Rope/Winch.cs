@@ -1,7 +1,8 @@
 using UnityEngine;
 
 using Force;
-
+using Unity.Robotics.ROSTCPConnector;
+using StdMessages = RosMessageTypes.Std;
 namespace Rope
 {
     public class Winch : RopeSystemBase
@@ -33,6 +34,29 @@ namespace Rope
         [Header("Debug")]
         public float ActualDistance;
 
+        ROSConnection ros;
+
+        string winchFeedbackTopic = "/winch_control_unity";
+        float CurrentRopeSpeedFeedback;
+        float CurrentLengthFeedback;
+        float TargetLengthFeedback;
+
+        void WinchControlTestCallback(StdMessages.Float32MultiArrayMsg msg)
+        {
+            if (msg.data.Length >= 2)
+            {
+                float testTargetLength = msg.data[0];
+                float testWinchSpeed = msg.data[1];
+                Debug.Log($"Received test Float32MultiArray: target_length={testTargetLength}, winch_speed={testWinchSpeed}");
+
+                TargetLength = Mathf.Clamp(testTargetLength, MinLength, RopeLength);
+                WinchSpeed = testWinchSpeed;
+            }
+            else
+            {
+                Debug.LogWarning("Received Float32MultiArray with insufficient data.");
+            }
+        }
         
 
         
@@ -69,18 +93,42 @@ namespace Rope
 
         void Awake()
         {
-            if (loadBody == null) loadBody = new MixedBody(LoadAB, LoadRB);
+            ros = ROSConnection.GetOrCreateInstance();
+            Debug.Log("Subscribing to /winch_control_test");
+            ros.Subscribe<StdMessages.Float32MultiArrayMsg>("/winch_control_test", WinchControlTestCallback);
+
+            // Register publisher
+            ros.RegisterPublisher<StdMessages.Float32MultiArrayMsg>(winchFeedbackTopic);
+            
+            //if (loadBody == null) loadBody = new MixedBody(LoadAB, LoadRB);
         }
 
         void Update()
         {
-            if(!setup) return;
+            if (!setup) return;
             ActualDistance = Vector3.Distance(loadBody.position, transform.position);
             bool ropeSlack = ActualDistance < CurrentLength;
             lineRenderer.SetPosition(0, transform.position);
             lineRenderer.SetPosition(1, loadBody.position);
             lineRenderer.startColor = ropeSlack ? Color.green : Color.red;
             lineRenderer.endColor = lineRenderer.startColor;
+
+
+            // Update feedback values
+            CurrentRopeSpeedFeedback = CurrentRopeSpeed;
+            TargetLengthFeedback = TargetLength;
+            CurrentLengthFeedback = CurrentLength;
+            
+            PublishWinchFeedback();
+
+        }
+
+
+        void PublishWinchFeedback()
+        {
+            StdMessages.Float32MultiArrayMsg feedbackMsg = new StdMessages.Float32MultiArrayMsg();
+            feedbackMsg.data = new float[] { CurrentRopeSpeedFeedback, TargetLengthFeedback, CurrentLengthFeedback };
+            ros.Publish(winchFeedbackTopic, feedbackMsg);
         }
 
         void FixedUpdate()
@@ -95,9 +143,9 @@ namespace Rope
             ropeCollider.transform.rotation = Quaternion.LookRotation(toLoad.normalized, transform.forward);
             ropeCollider.height = toLoad.magnitude;
 
-            // simple speed control
+            // simple speed control   
             var lenDiff = TargetLength - CurrentLength;
-            if (Mathf.Abs(lenDiff) > 0.025)
+            if(Mathf.Abs(lenDiff) > 0.015)   // > 0.025  too small will cause the winch control jitering
             {
                 CurrentRopeSpeed = lenDiff > 0 ? WinchSpeed : -WinchSpeed;
             }
