@@ -124,7 +124,12 @@ namespace Force
             var waterModels = FindObjectsByType<WaterQueryModel>(FindObjectsSortMode.None);
             if (waterModels.Length > 0) waterModel = waterModels[0];
 
-            allForcePoints = body.gameObject.GetComponentsInChildren<ForcePoint>();
+            var tag = body.gameObject.tag;
+            allForcePoints = body.gameObject.GetComponentsInChildren<ForcePoint>()
+                .Where(fp => (fp.ConnectedArticulationBody != null && fp.ConnectedArticulationBody.gameObject.CompareTag(tag)) ||
+                             (fp.ConnectedRigidbody != null && fp.ConnectedRigidbody.gameObject.CompareTag(tag)))
+                .ToArray();
+
             if (AutomaticCenterOfGravity)
             {
                 body.automaticCenterOfMass = false;
