@@ -47,4 +47,23 @@ namespace SmarcGUI.MissionPlanning.Tasks
             Description = "Stop the gimbal";
         }
     }
+
+    public class SmarcWait : Task
+    {
+        public override void SetParams()
+        {
+            Name = "smarc-wait";
+            Description = "Wait for a specified amount of time";
+        }
+    }
+
+    public class SmarcLog : Task
+    {
+        public override void SetParams()
+        {
+            Name = "smarc-log";
+            Description = "Log a message to the topic smarc/human_log";
+            Params.Add("log_str", "");
+        }
+    }
 }

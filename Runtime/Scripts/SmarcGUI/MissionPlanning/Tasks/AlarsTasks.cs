@@ -51,7 +51,6 @@ namespace SmarcGUI.MissionPlanning.Tasks
             Params.Add("forward_altitude", 3.0f);
             Params.Add("dipping_altitude", 7.0f);
             Params.Add("raising_altitude", 15.0f);
-            Params.Add("delivery_position", new GeoPoint());
         }
     }
 

@@ -267,6 +267,18 @@ namespace dji
             return true;
         }
 
+        public bool TurnOnMotors()
+        {
+            Ignition(true);
+            return true;
+        }
+
+        public bool TurnOffMotors()
+        {
+            Ignition(false);
+            return true;
+        }
+
         void Ignition(bool on)
         {
             if (!GotControl)

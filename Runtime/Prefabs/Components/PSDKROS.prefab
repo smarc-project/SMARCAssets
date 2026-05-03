@@ -1,0 +1,496 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &8712428304391911991
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2400408850833503821}
+  - component: {fileID: 8894422706393173003}
+  - component: {fileID: 8544402452384174147}
+  - component: {fileID: 2380671185045462122}
+  - component: {fileID: 4564754037588642812}
+  - component: {fileID: 6798356740492233986}
+  - component: {fileID: 6367243869422129612}
+  - component: {fileID: 8185796039669767436}
+  - component: {fileID: 272217537303167789}
+  - component: {fileID: 6044196106779448216}
+  - component: {fileID: 5979714330985076953}
+  - component: {fileID: 6194682585667045448}
+  - component: {fileID: 1513458110277868296}
+  - component: {fileID: 2297191237379305790}
+  - component: {fileID: 8584360419644735526}
+  - component: {fileID: 5275883042989719669}
+  - component: {fileID: 4936660801068890705}
+  - component: {fileID: 2634633438908419752}
+  - component: {fileID: 1118128271645154542}
+  - component: {fileID: 632299997180222209}
+  - component: {fileID: 9177565669677689907}
+  - component: {fileID: 3459672345917185273}
+  - component: {fileID: 3814562098198112861}
+  - component: {fileID: 4405601322243559750}
+  - component: {fileID: 4500569530247163701}
+  - component: {fileID: 3056830063282582805}
+  - component: {fileID: 4301774078613079423}
+  m_Layer: 0
+  m_Name: PSDKROS
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2400408850833503821
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8712428304391911991}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 9.0343, y: 1.1117998, z: 6.0934}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &8894422706393173003
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8712428304391911991}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cc1f312a0e6c8dd7da476f6f6ea03d43, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  linkName: base_link
+  retryUntilSuccess: 1
+  rotateForROSCamera: 0
+  roll: 0
+  pitch: 0
+  yaw: 0
+  FixedRotation: 0
+  frequency: 50
+  hasNewData: 0
+  withGravity: 0
+  localVelocity: {x: 0, y: 0, z: 0}
+  linearAcceleration: {x: 0, y: 0, z: 0}
+  linearAccelerationCovariance:
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  angularVelocity: {x: 0, y: 0, z: 0}
+  angularVelocityCovariance:
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  eulerAngles: {x: 0, y: 0, z: 0}
+  orientation: {x: 0, y: 0, z: 0, w: 0}
+  orientationCovariance:
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+--- !u!114 &8544402452384174147
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8712428304391911991}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b4084f8a5c6ecf5458eb1cddb22da431, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  topic: wrapper/psdk_ros2/acceleration_ground_fused
+  NotARobot: 0
+  frequency: 50
+--- !u!114 &2380671185045462122
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8712428304391911991}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b98690e955052ee4a8a7e8596f1fbba0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  topic: wrapper/psdk_ros2/altitude_sea_level
+  NotARobot: 0
+  frequency: 50
+--- !u!114 &4564754037588642812
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8712428304391911991}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 87fd6b53ac1d4f9469e689b602fe823c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  topic: wrapper/psdk_ros2/angular_rate_ground_fused
+  NotARobot: 0
+  frequency: 100
+--- !u!114 &6798356740492233986
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8712428304391911991}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 04726e0628e789144977ac28c167ed61, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  topic: wrapper/psdk_ros2/attitude
+  NotARobot: 0
+  frequency: 100
+--- !u!114 &6367243869422129612
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8712428304391911991}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 28ab4fe77a5608749afa651f38b2e84d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  topic: wrapper/psdk_ros2/gps_position
+  NotARobot: 0
+  frequency: 10
+--- !u!114 &8185796039669767436
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8712428304391911991}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7e0cbf82a29db3c42b01c9eefe013934, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  topic: wrapper/psdk_ros2/gps_signal_level
+  NotARobot: 0
+  frequency: 10
+  level: 5
+--- !u!114 &272217537303167789
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8712428304391911991}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ddb5b15a8cd095545b59f8bbd7cd8433, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  topic: wrapper/psdk_ros2/gps_velocity
+  NotARobot: 0
+  frequency: 5
+--- !u!114 &6044196106779448216
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8712428304391911991}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 28ab4fe77a5608749afa651f38b2e84d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  topic: wrapper/psdk_ros2/rtk_position
+  NotARobot: 0
+  frequency: 5
+--- !u!114 &5979714330985076953
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8712428304391911991}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ddb5b15a8cd095545b59f8bbd7cd8433, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  topic: wrapper/psdk_ros2/rtk_velocity
+  NotARobot: 0
+  frequency: 5
+--- !u!114 &6194682585667045448
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8712428304391911991}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 522d2457b6dde2a4dad6d393315ea851, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  topic: wrapper/psdk_ros2/velocity_ground_fused
+  NotARobot: 0
+  frequency: 50
+--- !u!114 &1513458110277868296
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8712428304391911991}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7e0cbf82a29db3c42b01c9eefe013934, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  topic: wrapper/psdk_ros2/rtk_position_info
+  NotARobot: 0
+  frequency: 5
+  level: 50
+--- !u!114 &2297191237379305790
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8712428304391911991}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7e0cbf82a29db3c42b01c9eefe013934, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  topic: wrapper/psdk_ros2/rtk_yaw_info
+  NotARobot: 0
+  frequency: 5
+  level: 50
+--- !u!114 &8584360419644735526
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8712428304391911991}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c22f95c563c039045a9ab1d165e990b9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  topic: wrapper/psdk_ros2/rtk_connection_status
+  NotARobot: 0
+  frequency: 5
+  level: 1
+--- !u!114 &5275883042989719669
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8712428304391911991}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e8aebec86abe19d4eb1292f8050de886, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  topic: wrapper/psdk_ros2/home_point
+  NotARobot: 0
+  frequency: 10
+  UnityHomePosition: {x: 0, y: 0, z: 0}
+--- !u!114 &4936660801068890705
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8712428304391911991}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eb9b955243da0d7479eaf3e1724006ee, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  topic: wrapper/psdk_ros2/home_point_altitude
+  NotARobot: 0
+  frequency: 10
+--- !u!114 &2634633438908419752
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8712428304391911991}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8035dbf5c1e4a6847af63d3d0ac76c43, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  topic: wrapper/psdk_ros2/position_fused
+  NotARobot: 0
+  frequency: 10
+--- !u!114 &1118128271645154542
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8712428304391911991}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3a86141ef12134a4a9cf560aa0fa75f3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  topic: wrapper/psdk_ros2/esc_data
+  NotARobot: 0
+  frequency: 10
+  p0: {fileID: 0}
+  p1: {fileID: 0}
+  p2: {fileID: 0}
+  p3: {fileID: 0}
+  DualProp: 0
+--- !u!114 &632299997180222209
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8712428304391911991}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 342d659d27a165847aae788eae4fd0a3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  topic: wrapper/psdk_ros2/takeoff
+  NotARobot: 0
+--- !u!114 &9177565669677689907
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8712428304391911991}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ead35a36ab39d344c99230e6287fb74b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  topic: wrapper/psdk_ros2/release_ctrl_authority
+  NotARobot: 0
+--- !u!114 &3459672345917185273
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8712428304391911991}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 67f4a00b3f361d843b7a8374fec460aa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  topic: wrapper/psdk_ros2/obtain_ctrl_authority
+  NotARobot: 0
+--- !u!114 &3814562098198112861
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8712428304391911991}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f0368a6de71d7754686d271b985f5b90, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  topic: wrapper/psdk_ros2/control_mode
+  NotARobot: 0
+  frequency: 10
+--- !u!114 &4405601322243559750
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8712428304391911991}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fede40b7973330f4692bb6430457b65d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  topic: wrapper/psdk_ros2/flight_control_setpoint_FLUvelocity_yawrate
+  NotARobot: 0
+  joy_timeout: 0.5
+  time_since_joy: 0
+--- !u!114 &4500569530247163701
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8712428304391911991}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a108cde68091d5a4b9be6350d20a9c17, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  topic: wrapper/psdk_ros2/land
+  NotARobot: 0
+--- !u!114 &3056830063282582805
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8712428304391911991}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4afe7e2a96aa7154681de26c3d493d67, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: SMARC.SMARCAssets::M350.PSDK_ROS2.PsdkTurnOnMotorsService
+  topic: wrapper/psdk_ros2/turn_on_motors
+  NotARobot: 0
+--- !u!114 &4301774078613079423
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8712428304391911991}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 134066f48f5878c4daaea2ac89fc8eb5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: SMARC.SMARCAssets::M350.PSDK_ROS2.PsdkTurnOffMotorsService
+  topic: wrapper/psdk_ros2/turn_off_motors
+  NotARobot: 0

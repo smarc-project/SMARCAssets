@@ -3153,7 +3153,7 @@ Transform:
   - {fileID: 3461406886427279844}
   - {fileID: 5172971444056739521}
   - {fileID: 2680635487902792361}
-  - {fileID: 3255108177612792208}
+  - {fileID: 8317845878663956011}
   - {fileID: 1269494488675563611}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -4927,470 +4927,6 @@ Transform:
   - {fileID: 6870132654034752080}
   m_Father: {fileID: 3480939762032943997}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &7982597064404111922
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 3255108177612792208}
-  - component: {fileID: 8723383621280612798}
-  - component: {fileID: 3439496058481698807}
-  - component: {fileID: 2367418455913696926}
-  - component: {fileID: 1216941131633503158}
-  - component: {fileID: 84417603246261145}
-  - component: {fileID: 7902851644231535019}
-  - component: {fileID: 6464672209209206267}
-  - component: {fileID: 8244122968924969182}
-  - component: {fileID: 6320301752611152133}
-  - component: {fileID: 2299254543914537816}
-  - component: {fileID: 337064613675746659}
-  - component: {fileID: 3418797472735356117}
-  - component: {fileID: 8562775752725954761}
-  - component: {fileID: 5175760132187875337}
-  - component: {fileID: 2854688900584321308}
-  - component: {fileID: 9217948330569890686}
-  - component: {fileID: 3563419003607651671}
-  - component: {fileID: 3298549640756895142}
-  - component: {fileID: 6082087200577232483}
-  - component: {fileID: 3525531216025562080}
-  - component: {fileID: 6061098872162676137}
-  - component: {fileID: 9109946573173142050}
-  - component: {fileID: 8515266022483643805}
-  - component: {fileID: 8083210723672243670}
-  m_Layer: 0
-  m_Name: PSDKROS
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &3255108177612792208
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7982597064404111922}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.06409997, y: -0.15100014, z: 0.08900046}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 4384143900959513524}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &8723383621280612798
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7982597064404111922}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cc1f312a0e6c8dd7da476f6f6ea03d43, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  linkName: base_link
-  retryUntilSuccess: 1
-  rotateForROSCamera: 0
-  roll: 0
-  pitch: 0
-  yaw: 0
-  FixedRotation: 0
-  frequency: 50
-  hasNewData: 0
-  withGravity: 0
-  localVelocity: {x: 0, y: 0, z: 0}
-  linearAcceleration: {x: 0, y: 0, z: 0}
-  linearAccelerationCovariance:
-  - 0
-  - 0
-  - 0
-  - 0
-  - 0
-  - 0
-  - 0
-  - 0
-  - 0
-  angularVelocity: {x: 0, y: 0, z: 0}
-  angularVelocityCovariance:
-  - 0
-  - 0
-  - 0
-  - 0
-  - 0
-  - 0
-  - 0
-  - 0
-  - 0
-  eulerAngles: {x: 0, y: 0, z: 0}
-  orientation: {x: 0, y: 0, z: 0, w: 0}
-  orientationCovariance:
-  - 0
-  - 0
-  - 0
-  - 0
-  - 0
-  - 0
-  - 0
-  - 0
-  - 0
---- !u!114 &3439496058481698807
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7982597064404111922}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b4084f8a5c6ecf5458eb1cddb22da431, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  topic: wrapper/psdk_ros2/acceleration_ground_fused
-  NotARobot: 0
-  frequency: 50
---- !u!114 &2367418455913696926
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7982597064404111922}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b98690e955052ee4a8a7e8596f1fbba0, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  topic: wrapper/psdk_ros2/altitude_sea_level
-  NotARobot: 0
-  frequency: 50
---- !u!114 &1216941131633503158
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7982597064404111922}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 87fd6b53ac1d4f9469e689b602fe823c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  topic: wrapper/psdk_ros2/angular_rate_ground_fused
-  NotARobot: 0
-  frequency: 100
---- !u!114 &84417603246261145
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7982597064404111922}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 04726e0628e789144977ac28c167ed61, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  topic: wrapper/psdk_ros2/attitude
-  NotARobot: 0
-  frequency: 100
---- !u!114 &7902851644231535019
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7982597064404111922}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 28ab4fe77a5608749afa651f38b2e84d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  topic: wrapper/psdk_ros2/gps_position
-  NotARobot: 0
-  frequency: 10
---- !u!114 &6464672209209206267
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7982597064404111922}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7e0cbf82a29db3c42b01c9eefe013934, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  topic: wrapper/psdk_ros2/gps_signal_level
-  NotARobot: 0
-  frequency: 10
-  level: 5
---- !u!114 &8244122968924969182
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7982597064404111922}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ddb5b15a8cd095545b59f8bbd7cd8433, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  topic: wrapper/psdk_ros2/gps_velocity
-  NotARobot: 0
-  frequency: 5
---- !u!114 &6320301752611152133
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7982597064404111922}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 28ab4fe77a5608749afa651f38b2e84d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  topic: wrapper/psdk_ros2/rtk_position
-  NotARobot: 0
-  frequency: 5
---- !u!114 &2299254543914537816
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7982597064404111922}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ddb5b15a8cd095545b59f8bbd7cd8433, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  topic: wrapper/psdk_ros2/rtk_velocity
-  NotARobot: 0
-  frequency: 5
---- !u!114 &337064613675746659
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7982597064404111922}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 522d2457b6dde2a4dad6d393315ea851, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  topic: wrapper/psdk_ros2/velocity_ground_fused
-  NotARobot: 0
-  frequency: 50
---- !u!114 &3418797472735356117
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7982597064404111922}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7e0cbf82a29db3c42b01c9eefe013934, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  topic: wrapper/psdk_ros2/rtk_position_info
-  NotARobot: 0
-  frequency: 5
-  level: 50
---- !u!114 &8562775752725954761
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7982597064404111922}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7e0cbf82a29db3c42b01c9eefe013934, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  topic: wrapper/psdk_ros2/rtk_yaw_info
-  NotARobot: 0
-  frequency: 5
-  level: 50
---- !u!114 &5175760132187875337
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7982597064404111922}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c22f95c563c039045a9ab1d165e990b9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  topic: wrapper/psdk_ros2/rtk_connection_status
-  NotARobot: 0
-  frequency: 5
-  level: 1
---- !u!114 &2854688900584321308
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7982597064404111922}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e8aebec86abe19d4eb1292f8050de886, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  topic: wrapper/psdk_ros2/home_point
-  NotARobot: 0
-  frequency: 10
-  UnityHomePosition: {x: 0, y: 0, z: 0}
---- !u!114 &9217948330569890686
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7982597064404111922}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: eb9b955243da0d7479eaf3e1724006ee, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  topic: wrapper/psdk_ros2/home_point_altitude
-  NotARobot: 0
-  frequency: 10
---- !u!114 &3563419003607651671
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7982597064404111922}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8035dbf5c1e4a6847af63d3d0ac76c43, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  topic: wrapper/psdk_ros2/position_fused
-  NotARobot: 0
-  frequency: 10
---- !u!114 &3298549640756895142
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7982597064404111922}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3a86141ef12134a4a9cf560aa0fa75f3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  topic: wrapper/psdk_ros2/esc_data
-  NotARobot: 0
-  frequency: 10
-  p0: {fileID: 4495729588496952926}
-  p1: {fileID: 7804527782484352368}
-  p2: {fileID: 6107677940908191336}
-  p3: {fileID: 1422271091232739523}
-  DualProp: 1
---- !u!114 &6082087200577232483
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7982597064404111922}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 342d659d27a165847aae788eae4fd0a3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  topic: wrapper/psdk_ros2/takeoff
-  NotARobot: 0
---- !u!114 &3525531216025562080
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7982597064404111922}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ead35a36ab39d344c99230e6287fb74b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  topic: wrapper/psdk_ros2/release_ctrl_authority
-  NotARobot: 0
---- !u!114 &6061098872162676137
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7982597064404111922}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 67f4a00b3f361d843b7a8374fec460aa, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  topic: wrapper/psdk_ros2/obtain_ctrl_authority
-  NotARobot: 0
---- !u!114 &9109946573173142050
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7982597064404111922}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f0368a6de71d7754686d271b985f5b90, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  topic: wrapper/psdk_ros2/control_mode
-  NotARobot: 0
-  frequency: 10
---- !u!114 &8515266022483643805
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7982597064404111922}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fede40b7973330f4692bb6430457b65d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  topic: wrapper/psdk_ros2/flight_control_setpoint_FLUvelocity_yawrate
-  NotARobot: 0
-  joy_timeout: 0.5
-  time_since_joy: 0
---- !u!114 &8083210723672243670
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7982597064404111922}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a108cde68091d5a4b9be6350d20a9c17, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  topic: wrapper/psdk_ros2/land
-  NotARobot: 0
 --- !u!1 &8050753276342205006
 GameObject:
   m_ObjectHideFlags: 0
@@ -6847,6 +6383,105 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 2548865424984193880, guid: e327e9efb86338144b9b4afc3b64579b,
     type: 3}
   m_PrefabInstance: {fileID: 1836205692766286125}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1001 &5918042036301475942
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 4384143900959513524}
+    m_Modifications:
+    - target: {fileID: 1118128271645154542, guid: c47b97e224f45834ba1ac0d885316de5,
+        type: 3}
+      propertyPath: p0
+      value: 
+      objectReference: {fileID: 7804527782484352368}
+    - target: {fileID: 1118128271645154542, guid: c47b97e224f45834ba1ac0d885316de5,
+        type: 3}
+      propertyPath: p1
+      value: 
+      objectReference: {fileID: 4495729588496952926}
+    - target: {fileID: 1118128271645154542, guid: c47b97e224f45834ba1ac0d885316de5,
+        type: 3}
+      propertyPath: p2
+      value: 
+      objectReference: {fileID: 1422271091232739523}
+    - target: {fileID: 1118128271645154542, guid: c47b97e224f45834ba1ac0d885316de5,
+        type: 3}
+      propertyPath: p3
+      value: 
+      objectReference: {fileID: 6107677940908191336}
+    - target: {fileID: 1118128271645154542, guid: c47b97e224f45834ba1ac0d885316de5,
+        type: 3}
+      propertyPath: DualProp
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2400408850833503821, guid: c47b97e224f45834ba1ac0d885316de5,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 16.92
+      objectReference: {fileID: 0}
+    - target: {fileID: 2400408850833503821, guid: c47b97e224f45834ba1ac0d885316de5,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -24.40145
+      objectReference: {fileID: 0}
+    - target: {fileID: 2400408850833503821, guid: c47b97e224f45834ba1ac0d885316de5,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -8.67285
+      objectReference: {fileID: 0}
+    - target: {fileID: 2400408850833503821, guid: c47b97e224f45834ba1ac0d885316de5,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2400408850833503821, guid: c47b97e224f45834ba1ac0d885316de5,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2400408850833503821, guid: c47b97e224f45834ba1ac0d885316de5,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2400408850833503821, guid: c47b97e224f45834ba1ac0d885316de5,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2400408850833503821, guid: c47b97e224f45834ba1ac0d885316de5,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2400408850833503821, guid: c47b97e224f45834ba1ac0d885316de5,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2400408850833503821, guid: c47b97e224f45834ba1ac0d885316de5,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8712428304391911991, guid: c47b97e224f45834ba1ac0d885316de5,
+        type: 3}
+      propertyPath: m_Name
+      value: PSDKROS
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: c47b97e224f45834ba1ac0d885316de5, type: 3}
+--- !u!4 &8317845878663956011 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 2400408850833503821, guid: c47b97e224f45834ba1ac0d885316de5,
+    type: 3}
+  m_PrefabInstance: {fileID: 5918042036301475942}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &6727801012191845825
 PrefabInstance:
