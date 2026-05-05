@@ -46,6 +46,7 @@ public class DomainRandomization : MonoBehaviour
     public float CurrentOrientationRange = 360f;
     public float CurrentSpeedBase = 1f;
     public float CurrentSpeedRange = 1f;
+    public bool RGBOcean = true;
 
     [Header("Cameras")]
     public Transform CamTF;
@@ -530,6 +531,16 @@ public class DomainRandomization : MonoBehaviour
         {
             float randomCurrentSpeedOffset = Random.Range(-CurrentSpeedRange, CurrentSpeedRange);
             WaterSurface.largeCurrentSpeedValue = Mathf.Max(0f, CurrentSpeedBase + randomCurrentSpeedOffset);
+        }
+
+        if(RGBOcean)
+        {
+            float refR = Random.Range(0f, 1f);
+            float refG = Random.Range(0f, 1f);
+            float refB = Random.Range(0f, 1f);
+            float a = Random.Range(0f, 1f);
+            WaterSurface.refractionColor = new Color(refR, refG, refB, a);
+            WaterSurface.scatteringColor = new Color(refR, refG, refB, a);
         }
     }
     
