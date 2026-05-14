@@ -12828,6 +12828,8 @@ MonoBehaviour:
     type: 3}
   ContextMenuPrefab: {fileID: 5700513683117687523, guid: f572305ce6fd19640996140b10b21b8c,
     type: 3}
+  HumanPrefab: {fileID: 4133176176906473063, guid: a5303d057340a414c859386737d8b30b,
+    type: 3}
   DefaultCamera: {fileID: 3885939636452086765}
   DefaultCameraLookAtMin: 1
   DefaultCameraLookAtMax: 100

@@ -77,6 +77,9 @@ namespace SmarcGUI.Connections
         Queue<Tuple<string, string>> mqttInbox = new();
         HashSet<string> subscribedTopics = new();
 
+
+        
+
         void Awake()
         {
             guiState = FindFirstObjectByType<GUIState>();
@@ -183,6 +186,7 @@ namespace SmarcGUI.Connections
         {
             if(SubToRealToggle.isOn) SubToHeartbeats("real");
             if(SubToSimToggle.isOn) SubToHeartbeats("simulation");
+            SubToOwntracks();
             foreach(var publisher in publishers)
             {
                 publisher.StartPublishing();
@@ -373,6 +377,14 @@ namespace SmarcGUI.Connections
             SubToTopic(topic);
         }
 
+        void SubToOwntracks()
+        {
+            var topic = $"owntracks/user/+";
+            SubToTopic(topic);
+        }
+
+
+
         void HandleMQTTMsg(Tuple<string, string> topicPayload)
         {
             if(topicPayload == null) return;
@@ -380,6 +392,12 @@ namespace SmarcGUI.Connections
             
             var topic = topicPayload.Item1;
             var payload = topicPayload.Item2;
+
+            if (topic.StartsWith("owntracks/"))
+            {
+                HandleOwntracksMsg(topic, payload);
+                return;
+            }
 
             try
             {
@@ -391,6 +409,22 @@ namespace SmarcGUI.Connections
                 guiState.Log(e.Message);
             }
 
+        }
+
+        void HandleOwntracksMsg(string topic, string payload)
+        {
+            // owntracks messages are formatted like: owntracks/user/{userId}
+            var topicParts = topic.Split('/');
+            var userId = topicParts[2];
+
+            try
+            {
+                // owntracks format changes, and doesnt always include lat, lon, alt. so we just try to parse it, and if it fails, we ignore it for now.
+                var msg = new OwntracksMsg(payload);
+                guiState.UpdateOwntracksUserLocation(userId, msg);
+            }
+            catch (Exception)
+            { }
         }
 
 

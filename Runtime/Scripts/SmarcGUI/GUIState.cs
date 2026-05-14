@@ -10,7 +10,8 @@ using SmarcGUI.WorldSpace;
 using System;
 using System.IO;
 using UnityEngine.InputSystem;
-
+using SmarcGUI.Connections;
+using GeoRef;
 
 
 namespace SmarcGUI
@@ -42,6 +43,7 @@ namespace SmarcGUI
         [Header("Prefabs")]
         public GameObject RobotGuiPrefab;
         public GameObject ContextMenuPrefab;
+        public GameObject HumanPrefab;
 
 
 
@@ -58,6 +60,8 @@ namespace SmarcGUI
         public Dictionary<string, RobotGUI> RobotGuis = new();
         public List<RobotGUI> SelectedRobotGUIs {get; private set;} = new();
         public List<string> SelectedRobotNames => SelectedRobotGUIs?.ConvertAll(r => r.RobotName) ?? new List<string>();
+
+        public Dictionary<string, Transform> OwntracksUserLocations = new();
         
         WaterRenderToggle[] waterRenderToggles;
         bool renderWaters = true;
@@ -72,6 +76,8 @@ namespace SmarcGUI
         public float mouseTwoDelay = 0.15f;
         ContextMenu WorldContextMenu;
 
+
+        GlobalReferencePoint globalReferencePoint;
 
         string CameraTextFromCamera(Camera c)
         {
@@ -283,6 +289,8 @@ namespace SmarcGUI
                     toggle.ToggleWaterRender(renderWaters);
                 }
             });
+            globalReferencePoint = FindFirstObjectByType<GlobalReferencePoint>();
+
         }
 
         public void OnPointerExit(PointerEventData eventData)
@@ -364,6 +372,32 @@ namespace SmarcGUI
         public static string GetStoragePath()
         {
             return Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Personal), "SMaRCUnity");
+        }
+
+        public void UpdateOwntracksUserLocation(string humanId, OwntracksMsg msg)
+        {
+            Transform humanTransform;
+            if(OwntracksUserLocations.ContainsKey(humanId))
+            {
+                humanTransform = OwntracksUserLocations[humanId];
+            }
+            else
+            {
+                var humanGO = Instantiate(HumanPrefab);
+                humanGO.name = $"Owntracks_{humanId}";
+                humanTransform = humanGO.transform;
+                OwntracksUserLocations[humanId] = humanTransform;
+            }
+
+            if(globalReferencePoint != null)
+            {
+                var (x,z) = globalReferencePoint.GetUnityXZFromLatLon(msg.lat, msg.lon);
+                humanTransform.position = new Vector3(x, msg.alt, z);
+            }
+            else
+            {
+                Debug.LogWarning("No GlobalReferencePoint found in the scene! Cannot update Owntracks user location.");
+            }
         }
 
     }
