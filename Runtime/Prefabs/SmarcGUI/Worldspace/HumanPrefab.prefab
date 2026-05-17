@@ -67,7 +67,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 129bfc8f134b721488223029a0e1e9d1, type: 2}
+  - {fileID: 2100000, guid: 188eae54f2b79c74cb5c21311fc62338, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -113,6 +113,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7090821153842907472}
+  - component: {fileID: 593243258109858752}
   m_Layer: 0
   m_Name: HumanPrefab
   m_TagString: Untagged
@@ -136,3 +137,16 @@ Transform:
   - {fileID: 1985897221721354856}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &593243258109858752
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4133176176906473063}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bf5c9a2f383e66842b59db20ca4c138f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: SMARC.SMARCAssets::LineToZeroY
+  lineMaterial: {fileID: 2100000, guid: 188eae54f2b79c74cb5c21311fc62338, type: 2}

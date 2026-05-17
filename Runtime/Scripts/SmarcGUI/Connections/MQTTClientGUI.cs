@@ -421,6 +421,10 @@ namespace SmarcGUI.Connections
             {
                 // owntracks format changes, and doesnt always include lat, lon, alt. so we just try to parse it, and if it fails, we ignore it for now.
                 var msg = new OwntracksMsg(payload);
+                int now = (int)DateTimeOffset.UtcNow.ToUnixTimeSeconds();
+                int diff = Math.Abs(msg.tst - now);
+                Debug.Log($"Received owntracks message for user {userId} with timestamp {msg.tst} (diff: {diff} seconds)");
+                if (diff > 60*60) return;// if the message is older than 1hr,ignore
                 guiState.UpdateOwntracksUserLocation(userId, msg);
             }
             catch (Exception)
