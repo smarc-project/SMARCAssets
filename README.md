@@ -98,6 +98,14 @@ Once you have installed NuGet, install the following packages.
 3. Search and install:
   *  MathNet.Numerics
   *  CoordinateSharp
+  *  CsvHelper
+  *  Microsoft.Data.Sqlite
+
+For ROSBag playback, use the SQLite package set known to work in Unity with NuGetForUnity:
+- `Microsoft.Data.Sqlite` `9.0.7`
+- `SQLitePCLRaw.bundle_e_sqlite3` `2.1.10`
+
+`CsvHelper` and `Microsoft.Data.Sqlite` are required for the ROSBag playback and export tooling shipped in `SMARCAssets`.
 
 ### Configure the ROS Connector
 
