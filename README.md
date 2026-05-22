@@ -105,7 +105,8 @@ For ROSBag playback, use the SQLite package set known to work in Unity with NuGe
 - `Microsoft.Data.Sqlite` `9.0.7`
 - `SQLitePCLRaw.bundle_e_sqlite3` `2.1.10`
 
-`CsvHelper` and `Microsoft.Data.Sqlite` are required for the ROSBag playback and export tooling shipped in `SMARCAssets`.
+`Microsoft.Data.Sqlite` is required for the generic ROSBag playback tooling shipped in `SMARCAssets`.
+`CsvHelper` is still needed by the SAM-specific ROSBag export utilities that remain in `SMARC-RL`.
 
 ### Configure the ROS Connector
 

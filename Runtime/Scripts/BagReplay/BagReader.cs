@@ -1,13 +1,7 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using Microsoft.Data.Sqlite;
-using RosMessageTypes.Geometry;
-using RosMessageTypes.Nav;
-using RosMessageTypes.Sam;
-using RosMessageTypes.Smarc;
 using Unity.Robotics.ROSTCPConnector.MessageGeneration;
-using UnityEngine;
 
 namespace BagReplay
 {
@@ -18,38 +12,23 @@ namespace BagReplay
             "For Unity projects using NuGetForUnity, install the ROSBag playback SQLite set documented in the SMARCAssets README: " +
             "Microsoft.Data.Sqlite 9.0.7 and SQLitePCLRaw.bundle_e_sqlite3 2.1.10.";
 
-        public SortedList<long, PercentStampedMsg> vbs_cmd, vbs_fb;
-        public SortedList<long, OdometryMsg> odometry;
-        public SortedList<long, PercentStampedMsg> lcg_cmd, lcg_fb;
-        public SortedList<long, ThrusterAnglesMsg> angles_cmd;
-        public SortedList<long, ThrusterRPMsMsg> rpms_cmd;
-        public SortedList<long, PoseStampedMsg> pose;
-        public SortedList<long, TwistStampedMsg> twist;
+        private readonly string filePath;
+        private readonly Dictionary<string, SortedList<long, BagTopicPlaybackValue>> loadedTopicsByName =
+            new Dictionary<string, SortedList<long, BagTopicPlaybackValue>>(StringComparer.Ordinal);
 
-        public double StartNanos;
-        public double EndNanos;
+        public IReadOnlyList<BagTopicInventoryEntry> TopicInventory { get; }
+        public double StartNanos { get; }
+        public double EndNanos { get; }
 
         public BagReader(string filePath)
         {
+            this.filePath = filePath;
+
             try
             {
-                using var connection = new SqliteConnection($"Data Source={filePath}");
-                connection.Open();
-
-                vbs_cmd = ReadMessagesOfType<PercentStampedMsg>(connection, "/sam/core/vbs_cmd");
-                vbs_fb = ReadMessagesOfType<PercentStampedMsg>(connection, "/sam/core/vbs_fb");
-                lcg_cmd = ReadMessagesOfType<PercentStampedMsg>(connection, "/sam/core/lcg_cmd");
-                lcg_fb = ReadMessagesOfType<PercentStampedMsg>(connection, "/sam/core/lcg_fb");
-
-                rpms_cmd = ReadMessagesOfType<ThrusterRPMsMsg>(connection, "/sam/core/thruster_rpms_cmd");
-                angles_cmd = ReadMessagesOfType<ThrusterAnglesMsg>(connection, "/sam/core/thrust_vector_cmd");
-
-                odometry = ReadMessagesOfType<OdometryMsg>(connection, "/mocap/sam_mocap/odom");
-                pose = ReadMessagesOfType<PoseStampedMsg>(connection, "/mocap/sam_mocap/pose");
-                twist = ReadMessagesOfType<TwistStampedMsg>(connection, "/mocap/sam_mocap/velocity");
-
-                StartNanos = vbs_cmd.Keys.Min();
-                EndNanos = vbs_cmd.Keys.Max();
+                using var connection = OpenConnection();
+                TopicInventory = ReadTopicInventory(connection);
+                (StartNanos, EndNanos) = ReadTimeBounds(connection);
             }
             catch (DllNotFoundException ex)
             {
@@ -61,90 +40,226 @@ namespace BagReplay
             }
         }
 
-        public BagData ReadFields(double timeToReadAt)
+        public void LoadBindings(IReadOnlyList<BagTopicBinding> bindings)
         {
-            if (timeToReadAt >= StartNanos && timeToReadAt <= EndNanos)
+            loadedTopicsByName.Clear();
+
+            if (bindings == null)
             {
-                var vbsCmdMsg = vbs_cmd.GetLatestMessage(timeToReadAt);
-                var vbsFbMsg = vbs_fb.GetLatestMessage(timeToReadAt);
-                var lcgCmdMsg = lcg_cmd.GetLatestMessage(timeToReadAt);
-                var lcgFbMsg = lcg_fb.GetLatestMessage(timeToReadAt);
-                var rpmMsg = rpms_cmd.GetLatestMessage(timeToReadAt);
-                var angleMsg = angles_cmd.GetLatestMessage(timeToReadAt);
-
-                var odometryMsg = odometry.GetLatestMessage(timeToReadAt);
-                var poseMsg = pose.GetLatestMessage(timeToReadAt);
-                var twistMsg = twist.GetLatestMessage(timeToReadAt);
-
-                BagData bagData = new BagData
-                {
-                    Vbs_cmd = vbsCmdMsg?.value ?? 0,
-                    Vbs_fb = vbsFbMsg?.value ?? 0,
-                    Lcg_cmd = lcgCmdMsg?.value ?? 0,
-                    Lcg_fb = lcgFbMsg?.value ?? 0,
-                    Thruster1RPM = rpmMsg?.thruster_1_rpm ?? 0,
-                    Thruster2RPM = rpmMsg?.thruster_2_rpm ?? 0,
-                    ThrusterHorizontalRad = angleMsg?.thruster_horizontal_radians ?? 0,
-                    ThrusterVerticalRad = angleMsg?.thruster_vertical_radians ?? 0,
-                    PositionMocapFRD = new Vector3((float)poseMsg.pose.position.x, (float)poseMsg.pose.position.y, (float)poseMsg.pose.position.z),
-                    OrientationMocapFRD = new Quaternion((float)poseMsg.pose.orientation.x, (float)poseMsg.pose.orientation.y, (float)poseMsg.pose.orientation.z, (float)poseMsg.pose.orientation.w),
-                    LinearVelocityMocapFRD = new Vector3((float)twistMsg.twist.linear.x, (float)twistMsg.twist.linear.y, (float)twistMsg.twist.linear.z),
-                    AngularVelocityMocapFRD = new Vector3((float)twistMsg.twist.angular.x, (float)twistMsg.twist.angular.y, (float)twistMsg.twist.angular.z),
-                    LinearVelocityBodyFRD = new Vector3((float)odometryMsg.twist.twist.linear.x, (float)odometryMsg.twist.twist.linear.y, (float)odometryMsg.twist.twist.linear.z),
-                    AngularVelocityBodyFRD = new Vector3((float)odometryMsg.twist.twist.angular.x, (float)odometryMsg.twist.twist.angular.y, (float)odometryMsg.twist.twist.angular.z),
-                };
-
-                return bagData;
+                return;
             }
 
-            return null;
+            foreach (var binding in bindings)
+            {
+                binding?.ClearRuntimeState();
+            }
+
+            try
+            {
+                using var connection = OpenConnection();
+                foreach (var binding in bindings)
+                {
+                    LoadBinding(connection, binding);
+                }
+            }
+            catch (DllNotFoundException ex)
+            {
+                throw new InvalidOperationException(MissingSqliteMessage, ex);
+            }
+            catch (TypeInitializationException ex) when (ContainsDllNotFound(ex))
+            {
+                throw new InvalidOperationException(MissingSqliteMessage, ex);
+            }
         }
 
-        private static SortedList<long, T> ReadMessagesOfType<T>(SqliteConnection connection, string topicName) where T : Message
+        public BagTopicSnapshot ReadSnapshot(double timeToReadAt)
         {
-            var id = GetTopicId(connection, topicName);
-            SortedList<long, T> messages = new SortedList<long, T>();
+            if (loadedTopicsByName.Count == 0 || timeToReadAt > EndNanos)
+            {
+                return BagTopicSnapshot.Empty;
+            }
 
-            if (id == null) return messages;
+            var snapshotValues = new Dictionary<string, BagTopicPlaybackValue>(StringComparer.Ordinal);
+            foreach (var topicEntry in loadedTopicsByName)
+            {
+                var playbackValue = topicEntry.Value.GetLatestMessage(timeToReadAt);
+                if (playbackValue != null)
+                {
+                    snapshotValues[topicEntry.Key] = playbackValue;
+                }
+            }
 
-            var cmd = connection.CreateCommand();
-            cmd.CommandText = "SELECT topic_id, timestamp, data FROM messages WHERE topic_id = $topic_id";
-            cmd.Parameters.AddWithValue("$topic_id", id);
+            return snapshotValues.Count == 0 ? BagTopicSnapshot.Empty : new BagTopicSnapshot(snapshotValues);
+        }
 
-            using var reader = cmd.ExecuteReader();
-            var method = typeof(T).GetMethod("Deserialize", new[] { typeof(MessageDeserializer) });
+        private void LoadBinding(SqliteConnection connection, BagTopicBinding binding)
+        {
+            if (binding == null || !binding.Enabled || binding.MappingMode == BagTopicMappingMode.None)
+            {
+                return;
+            }
 
+            var resolvedRosMessageName = ResolveRosMessageName(binding, out var descriptor, out var resolutionError);
+            if (!string.IsNullOrWhiteSpace(resolutionError))
+            {
+                binding.SetRuntimeState(resolvedRosMessageName, descriptor?.MessageType, 0, resolutionError);
+                return;
+            }
+
+            if (!RosMessageCatalog.TryEnsureRegistered(resolvedRosMessageName, out descriptor))
+            {
+                binding.SetRuntimeState(
+                    resolvedRosMessageName,
+                    descriptor?.MessageType,
+                    0,
+                    $"No generated C# message was found for '{resolvedRosMessageName}'.");
+                return;
+            }
+
+            var deserialize = MessageRegistry.GetDeserializeFunction(resolvedRosMessageName);
+            if (deserialize == null)
+            {
+                binding.SetRuntimeState(
+                    resolvedRosMessageName,
+                    descriptor.MessageType,
+                    0,
+                    $"No deserializer was registered for '{resolvedRosMessageName}'.");
+                return;
+            }
+
+            var timeline = new SortedList<long, BagTopicPlaybackValue>();
+            try
+            {
+                using var command = connection.CreateCommand();
+                command.CommandText =
+                    "SELECT timestamp, data FROM messages WHERE topic_id = $topic_id ORDER BY timestamp";
+                command.Parameters.AddWithValue("$topic_id", binding.TopicId);
+
+                using var reader = command.ExecuteReader();
+                while (reader.Read())
+                {
+                    var timestamp = reader.GetInt64(0);
+                    var data = (byte[])reader["data"];
+
+                    var deserializer = new MessageDeserializer();
+                    deserializer.InitWithBuffer(data);
+
+                    var message = deserialize(deserializer);
+                    AddTimelineValue(timeline, timestamp, new BagTopicPlaybackValue(binding, timestamp, resolvedRosMessageName, message));
+                }
+            }
+            catch (Exception ex)
+            {
+                binding.SetRuntimeState(
+                    resolvedRosMessageName,
+                    descriptor.MessageType,
+                    timeline.Count,
+                    $"Failed to deserialize '{binding.TopicName}' as '{resolvedRosMessageName}': {ex.Message}");
+                return;
+            }
+
+            binding.SetRuntimeState(resolvedRosMessageName, descriptor.MessageType, timeline.Count, string.Empty);
+            loadedTopicsByName[binding.TopicName] = timeline;
+        }
+
+        private SqliteConnection OpenConnection()
+        {
+            var connection = new SqliteConnection($"Data Source={filePath}");
+            connection.Open();
+            return connection;
+        }
+
+        private static List<BagTopicInventoryEntry> ReadTopicInventory(SqliteConnection connection)
+        {
+            using var command = connection.CreateCommand();
+            command.CommandText = @"
+                SELECT
+                    t.id,
+                    t.name,
+                    t.type,
+                    COUNT(m.rowid) AS message_count
+                FROM topics t
+                LEFT JOIN messages m ON m.topic_id = t.id
+                GROUP BY t.id, t.name, t.type
+                ORDER BY t.name";
+
+            var inventory = new List<BagTopicInventoryEntry>();
+            using var reader = command.ExecuteReader();
             while (reader.Read())
             {
-                long timestamp = reader.GetInt64(1);
-                byte[] data = (byte[])reader["data"];
-
-                var messageDeserializer = new MessageDeserializer();
-                messageDeserializer.InitWithBuffer(data);
-
-                var invoke = method.Invoke(null, new object[] { messageDeserializer });
-                messages.Add(timestamp, (T)invoke);
+                inventory.Add(new BagTopicInventoryEntry(
+                    reader.GetInt32(0),
+                    reader.GetString(1),
+                    reader.GetString(2),
+                    reader.GetInt64(3)));
             }
 
-            if (messages.Count == 0) Debug.LogWarning($"Topic '{topicName}' was empty.");
-
-            return messages;
+            return inventory;
         }
 
-        public static int? GetTopicId(SqliteConnection connection, string topicName)
+        private static (double startNanos, double endNanos) ReadTimeBounds(SqliteConnection connection)
         {
-            using var cmd = connection.CreateCommand();
-            cmd.CommandText = "SELECT id FROM topics WHERE name = $name";
-            cmd.Parameters.AddWithValue("$name", topicName);
+            using var command = connection.CreateCommand();
+            command.CommandText = "SELECT MIN(timestamp), MAX(timestamp) FROM messages";
 
-            using var reader = cmd.ExecuteReader();
-            if (reader.Read())
+            using var reader = command.ExecuteReader();
+            if (!reader.Read() || reader.IsDBNull(0) || reader.IsDBNull(1))
             {
-                return reader.GetInt32(0);
+                return (0d, 0d);
             }
 
-            Debug.LogWarning($"Topic '{topicName}' not found.");
-            return null;
+            return (reader.GetInt64(0), reader.GetInt64(1));
+        }
+
+        private static string ResolveRosMessageName(
+            BagTopicBinding binding,
+            out RosMessageTypeDescriptor descriptor,
+            out string errorMessage)
+        {
+            descriptor = null;
+            errorMessage = string.Empty;
+
+            switch (binding.MappingMode)
+            {
+                case BagTopicMappingMode.None:
+                    return string.Empty;
+                case BagTopicMappingMode.Override:
+                    if (string.IsNullOrWhiteSpace(binding.OverrideRosMessageName))
+                    {
+                        errorMessage = "Select an override C# ROS message type.";
+                        return string.Empty;
+                    }
+
+                    RosMessageCatalog.TryGetDescriptor(binding.OverrideRosMessageName, out descriptor);
+                    if (descriptor == null)
+                    {
+                        errorMessage = $"Override message '{binding.OverrideRosMessageName}' is not available in this project.";
+                    }
+
+                    return binding.OverrideRosMessageName;
+                case BagTopicMappingMode.Auto:
+                default:
+                    if (!RosMessageCatalog.TryResolveRosMessageName(binding.RosTypeName, out var resolvedRosMessageName, out descriptor))
+                    {
+                        errorMessage = $"No generated C# ROS message matches '{binding.RosTypeName}'.";
+                        return binding.RosTypeName;
+                    }
+
+                    return resolvedRosMessageName;
+            }
+        }
+
+        private static void AddTimelineValue(
+            SortedList<long, BagTopicPlaybackValue> timeline,
+            long timestamp,
+            BagTopicPlaybackValue playbackValue)
+        {
+            while (timeline.ContainsKey(timestamp))
+            {
+                timestamp += 1;
+            }
+
+            timeline.Add(timestamp, playbackValue);
         }
 
         private static bool ContainsDllNotFound(Exception exception)
