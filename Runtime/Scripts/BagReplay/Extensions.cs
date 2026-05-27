@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace BagReplay
+namespace Scripts.BagReplay
 {
     public static class Extensions
     {

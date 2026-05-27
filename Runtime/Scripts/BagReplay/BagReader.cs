@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Microsoft.Data.Sqlite;
 using Unity.Robotics.ROSTCPConnector.MessageGeneration;
 
-namespace BagReplay
+namespace Scripts.BagReplay
 {
     public class BagReader
     {

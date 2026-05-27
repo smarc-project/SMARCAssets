@@ -5,7 +5,7 @@ using System.Reflection;
 using Unity.Robotics.ROSTCPConnector.MessageGeneration;
 using UnityEngine;
 
-namespace BagReplay
+namespace Scripts.BagReplay
 {
     public enum BagTopicMappingMode
     {

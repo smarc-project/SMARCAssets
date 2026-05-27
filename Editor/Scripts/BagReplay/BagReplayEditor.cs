@@ -4,9 +4,10 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using Scripts.BagReplay;
 using UnityEngine;
 using UnityEngine.UIElements;
-using BagReplayComponent = BagReplay.BagReplay;
+using BagReplayComponent = Scripts.BagReplay.BagReplay;
 
 namespace BagReplay
 {
@@ -39,13 +40,13 @@ namespace BagReplay
         private void OnEnable()
         {
             EditorApplication.update += EditorTick;
-            BagReplay.OnTopicBindingsChanged += HandleTopicBindingsChanged;
+            TargetReplay.OnTopicBindingsChanged += HandleTopicBindingsChanged;
         }
 
         private void OnDisable()
         {
             EditorApplication.update -= EditorTick;
-            BagReplay.OnTopicBindingsChanged -= HandleTopicBindingsChanged;
+            TargetReplay.OnTopicBindingsChanged -= HandleTopicBindingsChanged;
         }
 
         public override VisualElement CreateInspectorGUI()
@@ -573,13 +574,8 @@ namespace BagReplay
             debugValuesContainer?.MarkDirtyRepaint();
         }
 
-        private void HandleTopicBindingsChanged(BagReplay replay)
+        private void HandleTopicBindingsChanged()
         {
-            if (replay != TargetReplay)
-            {
-                return;
-            }
-
             serializedObject.Update();
             RefreshTopicList();
             RefreshDebugSection();

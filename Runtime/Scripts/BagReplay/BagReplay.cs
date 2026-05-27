@@ -4,7 +4,7 @@ using System.IO;
 using System.Linq;
 using UnityEngine;
 
-namespace BagReplay
+namespace Scripts.BagReplay
 {
     [Serializable]
     public struct FloatRange
@@ -30,9 +30,10 @@ namespace BagReplay
         [HideInInspector] public float limitEnd;
         [HideInInspector] public FloatRange replayRange = new FloatRange(0f, 0f);
 
-        public static event Action<BagReplay> OnReplayRestart;
-        public static event Action<BagReplay> OnReplayDone;
-        public static event Action<BagReplay> OnTopicBindingsChanged;
+        public event Action OnReplayRestart;
+        public event Action OnReplayDone;
+        public event Action OnReplayTick;
+        public event Action OnTopicBindingsChanged;
 
         [HideInInspector] public double currentTime;
         [HideInInspector] public bool isPlaying;
@@ -125,7 +126,7 @@ namespace BagReplay
             isPlaying = true;
             if (Application.isPlaying)
             {
-                OnReplayRestart?.Invoke(this);
+                OnReplayRestart?.Invoke();
             }
         }
 
@@ -254,7 +255,7 @@ namespace BagReplay
                         Time.timeScale = 0f;
                     }
 
-                    OnReplayDone?.Invoke(this);
+                    OnReplayDone?.Invoke();
                 }
 
                 return;
@@ -262,6 +263,7 @@ namespace BagReplay
 
             currentTime = nextTime;
             UpdateTopicSnapshots();
+            OnReplayTick?.Invoke();
         }
 
         public void RefreshSnapshotsAtCurrentTime()
@@ -422,7 +424,7 @@ namespace BagReplay
 
         private void NotifyTopicBindingsChanged()
         {
-            OnTopicBindingsChanged?.Invoke(this);
+            OnTopicBindingsChanged?.Invoke();
         }
     }
 }
