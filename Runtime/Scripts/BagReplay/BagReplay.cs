@@ -32,11 +32,11 @@ namespace BagReplay
 
         public static event Action<BagReplay> OnReplayRestart;
         public static event Action<BagReplay> OnReplayDone;
+        public static event Action<BagReplay> OnTopicBindingsChanged;
 
         [HideInInspector] public double currentTime;
         [HideInInspector] public bool isPlaying;
 
-        public bool evalMode;
         public bool stopTimeAtEnd;
 
         public BagReader BagReader { get; private set; }
@@ -93,7 +93,7 @@ namespace BagReplay
 
             NormalizeReplayRange();
             RefreshTopicConfiguration(restartPlayback: false);
-            RestartReplay();
+            RestartReplayAt((float)currentTime);
         }
 
         public void RestartReplay()
@@ -104,7 +104,19 @@ namespace BagReplay
                 return;
             }
 
-            currentTime = replayRange.start;
+            RestartReplayAt(replayRange.start);
+        }
+
+        public void RestartReplayAt(float timeSeconds)
+        {
+            if (BagReader == null)
+            {
+                currentTime = ClampReplayTime(timeSeconds);
+                ResetSnapshots();
+                return;
+            }
+
+            currentTime = ClampReplayTime(timeSeconds);
             PreviousTopicSnapshot = BagTopicSnapshot.Empty;
             CurrentTopicSnapshot = BagTopicSnapshot.Empty;
             NextTopicSnapshot = BagTopicSnapshot.Empty;
@@ -117,20 +129,58 @@ namespace BagReplay
             }
         }
 
+        public void Seek(float timeSeconds)
+        {
+            RestartReplayAt(timeSeconds);
+        }
+
+        public void ClampCurrentTimeToReplayRange()
+        {
+            var clampedTime = ClampReplayTime((float)currentTime);
+            if (Mathf.Abs((float)currentTime - clampedTime) > 0.0001f)
+            {
+                RestartReplayAt(clampedTime);
+                return;
+            }
+
+            currentTime = clampedTime;
+            UpdateTopicSnapshots();
+        }
+
+        public float ClampReplayTime(float timeSeconds)
+        {
+            if (float.IsNaN(timeSeconds) || float.IsInfinity(timeSeconds))
+            {
+                timeSeconds = replayRange.start;
+            }
+
+            var min = replayRange.start;
+            var max = replayRange.end;
+            if (max <= min)
+            {
+                min = limitStart;
+                max = limitEnd;
+            }
+
+            return max > min ? Mathf.Clamp(timeSeconds, min, max) : min;
+        }
+
         public void RefreshTopicConfiguration(bool restartPlayback = true)
         {
             if (BagReader == null)
             {
                 ResetSnapshots();
+                NotifyTopicBindingsChanged();
                 return;
             }
 
             BagReader.LoadBindings(topicBindings);
             EnsureDebugTopicSelection();
+            NotifyTopicBindingsChanged();
 
             if (restartPlayback)
             {
-                RestartReplay();
+                RestartReplayAt((float)currentTime);
             }
             else
             {
@@ -163,7 +213,7 @@ namespace BagReplay
         {
             binding = topicBindings.FirstOrDefault(x =>
                 string.Equals(x.TopicName, topicName, StringComparison.Ordinal) &&
-                string.Equals(x.RosTypeName, rosTypeName, StringComparison.Ordinal));
+                RosMessageCatalog.AreEquivalentRosMessageNames(x.RosTypeName, rosTypeName));
 
             return binding != null;
         }
@@ -193,7 +243,8 @@ namespace BagReplay
             var nextTime = currentTime + Time.fixedDeltaTime;
             if (replayRange.end > 0f && nextTime > replayRange.end)
             {
-                ResetSnapshots();
+                currentTime = ClampReplayTime(replayRange.end);
+                UpdateTopicSnapshots();
 
                 if (Application.isPlaying && isPlaying)
                 {
@@ -213,6 +264,18 @@ namespace BagReplay
             UpdateTopicSnapshots();
         }
 
+        public void RefreshSnapshotsAtCurrentTime()
+        {
+            if (BagReader == null)
+            {
+                ResetSnapshots();
+                return;
+            }
+
+            currentTime = ClampReplayTime((float)currentTime);
+            UpdateTopicSnapshots();
+        }
+
         private void UpdateTopicSnapshots()
         {
             if (BagReader == null)
@@ -222,6 +285,11 @@ namespace BagReplay
             }
 
             var queryTime = BagReader.StartNanos + currentTime * 1_000_000_000d;
+            if (BagReader.EndNanos > BagReader.StartNanos)
+            {
+                queryTime = Math.Min(Math.Max(queryTime, BagReader.StartNanos), BagReader.EndNanos);
+            }
+
             PreviousTopicSnapshot = CurrentTopicSnapshot;
             CurrentTopicSnapshot = BagReader.ReadSnapshot(queryTime);
             NextTopicSnapshot = BagReader.ReadSnapshot(queryTime + Time.fixedDeltaTime * 1_000_000_000d);
@@ -244,6 +312,7 @@ namespace BagReplay
             }
 
             ResetSnapshots();
+            NotifyTopicBindingsChanged();
         }
 
         private void ResetSnapshots()
@@ -349,6 +418,11 @@ namespace BagReplay
             }
 
             return mergedBindings;
+        }
+
+        private void NotifyTopicBindingsChanged()
+        {
+            OnTopicBindingsChanged?.Invoke(this);
         }
     }
 }

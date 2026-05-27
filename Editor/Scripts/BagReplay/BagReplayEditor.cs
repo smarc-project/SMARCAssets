@@ -20,24 +20,32 @@ namespace BagReplay
         private const string BrowseKey = "Smarc.BagReplay.LastBrowseFolder";
         private const float DebugRowHeight = 18f;
 
-        private TextField currentTimeField;
+        private FloatField currentTimeField;
+        private Slider currentTimeSlider;
+        private VisualElement currentTimeSliderContainer;
         private TextField pathField;
         private ListView topicListView;
         private IMGUIContainer debugTopicSelectionContainer;
         private HelpBox debugHelpBox;
         private IMGUIContainer debugValuesContainer;
         private double nextRefreshTime;
+        private int lastTopicBindingStateHash;
+        private bool hasTopicBindingStateHash;
+        private readonly Dictionary<string, bool> debugValueFoldoutStates =
+            new Dictionary<string, bool>(StringComparer.Ordinal);
 
         private BagReplayComponent TargetReplay => (BagReplayComponent)target;
 
         private void OnEnable()
         {
             EditorApplication.update += EditorTick;
+            BagReplay.OnTopicBindingsChanged += HandleTopicBindingsChanged;
         }
 
         private void OnDisable()
         {
             EditorApplication.update -= EditorTick;
+            BagReplay.OnTopicBindingsChanged -= HandleTopicBindingsChanged;
         }
 
         public override VisualElement CreateInspectorGUI()
@@ -47,7 +55,6 @@ namespace BagReplay
 
             CreateBagSourceSection(root);
             CreateReplayRangeSlider(root);
-            CreateCurrentTimeField(root);
             CreateResetPlaybackButton(root);
             CreateTopicsSection(root);
             CreateDebugSection(root);
@@ -136,17 +143,6 @@ namespace BagReplay
             };
 
             root.Add(resetButton);
-        }
-
-        private void CreateCurrentTimeField(VisualElement root)
-        {
-            currentTimeField = new TextField("Current Time (s)")
-            {
-                isReadOnly = true,
-                focusable = false
-            };
-
-            root.Add(currentTimeField);
         }
 
         private void CreateTopicsSection(VisualElement root)
@@ -254,7 +250,7 @@ namespace BagReplay
 
         private void HandleTopicBindingChanged()
         {
-            TargetReplay.RefreshTopicConfiguration(restartPlayback: !TargetReplay.evalMode);
+            TargetReplay.RefreshTopicConfiguration();
             EditorUtility.SetDirty(TargetReplay);
             serializedObject.Update();
             RefreshAllViews();
@@ -269,12 +265,13 @@ namespace BagReplay
             var startProperty = rangeProperty.FindPropertyRelative("start");
             var endProperty = rangeProperty.FindPropertyRelative("end");
 
-            var row = new VisualElement
+            var rangeRow = new VisualElement
             {
                 style =
                 {
                     flexDirection = FlexDirection.Row,
-                    alignItems = Align.Center
+                    alignItems = Align.Center,
+                    marginBottom = 4f
                 }
             };
 
@@ -302,10 +299,54 @@ namespace BagReplay
             };
             endField.labelElement.style.minWidth = 0;
 
-            bool ShouldRestart(float newStart)
+            var currentTimeRow = new VisualElement
             {
-                return Mathf.Abs(bagReplay.replayRange.start - newStart) > 0.0001f;
-            }
+                style =
+                {
+                    flexDirection = FlexDirection.Row,
+                    alignItems = Align.Center
+                }
+            };
+
+            currentTimeSlider = new Slider
+            {
+                style =
+                {
+                    position = Position.Absolute,
+                    left = 0,
+                    right = 0,
+                    top = 0,
+                    bottom = 0,
+                    marginLeft = 0,
+                    marginRight = 0
+                }
+            };
+
+            currentTimeSliderContainer = new VisualElement
+            {
+                style =
+                {
+                    flexGrow = 1,
+                    minWidth = 0,
+                    height = 20f,
+                    marginLeft = 2,
+                    marginRight = 2,
+                    position = Position.Relative
+                }
+            };
+            currentTimeSliderContainer.Add(currentTimeSlider);
+
+            currentTimeField = new FloatField("Current")
+            {
+                isDelayed = true,
+                style = { width = 100f }
+            };
+            currentTimeField.labelElement.style.minWidth = 0;
+
+            var currentTimeRightSpacer = new VisualElement
+            {
+                style = { width = 100f }
+            };
 
             void SyncAllFromProperties()
             {
@@ -318,70 +359,60 @@ namespace BagReplay
                 slider.SetValueWithoutNotify(new Vector2(clampedStart, clampedEnd));
                 startField.SetValueWithoutNotify(clampedStart);
                 endField.SetValueWithoutNotify(clampedEnd);
+                SyncCurrentTimeControls();
+            }
+
+            void ApplyReplayRange(float newStart, float newEnd)
+            {
+                serializedObject.Update();
+                startProperty.floatValue = newStart;
+                endProperty.floatValue = newEnd;
+                serializedObject.ApplyModifiedProperties();
+
+                bagReplay.ClampCurrentTimeToReplayRange();
+                EditorUtility.SetDirty(bagReplay);
+                RefreshCurrentTimeField();
+                debugValuesContainer?.MarkDirtyRepaint();
             }
 
             SyncAllFromProperties();
 
             slider.RegisterValueChangedCallback(evt =>
             {
-                if (bagReplay.evalMode)
-                {
-                    return;
-                }
-
-                var shouldRestart = ShouldRestart(evt.newValue.x);
-                serializedObject.Update();
-                startProperty.floatValue = evt.newValue.x;
-                endProperty.floatValue = evt.newValue.y;
-                serializedObject.ApplyModifiedProperties();
-
                 startField.SetValueWithoutNotify(evt.newValue.x);
                 endField.SetValueWithoutNotify(evt.newValue.y);
-
-                if (shouldRestart)
-                {
-                    bagReplay.RestartReplay();
-                    RefreshCurrentTimeField();
-                }
+                ApplyReplayRange(evt.newValue.x, evt.newValue.y);
             });
 
-            void PushFieldsToSlider(ChangeEvent<float> changeEvent)
+            void PushFieldsToSlider(ChangeEvent<float> _)
             {
-                if (bagReplay.evalMode)
-                {
-                    return;
-                }
-
                 var newStart = Mathf.Clamp(startField.value, slider.lowLimit, slider.highLimit);
                 var newEnd = Mathf.Clamp(endField.value, newStart, slider.highLimit);
 
                 slider.SetValueWithoutNotify(new Vector2(newStart, newEnd));
-
-                serializedObject.Update();
-                startProperty.floatValue = newStart;
-                endProperty.floatValue = newEnd;
-                serializedObject.ApplyModifiedProperties();
-
-                if (changeEvent.target == startField)
-                {
-                    bagReplay.RestartReplay();
-                    RefreshCurrentTimeField();
-                }
+                ApplyReplayRange(newStart, newEnd);
             }
 
             startField.RegisterValueChangedCallback(PushFieldsToSlider);
             endField.RegisterValueChangedCallback(PushFieldsToSlider);
+            currentTimeSlider.RegisterValueChangedCallback(evt => SeekFromInspector(evt.newValue));
+            currentTimeField.RegisterValueChangedCallback(evt => SeekFromInspector(evt.newValue));
 
             root.TrackPropertyValue(limitStartProperty, _ => SyncAllFromProperties());
             root.TrackPropertyValue(limitEndProperty, _ => SyncAllFromProperties());
 
-            row.Add(startField);
-            row.Add(slider);
-            row.Add(endField);
+            rangeRow.Add(startField);
+            rangeRow.Add(slider);
+            rangeRow.Add(endField);
+
+            currentTimeRow.Add(currentTimeField);
+            currentTimeRow.Add(currentTimeSliderContainer);
+            currentTimeRow.Add(currentTimeRightSpacer);
 
             var box = new Box();
-            box.Add(new Label("Replay Range"));
-            box.Add(row);
+            box.Add(new Label("Playback Time"));
+            box.Add(rangeRow);
+            box.Add(currentTimeRow);
             root.Add(box);
         }
 
@@ -391,6 +422,7 @@ namespace BagReplay
             RefreshTopicList();
             RefreshDebugSection();
             RefreshCurrentTimeField();
+            CaptureTopicBindingStateHash();
         }
 
         private void RefreshPathField()
@@ -452,7 +484,75 @@ namespace BagReplay
 
         private void RefreshCurrentTimeField()
         {
-            currentTimeField?.SetValueWithoutNotify(TargetReplay.currentTime.ToString("0.###"));
+            SyncCurrentTimeControls();
+        }
+
+        private void SyncCurrentTimeControls()
+        {
+            if (currentTimeSlider == null && currentTimeField == null)
+            {
+                return;
+            }
+
+            var min = TargetReplay.replayRange.start;
+            var max = TargetReplay.replayRange.end;
+            if (max <= min)
+            {
+                min = TargetReplay.limitStart;
+                max = TargetReplay.limitEnd;
+            }
+
+            var hasRange = max > min;
+            var currentTime = TargetReplay.ClampReplayTime((float)TargetReplay.currentTime);
+            SyncCurrentTimeSliderLayout(hasRange);
+
+            if (currentTimeSlider != null)
+            {
+                currentTimeSlider.lowValue = min;
+                currentTimeSlider.highValue = hasRange ? max : min;
+                currentTimeSlider.SetValueWithoutNotify(currentTime);
+                currentTimeSlider.SetEnabled(hasRange);
+            }
+
+            if (currentTimeField != null)
+            {
+                currentTimeField.SetValueWithoutNotify(currentTime);
+                currentTimeField.SetEnabled(hasRange);
+            }
+        }
+
+        private void SyncCurrentTimeSliderLayout(bool hasRange)
+        {
+            if (currentTimeSlider == null)
+            {
+                return;
+            }
+
+            var fullMin = TargetReplay.limitStart;
+            var fullMax = TargetReplay.limitEnd;
+            var fullSpan = fullMax - fullMin;
+            if (!hasRange || fullSpan <= 0f)
+            {
+                currentTimeSlider.style.left = 0f;
+                currentTimeSlider.style.right = 0f;
+                return;
+            }
+
+            var rangeStart = Mathf.Clamp(TargetReplay.replayRange.start, fullMin, fullMax);
+            var rangeEnd = Mathf.Clamp(TargetReplay.replayRange.end, rangeStart, fullMax);
+            var leftPercent = Mathf.Clamp01((rangeStart - fullMin) / fullSpan) * 100f;
+            var rightPercent = Mathf.Clamp01((fullMax - rangeEnd) / fullSpan) * 100f;
+
+            currentTimeSlider.style.left = Length.Percent(leftPercent);
+            currentTimeSlider.style.right = Length.Percent(rightPercent);
+        }
+
+        private void SeekFromInspector(float requestedTime)
+        {
+            TargetReplay.Seek(requestedTime);
+            EditorUtility.SetDirty(TargetReplay);
+            SyncCurrentTimeControls();
+            debugValuesContainer?.MarkDirtyRepaint();
         }
 
         private void EditorTick()
@@ -463,8 +563,43 @@ namespace BagReplay
             }
 
             nextRefreshTime = EditorApplication.timeSinceStartup + 0.1d;
+            RefreshBindingViewsIfNeeded();
+            if (!Application.isPlaying && TargetReplay.HasLoadedBag)
+            {
+                TargetReplay.RefreshSnapshotsAtCurrentTime();
+            }
+
             RefreshCurrentTimeField();
             debugValuesContainer?.MarkDirtyRepaint();
+        }
+
+        private void HandleTopicBindingsChanged(BagReplay replay)
+        {
+            if (replay != TargetReplay)
+            {
+                return;
+            }
+
+            serializedObject.Update();
+            RefreshTopicList();
+            RefreshDebugSection();
+            CaptureTopicBindingStateHash();
+            Repaint();
+        }
+
+        private void RefreshBindingViewsIfNeeded()
+        {
+            var currentHash = ComputeTopicBindingStateHash();
+            if (hasTopicBindingStateHash && currentHash == lastTopicBindingStateHash)
+            {
+                return;
+            }
+
+            serializedObject.Update();
+            RefreshTopicList();
+            RefreshDebugSection();
+            lastTopicBindingStateHash = currentHash;
+            hasTopicBindingStateHash = true;
         }
 
         private void DrawDebugTopicSelectionControls()
@@ -556,15 +691,19 @@ namespace BagReplay
                 return;
             }
 
-            foreach (var selectedTopic in selectedTopics)
+            for (var index = 0; index < selectedTopics.Count; index++)
             {
+                var selectedTopic = selectedTopics[index];
+                var foldoutKey = BuildDebugValueFoldoutKey(index, selectedTopic);
                 if (!TargetReplay.TryGetCurrentTopicValue(selectedTopic, out var playbackValue) ||
                     playbackValue?.Message == null)
                 {
                     using (new EditorGUILayout.VerticalScope(EditorStyles.helpBox))
                     {
-                        EditorGUILayout.LabelField(selectedTopic, EditorStyles.boldLabel);
-                        EditorGUILayout.HelpBox("No live value is available for this topic yet.", MessageType.Info);
+                        if (DrawDebugValueFoldout(foldoutKey, selectedTopic))
+                        {
+                            EditorGUILayout.HelpBox("No live value is available for this topic yet.", MessageType.Info);
+                        }
                     }
 
                     EditorGUILayout.Space(6);
@@ -573,7 +712,12 @@ namespace BagReplay
 
                 using (new EditorGUILayout.VerticalScope(EditorStyles.helpBox))
                 {
-                    EditorGUILayout.LabelField(playbackValue.TopicName, EditorStyles.boldLabel);
+                    if (!DrawDebugValueFoldout(foldoutKey, playbackValue.TopicName))
+                    {
+                        EditorGUILayout.Space(2);
+                        continue;
+                    }
+
                     DrawDebugHeaderRow("Field", "Value");
                     DrawDebugRow("Topic", playbackValue.TopicName);
                     DrawDebugRow("ROS Type", playbackValue.RosTypeName);
@@ -590,6 +734,23 @@ namespace BagReplay
 
                 EditorGUILayout.Space(6);
             }
+        }
+
+        private bool DrawDebugValueFoldout(string key, string label)
+        {
+            if (!debugValueFoldoutStates.TryGetValue(key, out var isExpanded))
+            {
+                isExpanded = true;
+            }
+
+            isExpanded = EditorGUILayout.Foldout(isExpanded, label, true);
+            debugValueFoldoutStates[key] = isExpanded;
+            return isExpanded;
+        }
+
+        private static string BuildDebugValueFoldoutKey(int index, string topicName)
+        {
+            return $"{index}:{topicName ?? string.Empty}";
         }
 
         private void UpdateSelectedDebugTopics(IEnumerable<string> topicNames)
@@ -635,6 +796,44 @@ namespace BagReplay
 
             selectedTopics[selectedIndex] = topicName ?? string.Empty;
             UpdateSelectedDebugTopics(selectedTopics);
+        }
+
+        private void CaptureTopicBindingStateHash()
+        {
+            lastTopicBindingStateHash = ComputeTopicBindingStateHash();
+            hasTopicBindingStateHash = true;
+        }
+
+        private int ComputeTopicBindingStateHash()
+        {
+            unchecked
+            {
+                var hash = 17;
+                var bindings = TargetReplay.TopicBindings;
+                hash = hash * 31 + bindings.Count;
+
+                for (var index = 0; index < bindings.Count; index++)
+                {
+                    var binding = bindings[index];
+                    if (binding == null)
+                    {
+                        hash = hash * 31;
+                        continue;
+                    }
+
+                    hash = hash * 31 + (binding.TopicName?.GetHashCode() ?? 0);
+                    hash = hash * 31 + (binding.RosTypeName?.GetHashCode() ?? 0);
+                    hash = hash * 31 + binding.MessageCount.GetHashCode();
+                    hash = hash * 31 + binding.Enabled.GetHashCode();
+                    hash = hash * 31 + binding.MappingMode.GetHashCode();
+                    hash = hash * 31 + (binding.OverrideRosMessageName?.GetHashCode() ?? 0);
+                    hash = hash * 31 + (binding.ResolvedRosMessageName?.GetHashCode() ?? 0);
+                    hash = hash * 31 + (binding.ErrorMessage?.GetHashCode() ?? 0);
+                    hash = hash * 31 + binding.LoadedMessageCount.GetHashCode();
+                }
+
+                return hash;
+            }
         }
 
         private static void DrawDebugHeaderRow(string leftText, string rightText)

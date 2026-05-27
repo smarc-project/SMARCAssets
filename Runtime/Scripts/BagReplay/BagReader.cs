@@ -74,9 +74,14 @@ namespace BagReplay
 
         public BagTopicSnapshot ReadSnapshot(double timeToReadAt)
         {
-            if (loadedTopicsByName.Count == 0 || timeToReadAt > EndNanos)
+            if (loadedTopicsByName.Count == 0)
             {
                 return BagTopicSnapshot.Empty;
+            }
+
+            if (EndNanos > StartNanos)
+            {
+                timeToReadAt = Math.Min(timeToReadAt, EndNanos);
             }
 
             var snapshotValues = new Dictionary<string, BagTopicPlaybackValue>(StringComparer.Ordinal);

@@ -239,6 +239,30 @@ namespace BagReplay
             return false;
         }
 
+        public static bool AreEquivalentRosMessageNames(string leftRosMessageName, string rightRosMessageName)
+        {
+            if (string.Equals(leftRosMessageName, rightRosMessageName, StringComparison.Ordinal))
+            {
+                return true;
+            }
+
+            var leftMatchKeys = new HashSet<string>(GetMatchKeys(leftRosMessageName), StringComparer.Ordinal);
+            if (leftMatchKeys.Count == 0)
+            {
+                return false;
+            }
+
+            foreach (var rightMatchKey in GetMatchKeys(rightRosMessageName))
+            {
+                if (leftMatchKeys.Contains(rightMatchKey))
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
         public static bool TryEnsureRegistered(string rosMessageName, out RosMessageTypeDescriptor descriptor)
         {
             if (!TryGetDescriptor(rosMessageName, out descriptor))
