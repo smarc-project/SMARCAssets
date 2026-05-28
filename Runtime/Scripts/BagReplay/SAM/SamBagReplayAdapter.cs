@@ -61,7 +61,6 @@ namespace Scripts.BagReplay.SAM
 
         private void Awake()
         {
-            bagReplay = GetComponent<BagReplay>();
             bagReplay.OnReplayRestart += HandleReplayRestart;
             bagReplay.OnReplayDone += HandleReplayDone;
         }
@@ -85,7 +84,6 @@ namespace Scripts.BagReplay.SAM
 
         public void ApplyRequiredBindingsToReplay(bool restartPlayback)
         {
-            bagReplay = GetComponent<BagReplay>();
             if (bagReplay == null || !bagReplay.HasLoadedBag)
             {
                 return;

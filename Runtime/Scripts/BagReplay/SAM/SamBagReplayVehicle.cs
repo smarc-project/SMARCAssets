@@ -12,10 +12,9 @@ namespace Scripts.BagReplay.SAM
         GhostAcceleration
     }
 
-    public abstract class SamBagReplayVehicle : MonoBehaviour
+    public class SamBagReplayVehicle : MonoBehaviour
     {
         protected static readonly SamBagReplayData EmptySamData = new SamBagReplayData();
-        public SamBagReplayVehicleMode replayMode;
 
 
         public ArticulationChainComponent chain;
@@ -33,6 +32,7 @@ namespace Scripts.BagReplay.SAM
 
         protected SamBagReplayData CurrentSamData => samReplayAdapter != null ? samReplayAdapter.CurrentSamData : EmptySamData;
         protected SamBagReplayData NextSamData => samReplayAdapter != null ? samReplayAdapter.NextSamData : EmptySamData;
+        protected virtual SamBagReplayVehicleMode ReplayMode => SamBagReplayVehicleMode.TopicControl;
 
         protected virtual void Awake()
         {
@@ -52,7 +52,7 @@ namespace Scripts.BagReplay.SAM
             Restart();
         }
 
-        void TickReplayMode()
+        protected virtual void TickReplayMode()
         {
             if (ApplyPendingReset())
             {
@@ -60,7 +60,7 @@ namespace Scripts.BagReplay.SAM
             }
 
             ReleaseRootAfterReset();
-            ApplyReplayMode(replayMode);
+            ApplyReplayMode(ReplayMode);
         }
 
         protected virtual void Restart()
@@ -110,9 +110,8 @@ namespace Scripts.BagReplay.SAM
                 return true;
             }
 
-            chain.Restart(
-                FRD.ConvertToRUF(NextSamData.PositionMocapFRD),
-                FRD.ConvertToRUF(NextSamData.OrientationMocapFRD));
+            GetMocapWorldPose(NextSamData, out var position, out var rotation);
+            chain.Restart(position, rotation);
             chain.GetRoot().immovable = true;
 
             if (vbs != null && vbs.isActiveAndEnabled)
@@ -138,8 +137,8 @@ namespace Scripts.BagReplay.SAM
             }
 
             chain.GetRoot().immovable = false;
-            chain.GetRoot().linearVelocity = FRD.ConvertToRUF(CurrentSamData.LinearVelocityMocapFRD);
-            chain.GetRoot().angularVelocity = FRD.ConvertAngularVelocityToRUF(CurrentSamData.AngularVelocityMocapFRD);
+            chain.GetRoot().linearVelocity = MocapVectorToWorld(CurrentSamData.LinearVelocityMocapFRD);
+            chain.GetRoot().angularVelocity = MocapAngularVelocityToWorld(CurrentSamData.AngularVelocityMocapFRD);
         }
 
         protected void ApplyReplayMode(SamBagReplayVehicleMode selectedMode)
@@ -191,7 +190,7 @@ namespace Scripts.BagReplay.SAM
             var angularAcc = (newAngVel - root.transform.InverseTransformVector(root.angularVelocity)) / Time.fixedDeltaTime;
             root.AddRelativeTorque(angularAcc, ForceMode.Acceleration);
         }
-
+        
         protected virtual void DoVelocityUpdate()
         {
             if (chain == null)
@@ -199,8 +198,8 @@ namespace Scripts.BagReplay.SAM
                 return;
             }
 
-            chain.GetRoot().linearVelocity = FRD.ConvertToRUF(CurrentSamData.LinearVelocityMocapFRD);
-            chain.GetRoot().angularVelocity = FRD.ConvertAngularVelocityToRUF(CurrentSamData.AngularVelocityMocapFRD);
+            chain.GetRoot().linearVelocity = MocapVectorToWorld(CurrentSamData.LinearVelocityMocapFRD);
+            chain.GetRoot().angularVelocity = MocapAngularVelocityToWorld(CurrentSamData.AngularVelocityMocapFRD);
         }
 
         protected virtual void DoPositionTeleportUpdate()
@@ -210,9 +209,52 @@ namespace Scripts.BagReplay.SAM
                 return;
             }
 
+            GetMocapWorldPose(CurrentSamData, out var position, out var rotation);
             chain.GetRoot().TeleportRoot(
-                FRD.ConvertToRUF(CurrentSamData.PositionMocapFRD),
-                FRD.ConvertToRUF(CurrentSamData.OrientationMocapFRD));
+                position,
+                rotation);
+        }
+
+        protected void GetMocapWorldPose(SamBagReplayData samData, out Vector3 position, out Quaternion rotation)
+        {
+            var localPosition = FRD.ConvertToRUF(samData.PositionMocapFRD);
+            var localRotation = FRD.ConvertToRUF(samData.OrientationMocapFRD);
+            var parent = GetReplayParent();
+
+            if (parent == null)
+            {
+                position = localPosition;
+                rotation = localRotation;
+                return;
+            }
+
+            position = parent.TransformPoint(localPosition);
+            rotation = parent.rotation * localRotation;
+        }
+
+        protected Vector3 MocapVectorToWorld(Vector3 vectorFrd)
+        {
+            var localVector = FRD.ConvertToRUF(vectorFrd);
+            var parent = GetReplayParent();
+            return parent == null ? localVector : parent.TransformDirection(localVector);
+        }
+
+        protected Vector3 MocapAngularVelocityToWorld(Vector3 angularVelocityFrd)
+        {
+            var localAngularVelocity = FRD.ConvertAngularVelocityToRUF(angularVelocityFrd);
+            var parent = GetReplayParent();
+            return parent == null ? localAngularVelocity : parent.TransformDirection(localAngularVelocity);
+        }
+
+        private Transform GetReplayParent()
+        {
+            if (chain == null)
+            {
+                return null;
+            }
+
+            var root = chain.GetRoot();
+            return root != null ? root.transform.parent : null;
         }
 
         private void RestartListener()
@@ -220,4 +262,5 @@ namespace Scripts.BagReplay.SAM
             Restart();
         }
     }
+    
 }
