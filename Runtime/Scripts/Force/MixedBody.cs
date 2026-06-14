@@ -143,6 +143,17 @@ namespace Force
         {
             get {return ab ? ab.transform.rotation : rb.transform.rotation; }
         }
+        
+        public Vector3 localPosition
+        {
+            get {return ab ? ab.transform.localPosition : rb.transform.localPosition; }
+        }
+
+        public Quaternion localRotation
+        {
+            get {return ab ? ab.transform.localRotation : rb.transform.localRotation; }
+        }
+
 
         public void AddForceAtPosition(Vector3 force, Vector3 position, ForceMode mode = ForceMode.Force)
         {
