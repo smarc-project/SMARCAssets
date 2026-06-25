@@ -93,9 +93,9 @@ namespace dji
             horizCtrl.TargetVelocity = Vector3.zero;
             horizCtrl.TargetUnityPosition = robotBody.position;
 
-            float kf = 1.0f; // thrust coefficient
-            float km = 0.05f; // drag coefficient
-            float l  = 0.25f;  // arm length
+            float kf = 0.00012f; // thrust coefficient [N/rpm^2]
+            float km = 0.000012f; // drag coefficient [Nm/rpm^2]
+            float l  = 1.1f;  // arm length [m]
             float a = l / Mathf.Sqrt(2.0f);
 
             Binv = new Matrix4x4(
@@ -103,7 +103,7 @@ namespace dji
                 new Vector4(kf, -a*kf, -a*kf, -km),
                 new Vector4(kf, -a*kf,  a*kf,  km),
                 new Vector4(kf,  a*kf,  a*kf, -km)
-            ).inverse;
+            ).inverse; // Control allocation for X-configuration drone.
 
             Ignition(StartInAir);
             if (StartInAir)
