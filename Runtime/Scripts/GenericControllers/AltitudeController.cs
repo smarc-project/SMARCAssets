@@ -58,7 +58,11 @@ namespace Smarc.GenericControllers
         public float VelKd = 0.0f;
         public float VelIntegratorLimit = 5f; // limits integral term (in meter-seconds)
         PID velPID;
+        
 
+        public Vector3 LastAppliedForce { get; private set; }
+
+        
         // Use a generated object to apply force at center of mass, parented to the robot transform
         // This way, we don't have to recalculate the world position of the COM every frame
         Transform COM;
@@ -137,6 +141,7 @@ namespace Smarc.GenericControllers
 
             Vector3 upForce = Vector3.up * requiredForce;
             robotBody.AddForceAtPosition(upForce, COM.position, ForceMode.Force);
+            LastAppliedForce = upForce;
             Debug.DrawRay(COM.position, upForce * 0.1f, Color.red);
         }
         

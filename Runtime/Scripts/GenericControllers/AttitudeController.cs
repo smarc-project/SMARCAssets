@@ -53,17 +53,24 @@ namespace Smarc.GenericControllers
 
 
 
-
         [Header("Reactive Tilt Settings")]
         public HorizontalController horizontalController;
+        public AltitudeController altitudeController;
         public float MaxTiltAngle = 20f;
         public float ExpectedMaxAccel = 10f;
 
+
+        public Vector3 LastAppliedTorque { get; private set; }
+        public float LastAppliedThrust { get; private set; }
 
 
         void Start()
         {
             robotBody = new MixedBody(RobotAB, RobotRB);
+
+            altitudeController = GetComponent<AltitudeController>();
+            horizontalController = GetComponent<HorizontalController>();
+
         }
 
         void FixedUpdate()
@@ -81,28 +88,9 @@ namespace Smarc.GenericControllers
                 else
                 {
                     Vector3 appliedForce = horizontalController.LastAppliedForce;
-                    appliedForce.y = 0; // should already be, but just to be safe
-                    if(RollDirection != 0 || PitchDirection != 0)
-                    {
-                        Vector3 localAppliedForce = horizontalController.LastAppliedForceLocal;
-                        localAppliedForce.x *= RollDirection;
-                        localAppliedForce.z *= PitchDirection;
-                        appliedForce = robotBody.transform.TransformVector(localAppliedForce);
-                        appliedForce.y = 0;
-                    }
-                    float mag = appliedForce.magnitude;
-                    float targetTiltAngle = 0f;
-                    if (mag > 0.05f)
-                    {
-                        targetTiltAngle = Mathf.Clamp(mag, -ExpectedMaxAccel, ExpectedMaxAccel) / ExpectedMaxAccel * MaxTiltAngle;
-                    }
-                
-                    // keep the target angle within -180 to 180 range
-                    if (Mathf.Abs(targetTiltAngle) > 180f) targetTiltAngle -= Mathf.Sign(targetTiltAngle) * 360f;
-
-                    Vector3 tiltAxis = Vector3.Cross(Vector3.up, appliedForce.normalized);
-                    Quaternion targetRotation = Quaternion.AngleAxis(targetTiltAngle, tiltAxis);
-                    TargetUp = targetRotation * Vector3.up;
+                    appliedForce += altitudeController.LastAppliedForce;
+                    TargetUp = appliedForce.normalized;
+                    LastAppliedThrust = appliedForce.magnitude;
                 }
             }
 
@@ -135,7 +123,7 @@ namespace Smarc.GenericControllers
                 if (Mathf.Abs(robotBody.localVelocity.z) < 0.1f) TargetYawRate = 0f;
             }
 
-
+            
             // so far we just did tilt control, finally add the yaw.
             angVel += Mathf.Deg2Rad * TargetYawRate * Vector3.up;
 
@@ -143,6 +131,7 @@ namespace Smarc.GenericControllers
             Vector3 currentVel = robotBody.angularVelocity;
             Vector3 neededAccel = (angVel - currentVel) / Time.fixedDeltaTime;
             robotBody.AddTorque(neededAccel, ForceMode.Acceleration);
+            LastAppliedTorque = neededAccel;
 
             // robotBody.angularVelocity = angVel;
         }
