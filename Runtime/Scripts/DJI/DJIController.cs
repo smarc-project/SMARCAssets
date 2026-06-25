@@ -4,6 +4,7 @@ using UnityEngine;
 using VehicleComponents.Actuators;
 using VehicleComponents.Sensors;
 
+
 namespace dji
 {
 
@@ -67,6 +68,10 @@ namespace dji
 
         float stoppedFor = 0f;
 
+        
+
+        Matrix4x4 Binv;
+
         void Awake()
         {
             altCtrl = GetComponent<AltitudeController>();
@@ -88,6 +93,17 @@ namespace dji
             horizCtrl.TargetVelocity = Vector3.zero;
             horizCtrl.TargetUnityPosition = robotBody.position;
 
+            float kf = 1.0f; // thrust coefficient
+            float km = 0.05f; // drag coefficient
+            float l  = 0.25f;  // arm length
+            float a = l / Mathf.Sqrt(2.0f);
+
+            Binv = new Matrix4x4(
+                new Vector4(kf,  a*kf, -a*kf,  km),
+                new Vector4(kf, -a*kf, -a*kf, -km),
+                new Vector4(kf, -a*kf,  a*kf,  km),
+                new Vector4(kf,  a*kf,  a*kf, -km)
+            ).inverse;
 
             Ignition(StartInAir);
             if (StartInAir)
@@ -306,37 +322,21 @@ namespace dji
         }
 
         void RPMsFromMotion()
-        {
-            float tiltAngle = Vector3.Angle(robotBody.transform.up, Vector3.up);
+        {   
+            Vector3 torque = attCtrl.LastAppliedTorque; 
+            float thrust = attCtrl.LastAppliedThrust;
+            Vector4 wrench = new Vector4(thrust, torque.x, torque.y, torque.z);
+            Vector4 rpmSquared = Binv * wrench;
 
-            // more tilt = higher RPM needed for all the props
-            float tiltFactor = 1f + (tiltAngle / 90f) * 0.5f; // scales from 1.0 to 1.5
-
-            // + if the hub of a prop is moving up or down, it needs more or less RPM
-            float maxSpeed = 5f;
-
-            float propSpeedFactor(Propeller p)
+            if (IsDualProp)
             {
-                MixedBody body = p.GetMixedBody();
-                float verticalVelocity = Vector3.Dot(body.velocity, Vector3.up);
-                return 1f + (verticalVelocity / maxSpeed);
+                rpmSquared /= 2f; // if we have dual props, each prop only needs to provide half the thrust/torque, so we can divide the required wrench by 2 before converting to RPM^2
             }
-            
-            float idle_mult = flightState == DroneFlightState.Idle ? 0f : 1f;
-            float landing_mult = flightState == DroneFlightState.Landing ? 0.5f : 1f;
-            float takingoff_mult = flightState == DroneFlightState.TakingOff ? 1.5f : 1f;
-            float state_mult = idle_mult * landing_mult * takingoff_mult;
 
-            float flSpeedFactor = propSpeedFactor(frontLeftPropeller);
-            float frSpeedFactor = propSpeedFactor(frontRightPropeller);
-            float blSpeedFactor = propSpeedFactor(backLeftPropeller);
-            float brSpeedFactor = propSpeedFactor(backRightPropeller);
-
-
-            frontLeftPropeller.SetRpm(FloatRPM * tiltFactor * flSpeedFactor * state_mult);
-            frontRightPropeller.SetRpm(FloatRPM * tiltFactor * frSpeedFactor * state_mult);
-            backLeftPropeller.SetRpm(FloatRPM * tiltFactor * blSpeedFactor * state_mult);
-            backRightPropeller.SetRpm(FloatRPM * tiltFactor * brSpeedFactor * state_mult);
+            frontLeftPropeller.SetRpm(Mathf.Sqrt(Mathf.Max(0f, rpmSquared.x)));
+            frontRightPropeller.SetRpm(Mathf.Sqrt(Mathf.Max(0f, rpmSquared.y)));
+            backLeftPropeller.SetRpm(Mathf.Sqrt(Mathf.Max(0f, rpmSquared.z)));
+            backRightPropeller.SetRpm(Mathf.Sqrt(Mathf.Max(0f, rpmSquared.w)));
 
             if (IsDualProp)
             {
