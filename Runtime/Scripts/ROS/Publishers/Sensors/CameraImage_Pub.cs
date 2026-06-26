@@ -23,7 +23,7 @@ namespace ROS.Publishers
 
         [Tooltip(
 @"If your PC can not keep up, you might see the image flip around in ros. 
-This because of the message queue system in Unity-ROS-Bridge. 
+This is because of the message queue system in Unity-ROS-Bridge. 
 Happens when your PC can't keep up. 
 Flipping to true will create a new ROS message every time, which will stop the flipping, but will create issues on the unity side due to garbage collection. 
 There is no silver bullet, try a combination of: this flag, lowering frequency, lowering image resolution.
