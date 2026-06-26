@@ -6038,6 +6038,11 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 3361841265959878708}
     m_Modifications:
+    - target: {fileID: 78685993759695370, guid: e327e9efb86338144b9b4afc3b64579b,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 2548865424984193880, guid: e327e9efb86338144b9b4afc3b64579b,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -6092,6 +6097,16 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Z1Pro Sensor
+      objectReference: {fileID: 0}
+    - target: {fileID: 5387317130766701976, guid: e327e9efb86338144b9b4afc3b64579b,
+        type: 3}
+      propertyPath: textureWidth
+      value: 1280
+      objectReference: {fileID: 0}
+    - target: {fileID: 5387317130766701976, guid: e327e9efb86338144b9b4afc3b64579b,
+        type: 3}
+      propertyPath: textureHeight
+      value: 720
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

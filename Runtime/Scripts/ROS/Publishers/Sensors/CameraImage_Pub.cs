@@ -12,6 +12,7 @@ namespace ROS.Publishers
     [RequireComponent(typeof(CameraImageSensor))]
     class CameraImage_Pub : ROSSensorPublisher<ImageMsg, CameraImageSensor>
     {
+        
         // Thank chat for this whole new version lol
         [Header("Flips")]
         [Tooltip("Flip top-to-bottom by default to match ROS image orientation.")]
@@ -20,26 +21,50 @@ namespace ROS.Publishers
         [Tooltip("Flip left-to-right.")]
         public bool flipHorizontally = false;
 
+        [Tooltip(
+@"If your PC can not keep up, you might see the image flip around in ros. 
+This because of the message queue system in Unity-ROS-Bridge. 
+Happens when your PC can't keep up. 
+Flipping to true will create a new ROS message every time, which will stop the flipping, but will create issues on the unity side due to garbage collection. 
+There is no silver bullet, try a combination of: this flag, lowering frequency, lowering image resolution.
+Alternative: get better PC :)")]
+        public bool TooMuchFlipping = false;
+
         const int BYTES_PER_PIXEL = 3; // rgb8, source image is RGB24
 
         protected override void InitPublisher()
         {
-            var h = DataSource.textureHeight;
-            var w = DataSource.textureWidth;
-
-            ROSMsg.data = new byte[h * w * BYTES_PER_PIXEL];
-            ROSMsg.encoding = "rgb8";
-            ROSMsg.height = (uint)h;
-            ROSMsg.width  = (uint)w;
-            ROSMsg.is_bigendian = 0;
-            ROSMsg.step = (uint)(BYTES_PER_PIXEL * w);
-            ROSMsg.header.frame_id = $"{robot_name}/{DataSource.linkName}";
+            if(!TooMuchFlipping)
+            {
+                var h = DataSource.textureHeight;
+                var w = DataSource.textureWidth;
+                ROSMsg.data = new byte[h * w * BYTES_PER_PIXEL];
+                ROSMsg.encoding = "rgb8";
+                ROSMsg.height = (uint)h;
+                ROSMsg.width  = (uint)w;
+                ROSMsg.is_bigendian = 0;
+                ROSMsg.step = (uint)(BYTES_PER_PIXEL * w);
+                ROSMsg.header.frame_id = $"{robot_name}/{DataSource.linkName}";
+            }
         }
 
         protected override void UpdateMessage()
         {
-            int h = (int)ROSMsg.height;
-            int w = (int)ROSMsg.width;
+            var h = DataSource.textureHeight;
+            var w = DataSource.textureWidth;
+            if(TooMuchFlipping)
+            {
+                ROSMsg = new ImageMsg
+                {
+                    // data = new byte[h * w * BYTES_PER_PIXEL],
+                    encoding = "rgb8",
+                    height = (uint)h,
+                    width = (uint)w,
+                    is_bigendian = 0,
+                    step = (uint)(BYTES_PER_PIXEL * w)
+                };
+                ROSMsg.header.frame_id = $"{robot_name}/{DataSource.linkName}";
+            }
 
             // 1) Bulk copy from Unity texture to ROS buffer (no per-byte loop)
             NativeArray<byte> src = DataSource.image.GetRawTextureData<byte>();
