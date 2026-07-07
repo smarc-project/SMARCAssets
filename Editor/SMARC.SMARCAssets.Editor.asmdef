@@ -3,6 +3,7 @@
     "rootNamespace": "",
     "references": [
         "SMARC.SMARCAssets",
+        "Unity.Robotics.ROSTCPConnector.MessageGeneration",
         "Unity.Robotics.UrdfImporter"
     ],
     "includePlatforms": [
