@@ -53,13 +53,19 @@ namespace VehicleComponents
                 gameObject.SetActive(false);
                 return;
             }
-            attachedLink = Utils.FindDeepChildWithName(theRobot, linkName);
-            if (attachedLink == null)
+
+            Transform[] attachableTFs = Utils.FindAllChildrenWithName(theRobot, linkName, activeOnly: true);
+            if (attachableTFs.Length == 0)
             {
-                Debug.Log($"Object with name [{linkName}] not found under parent [{theRobot.name}]. Disabling {gameObject.name}.");
+                Debug.Log($"Active object with name [{linkName}] not found under parent [{theRobot.name}]. Disabling {gameObject.name}.");
                 gameObject.SetActive(false);
                 return;
             }
+            if (attachableTFs.Length > 1)
+            {
+                Debug.Log($"Multiple active objects with name [{linkName}] found under parent [{theRobot.name}]. Attaching to the first one.");
+            }
+            attachedLink = attachableTFs[0].gameObject;
 
             transform.SetPositionAndRotation(
                 attachedLink.transform.position,

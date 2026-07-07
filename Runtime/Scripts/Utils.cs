@@ -5,6 +5,7 @@ using MathNet.Numerics.LinearAlgebra;
 using MathNet.Numerics.LinearAlgebra.Double;
 using UnityEngine;
 using Random = UnityEngine.Random;
+using System.Linq;
 
 namespace DefaultNamespace
 {
@@ -288,6 +289,14 @@ namespace DefaultNamespace
                 if (result_go != null) return result_go;
             }
             return null;
+        }
+
+        public static Transform[] FindAllChildrenWithName(GameObject parent, string name, bool activeOnly = true)
+        {
+            var transforms = parent.transform.GetComponentsInChildren<Transform>().Where(t => t.name == name);
+            if (activeOnly)
+                transforms = transforms.Where(t => t.gameObject.activeInHierarchy);
+            return transforms.ToArray();
         }
 
         public static GameObject FindParentWithTag(GameObject self, string tag, bool returnTopLevel)
