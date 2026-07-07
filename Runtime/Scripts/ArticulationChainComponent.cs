@@ -12,7 +12,14 @@ public class ArticulationChainComponent : MonoBehaviour
 
     public void DoAwake()
     {
-        bodyParts = FindArticulationBodies(transform);
+        var findArticulationBodies = FindArticulationBodies(transform);
+        
+        foreach (var b in findArticulationBodies)
+        {
+            if (!bodyParts.Contains(b))
+                bodyParts.Add(b);
+        }
+        
         root = bodyParts.Find(body => body.isRoot);
 
         DriveControllers = bodyParts.Select(bp => (bp, new DriveController(bp))).ToDictionary(tuple => tuple.bp, tuple => tuple.Item2);
@@ -154,7 +161,7 @@ public class ArticulationChainComponent : MonoBehaviour
         var findArticulationBodies = new List<ArticulationBody>();
 
         var comp = item.GetComponent<ArticulationBody>();
-        if (comp != null)
+        if (comp != null && comp.isActiveAndEnabled)
         {
             findArticulationBodies.Add(comp);
         }
