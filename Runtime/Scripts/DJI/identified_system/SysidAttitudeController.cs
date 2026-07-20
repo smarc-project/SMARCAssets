@@ -3,8 +3,8 @@ using Force;
 
 namespace Smarc.GenericControllers
 {
-    [AddComponentMenu("Smarc/Generic Controllers/Level Attitude Controller")]
-    public class LevelAttitudeController : MonoBehaviour
+    [AddComponentMenu("Smarc/Generic Controllers/Sysid Attitude Controller")]
+    public class SysidAttitudeController : MonoBehaviour
     {
         public ArticulationBody RobotAB;
         public Rigidbody RobotRB;
