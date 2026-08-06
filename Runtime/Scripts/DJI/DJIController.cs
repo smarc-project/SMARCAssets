@@ -20,7 +20,7 @@ namespace dji
     /// </summary>
     [RequireComponent(typeof(AltitudeControllerBase))]
     [RequireComponent(typeof(AttitudeControllerBase))]
-    [RequireComponent(typeof(HorizontalController))]
+    [RequireComponent(typeof(HorizontalControllerBase))]
     public class DJIController : MonoBehaviour
     {
         [Header("Settings")]
@@ -54,7 +54,7 @@ namespace dji
 
         AltitudeControllerBase altCtrl;
         AttitudeControllerBase attCtrl;
-        HorizontalController horizCtrl;
+        HorizontalControllerBase horizCtrl;
         
         Vector3 commandedHorizontalVelocity = Vector3.zero;
         float lastHorizontalCommandTime = -1f;
@@ -112,8 +112,28 @@ namespace dji
                 return;
             }
 
+            HorizontalControllerBase[] horizCtrls = GetComponents<HorizontalControllerBase>();
+            horizCtrl = null;
+            foreach (var ctrl in horizCtrls)
+            {
+                if (ctrl.enabled)
+                {
+                    if (horizCtrl == null) horizCtrl = ctrl;
+                    else
+                    {
+                        Debug.LogWarning($"Multiple HorizontalControllerBase components found on {gameObject.name}, disabling all but one");
+                        ctrl.enabled = false;
+                    }
+                }
+            }
+            if (horizCtrl == null)
+            {
+                Debug.LogError($"No enabled HorizontalControllerBase component found on {gameObject.name}, disabling DJIController");
+                enabled = false;
+                return;
+            }
+
             
-            horizCtrl = GetComponent<HorizontalController>();
             robotBody = new MixedBody(altCtrl.RobotAB, altCtrl.RobotRB);
 
             homeAltitude = robotBody.position.y;
