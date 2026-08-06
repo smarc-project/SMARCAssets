@@ -2,7 +2,6 @@ using UnityEngine;
 using Force;
 using DefaultNamespace.Water;
 
-
 namespace Smarc.GenericControllers
 {
     public enum AltitudeControlMode
@@ -12,14 +11,18 @@ namespace Smarc.GenericControllers
         AltitudeFromWater
     }
 
-    [AddComponentMenu("Smarc/Generic Controllers/Altitude Controller")]
-    public class AltitudeController : MonoBehaviour
+    public class AltitudeControllerBase : MonoBehaviour
     {
+        [Header("Command")]
+        public AltitudeControlMode ControlMode = AltitudeControlMode.AbsoluteAltitude;
+        public float TargetVelocity = 0.0f;
+        public float TargetAltitude = 10.0f;
+
+        [Header("Controlled body")]
         public ArticulationBody RobotAB;
         public Rigidbody RobotRB;
-        private MixedBody robotBody;
+        protected MixedBody robotBody;
 
-        public AltitudeControlMode ControlMode = AltitudeControlMode.AbsoluteAltitude;
         [Tooltip("If true, the controller will only apply altitude control when the robot is moving forward.")]
         public bool OnlyIfMovingForward = false;
         [Tooltip("If true, gravity compensation will be applied before control.")]
@@ -31,53 +34,39 @@ namespace Smarc.GenericControllers
         [Tooltip("If true, the mass of all children will be negated before control is applied.")]
         public bool IncludeChildrenInGravityComp = false;
 
-
+        [Header("Velocity Settings")]
+        [Tooltip("Depending on the vehicle, very low targets can lead to PID control being dumb. Set to 0 to disable.")]
+        public float MinimumDescentTargetVelocity = 0f;
+        [Tooltip("Depending on the vehicle, very low targets can lead to PID control being dumb. Set to 0 to disable.")]
+        public float MinimumAscentTargetVelocity = 0f;
         public float AscentRate = 2.0f;
         public float DescentRate = 2.0f;
         [Tooltip("Set to 0 to disable force capping")]
         public float MaxForce = 0f;
 
-
-        [Header("Velocity Settings")]
-        public float TargetVelocity = 0.0f;
-        [Tooltip("Depending on the vehicle, very low targets can lead to PID control being dumb. Set to 0 to disable.")]
-        public float MinimumDescentTargetVelocity = 0f;
-        [Tooltip("Depending on the vehicle, very low targets can lead to PID control being dumb. Set to 0 to disable.")]
-        public float MinimumAscentTargetVelocity = 0f;
-
-
         [Header("Position Settings")]
-        public float TargetAltitude = 10.0f;
         public float AltitudeTolerance = 0.1f;
         public float GroundLevel = 0f; 
 
 
-        [Header("Velocity PID")]
-        public float VelKp = 5.0f;
-        public float VelKi = 0.0f;
-        public float VelKd = 0.0f;
-        public float VelIntegratorLimit = 5f; // limits integral term (in meter-seconds)
-        PID velPID;
-
         // Use a generated object to apply force at center of mass, parented to the robot transform
         // This way, we don't have to recalculate the world position of the COM every frame
-        Transform COM;
-        float totalMass;
+        protected Transform COM;
+        protected float totalMass;
+        public Vector3 LastAppliedForce { get; private set; }
 
         WaterQueryModel waterModel;
 
 
-        void Start()
+        protected void Start()
         {
             robotBody = new MixedBody(RobotAB, RobotRB);
-            velPID = new PID(VelKp, VelKi, VelKd, VelIntegratorLimit, maxOutput: MaxForce);
             totalMass = robotBody.GetTotalConnectedMass(includeChildren:IncludeChildrenInGravityComp);
             var globalCom = robotBody.GetTotalConnectedCenterOfMass(includeChildren:IncludeChildrenInCom);
             COM = new GameObject("AltitudeController_COM").transform;
             COM.parent = robotBody.transform;
             COM.position = globalCom;
         }
-
 
         void FixedUpdate()
         {
@@ -110,10 +99,12 @@ namespace Smarc.GenericControllers
             if (ascending && MinimumAscentTargetVelocity > 0f && TargetVelocity < MinimumAscentTargetVelocity) TargetVelocity = MinimumAscentTargetVelocity;
             if (descending && MinimumDescentTargetVelocity > 0f && TargetVelocity > -MinimumDescentTargetVelocity) TargetVelocity = -MinimumDescentTargetVelocity;
             
-            VelocityControl();
+            var f = VelocityControl();
+            LastAppliedForce = f;
+            robotBody.AddForceAtPosition(f, COM.position, ForceMode.Force);
         }
 
-        float LimitAccelation(float desiredAcc, float currentVel, float deltaTime)
+        protected float LimitAccelation(float desiredAcc, float currentVel, float deltaTime)
         {
             // limit acceleration so we don't instantly exceed configured ascent/descent rates
             float maxAccThisStepUp = (AscentRate - currentVel) / deltaTime;
@@ -122,24 +113,6 @@ namespace Smarc.GenericControllers
             float maxAcc = Mathf.Max(maxAccThisStepDown, maxAccThisStepUp);
             return Mathf.Clamp(desiredAcc, minAcc, maxAcc);
         }
-
-
-        void VelocityControl()
-        {
-            float currentVel = robotBody.velocity.y;
-            float pidAcc = velPID.Update(TargetVelocity, currentVel, Time.fixedDeltaTime);
-            pidAcc = LimitAccelation(pidAcc, currentVel, Time.fixedDeltaTime);
-
-            float requiredForce = pidAcc;
-            if (CompensateGravity) requiredForce += totalMass * -Physics.gravity.y;
-            requiredForce += ExtraMassToCompensate * -Physics.gravity.y;
-            requiredForce = MaxForce > 0f ? Mathf.Clamp(requiredForce, -MaxForce, MaxForce) : requiredForce;
-
-            Vector3 upForce = Vector3.up * requiredForce;
-            robotBody.AddForceAtPosition(upForce, COM.position, ForceMode.Force);
-            Debug.DrawRay(COM.position, upForce * 0.1f, Color.red);
-        }
-        
 
         void OnDrawGizmosSelected()
         {
@@ -154,5 +127,11 @@ namespace Smarc.GenericControllers
             Vector3 endPos = new(tf.position.x+0.1f, GroundLevel + TargetAltitude, tf.position.z+0.1f);
             Gizmos.DrawLine(startPos, endPos);
         }
+
+        protected virtual Vector3 VelocityControl()
+        {
+            throw new System.NotImplementedException("VelocityControl() must be implemented in a derived class.");
+        }
+
     }
 }

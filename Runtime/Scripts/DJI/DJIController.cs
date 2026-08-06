@@ -18,7 +18,7 @@ namespace dji
     /// <summary>
     /// This controller bridges between the DJI interface and a simple force-based set of controllers (smarc/generic controllers)
     /// </summary>
-    [RequireComponent(typeof(AltitudeController))]
+    [RequireComponent(typeof(AltitudeControllerBase))]
     [RequireComponent(typeof(AttitudeController))]
     [RequireComponent(typeof(HorizontalController))]
     public class DJIController : MonoBehaviour
@@ -52,7 +52,7 @@ namespace dji
         float takeOffAltitude = 1.5f; // what the real thing does is 1.5m
         float homeAltitude; // altitude at which the drone took off
 
-        AltitudeController altCtrl;
+        AltitudeControllerBase altCtrl;
         AttitudeController attCtrl;
         HorizontalController horizCtrl;
         
@@ -69,7 +69,29 @@ namespace dji
 
         void Awake()
         {
-            altCtrl = GetComponent<AltitudeController>();
+            // there might be many, make sure only one is enabled!
+            AltitudeControllerBase[] altCtrls = GetComponents<AltitudeControllerBase>();
+            altCtrl = null;
+            foreach (var ctrl in altCtrls)
+            {
+                if (ctrl.enabled)
+                {
+                    if (altCtrl == null) altCtrl = ctrl;
+                    else
+                    {
+                        Debug.LogWarning($"Multiple AltitudeControllerBase components found on {gameObject.name}, disabling all but one");
+                        ctrl.enabled = false;
+                    }
+                }
+            }
+            if (altCtrl == null)
+            {
+                Debug.LogError($"No enabled AltitudeControllerBase component found on {gameObject.name}, disabling DJIController");
+                enabled = false;
+                return;
+            }
+
+            
             attCtrl = GetComponent<AttitudeController>();
             horizCtrl = GetComponent<HorizontalController>();
             robotBody = new MixedBody(altCtrl.RobotAB, altCtrl.RobotRB);

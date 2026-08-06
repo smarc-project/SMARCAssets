@@ -4,7 +4,7 @@ using VehicleComponents.Actuators;
 
 namespace Evolo
 {
-    [RequireComponent(typeof(AltitudeController))]
+    [RequireComponent(typeof(PIDAltitudeController))]
     [RequireComponent(typeof(AttitudeController))]
     [RequireComponent(typeof(HorizontalController))]
     public class EvoloController : MonoBehaviour, IGenericTwistActuator
@@ -19,7 +19,7 @@ namespace Evolo
         public float MaxSpeed = 7f;
         public float MaxAltitude = 2f;
 
-        AltitudeController altCtrl;
+        PIDAltitudeController altCtrl;
         AttitudeController attCtrl;
         HorizontalController horizCtrl;
 
@@ -30,7 +30,7 @@ namespace Evolo
 
         void Awake()
         {
-            altCtrl = GetComponent<AltitudeController>();
+            altCtrl = GetComponent<PIDAltitudeController>();
             altCtrl.ControlMode = AltitudeControlMode.AltitudeFromWater;
             altCtrl.TargetAltitude = Altitude;
 
