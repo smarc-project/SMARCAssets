@@ -5,7 +5,7 @@ namespace Smarc.GenericControllers
 {
 
     [AddComponentMenu("Smarc/Generic Controllers/Altitude Controller")]
-    public class PIDAltitudeController : AltitudeControllerBase
+    public class AltitudeControllerPID : AltitudeControllerBase
     {
         [Header("Velocity PID")]
         public float VelKp = 5.0f;
