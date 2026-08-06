@@ -1,9 +1,9 @@
 using UnityEngine;
-using Force;
+using Smarc.GenericControllers;
 
-namespace Smarc.GenericControllers
+namespace dji
 {
-    [AddComponentMenu("Smarc/Generic Controllers/Sysid Horizontal Controller")]
+    [AddComponentMenu("Smarc/DJI/Sysid Horizontal Controller")]
     public class SysidHorizontalController : HorizontalControllerBase
     {
 

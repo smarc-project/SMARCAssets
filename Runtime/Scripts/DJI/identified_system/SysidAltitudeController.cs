@@ -1,12 +1,13 @@
 using UnityEngine;
+using Smarc.GenericControllers;
 
-namespace Smarc.GenericControllers
+namespace dji
 {
     // NOTE: the identified model below (b_Gzd / a_Gzd) was fit from flight data WITHOUT any payload
     // attached. If ExtraMassToCompensate (or any other payload) is used, the extra mass is only
     // accounted for in the gravity compensation term - the model itself has no knowledge of it, so
     // the simulated dynamics will likely diverge noticeably from the real drone's behaviour in that case.
-    [AddComponentMenu("Smarc/Generic Controllers/Sysid Altitude Controller")]
+    [AddComponentMenu("Smarc/DJI/Sysid Altitude Controller")]
     public class SysidAltitudeController : AltitudeControllerBase
     {
 
