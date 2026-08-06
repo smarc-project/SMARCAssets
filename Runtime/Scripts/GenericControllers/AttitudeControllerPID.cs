@@ -1,78 +1,33 @@
 using UnityEngine;
-using Force;
-using System.Collections.Generic;
 
 namespace Smarc.GenericControllers
 {
-    public enum YawControlMode
-    {
-        CompassHeading,
-        YawRate
-    }
 
-    public enum TiltMode
+    [AddComponentMenu("Smarc/Generic Controllers/Attitude Controller PID")]
+    public class AttitudeControllerPID : AttitudeControllerBase
     {
-        TargetUp,
-        ReactToAcceleration
-    }
-
-    /// <summary>
-    /// Attitude controller to control yaw and tilt of a robot using angular velocity commands.
-    /// </summary>
-    [AddComponentMenu("Smarc/Generic Controllers/Attitude Controller")]
-    public class AttitudeController : MonoBehaviour
-    {
-        public ArticulationBody RobotAB;
-        public Rigidbody RobotRB;
-        private MixedBody robotBody;
-
+        [Header("Basic PID Attitude Controller")]
         [Tooltip("Acceptable tolerance in degrees")]
         public float YawTolerance = 2.0f;
-
-
-        [Header("Yaw Rate Controller")]
-        public YawControlMode YawControlMode = YawControlMode.CompassHeading;
-        public float TargetYawRate = 5.0f; // Target yaw rate in degrees per second
+        
         [Tooltip("If true, the controller will only apply yaw control when the robot is moving (to avoid spinning in place)")]
         public bool OnlyIfMovingForward = false;
-
-        [Header("Compass Heading Controller")]
-        public float TargetCompassHeading = 0.0f; // Target heading in degrees
-        public float DesiredYawRate = 10f;
-
-
-
-        [Header("Tilt Controller")]
-        public TiltMode TiltMode = TiltMode.TargetUp;
-        [Range(-1,1), Tooltip("-1/1 to define the direction of positive pitch/roll, 0 to ignore that axis")]
-        public int PitchDirection = 1;
-        [Range(-1,1), Tooltip("-1/1 to define the direction of positive pitch/roll, 0 to ignore that axis")]
-        public int RollDirection = 1;
-        public Vector3 TargetUp = Vector3.up;
         public float TiltKp = 1.5f;
-
-
 
 
         [Header("Reactive Tilt Settings")]
         public HorizontalController horizontalController;
         public float MaxTiltAngle = 20f;
         public float ExpectedMaxAccel = 10f;
+        [Range(-1,1), Tooltip("-1/1 to define the direction of positive pitch/roll, 0 to ignore that axis")]
+        public int PitchDirection = 1;
+        [Range(-1,1), Tooltip("-1/1 to define the direction of positive pitch/roll, 0 to ignore that axis")]
+        public int RollDirection = 1;
 
 
-
-        void Start()
+        protected override Vector3 GetTargetTiltRate()
         {
-            robotBody = new MixedBody(RobotAB, RobotRB);
-        }
-
-        void FixedUpdate()
-        {
-            float upDotLimit = 0.5f;
-            var upDot = Vector3.Dot(robotBody.transform.up, Vector3.up);
-            Vector3 angVel = Vector3.zero;
-
-            if (TiltMode == TiltMode.ReactToAcceleration && upDot >= upDotLimit)
+            if (TiltMode == TiltMode.ReactToAcceleration)
             {
                 if (RollDirection == 0 && PitchDirection == 0)
                 {
@@ -106,28 +61,18 @@ namespace Smarc.GenericControllers
                 }
             }
 
+            return TiltControl();
+        }
 
-            // if the robot is too tilted, just try to upright it first
-            if (upDot < upDotLimit) TargetUp = Vector3.up;
-
-            
-            angVel += TiltControl();
-
-            
-            // check if the robot is upright enough to control the yaw of
-            if (upDot < upDotLimit)
-            {
-                Debug.Log($"Robot too tilted for yaw control! upDot: {upDot}");
-                return;
-            }
-
+        protected override Vector3 GetTargetYawRate()
+        {
             if (YawControlMode == YawControlMode.CompassHeading)
             {
                 float currentHeading = robotBody.transform.eulerAngles.y;
                 // Compute shortest angle difference, so that PID doesn't try to spin the long way around
                 float angleDifference = Mathf.DeltaAngle(currentHeading, TargetCompassHeading);
                 if (Mathf.Abs(angleDifference) <= YawTolerance) TargetYawRate = 0f;
-                else TargetYawRate = Mathf.Sign(angleDifference) * DesiredYawRate;
+                else TargetYawRate = Mathf.Sign(angleDifference) * MaxYawRateDeg;
             }
 
             if (OnlyIfMovingForward)
@@ -135,17 +80,9 @@ namespace Smarc.GenericControllers
                 if (Mathf.Abs(robotBody.localVelocity.z) < 0.1f) TargetYawRate = 0f;
             }
 
-
-            // so far we just did tilt control, finally add the yaw.
-            angVel += Mathf.Deg2Rad * TargetYawRate * Vector3.up;
-
-            // we cant just set the velocity, because physics downstream break when you do... instead we have to add torque to achieve the desired velocity
-            Vector3 currentVel = robotBody.angularVelocity;
-            Vector3 neededAccel = (angVel - currentVel) / Time.fixedDeltaTime;
-            robotBody.AddTorque(neededAccel, ForceMode.Acceleration);
-
-            // robotBody.angularVelocity = angVel;
+            return Mathf.Deg2Rad * TargetYawRate * Vector3.up;
         }
+
 
         Vector3 TiltControl()
         {

@@ -1,6 +1,6 @@
 using System;
 
-namespace Smarc.GenericControllers{
+namespace dji{
     public sealed class DiscreteTf
     {
         readonly double[] b; 
@@ -12,9 +12,9 @@ namespace Smarc.GenericControllers{
 
         public DiscreteTf(double[] bRaw, double[] a)
         {
-            if (a.Length < 2)           throw new System.ArgumentException("Denominator must have order >= 1.");
-            if (Math.Abs(a[0]) < 1e-12) throw new System.ArgumentException("a[0] must be nonzero.");
-            if (bRaw.Length > a.Length) throw new System.ArgumentException("Improper: numerator longer than denominator.");
+            if (a.Length < 2)           throw new ArgumentException("Denominator must have order >= 1.");
+            if (Math.Abs(a[0]) < 1e-12) throw new ArgumentException("a[0] must be nonzero.");
+            if (bRaw.Length > a.Length) throw new ArgumentException("Improper: numerator longer than denominator.");
 
             int denLen = a.Length;
 

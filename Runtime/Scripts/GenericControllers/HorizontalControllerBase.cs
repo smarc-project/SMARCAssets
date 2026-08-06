@@ -1,6 +1,6 @@
 using UnityEngine;
 using Force;
-
+using System;
 
 namespace Smarc.GenericControllers
 {
@@ -10,12 +10,13 @@ namespace Smarc.GenericControllers
         Velocity
     }
 
-    [AddComponentMenu("Smarc/Generic Controllers/Horizontal Controller")]
-    public class HorizontalController : MonoBehaviour
+    public class HorizontalControllerBase : MonoBehaviour
     {
+        [Header("Horizontal Controller Base")]
         public ArticulationBody RobotAB;
         public Rigidbody RobotRB;
-        MixedBody robotBody;
+        protected MixedBody robotBody;
+
         public HorizontalControlMode ControlMode = HorizontalControlMode.UnityPosition;
         public float MaxForce = 0f;
         public float MaxSpeed = 5.0f;
@@ -27,29 +28,19 @@ namespace Smarc.GenericControllers
         public Vector3 TargetUnityPosition = Vector3.zero;
         public float PositionTolerance = 0.5f;
 
+        [Header("Safety")]
+        public float MaxUpDot = 0.5f;
 
-        [Header("Velocity PID")]
-        public float VelKp = 5.0f;
-        public float VelKi = 0.0f;
-        public float VelKd = 0.0f;
-        public float VelIntegratorLimit = 5f;
-        PID velPID;
-        
         public Vector3 LastAppliedForce { get; private set; }
         public Vector3 LastAppliedForceLocal {get; private set;}
 
-
-
         // Use a generated object to apply force at center of mass, parented to the robot transform
         // This way, we don't have to recalculate the world position of the COM every frame
-        Transform COM;
+        protected Transform COM;
 
-
-        void Start()
+        protected void Start()
         {
             robotBody = new MixedBody(RobotAB, RobotRB);
-            velPID = new PID(VelKp, VelKi, VelKd, VelIntegratorLimit, maxOutput:MaxForce);
-
             var globalCom = robotBody.GetTotalConnectedCenterOfMass();
             COM = new GameObject("HorizontalController_COM").transform;
             COM.parent = robotBody.transform;
@@ -60,7 +51,6 @@ namespace Smarc.GenericControllers
             {
                 TargetUnityPosition = COM.position;
             }
-
         }
 
         void FixedUpdate()
@@ -76,46 +66,27 @@ namespace Smarc.GenericControllers
             var currentSpeed = robotBody.localVelocity.magnitude;
             if (currentSpeed > MaxSpeed*10f)
             {
-                Debug.Log($"Robot moving too fast for horizontal control! currentSpeed: {currentSpeed}");
+                Debug.Log($"Robot moving WAY too fast for any horizontal control! currentSpeed: {currentSpeed}");
                 return;
             }
-
-           
-
-            if (ControlMode == HorizontalControlMode.UnityPosition && currentSpeed <= MaxSpeed)
+            if (currentSpeed > MaxSpeed)
             {
-                if (currentSpeed > MaxSpeed) TargetVelocity = Vector3.zero;
-                else
-                {
-                    Vector3 diff = TargetUnityPosition - COM.position;
-                    if (diff.magnitude <= PositionTolerance) TargetVelocity = Vector3.zero;
-                    else TargetVelocity = diff.normalized * MaxSpeed;
-                    Debug.DrawLine(COM.position, TargetUnityPosition, Color.green);
-                }
+                // just a little too fast, we can probably brake it down...
+                TargetVelocity = Vector3.zero;
             }
-            
-            TargetVelocity.y = 0;
-            VelocityControl();
+
+            Vector3 f = GetHorizontalForceLocal();
+            f.y = 0;
+            LastAppliedForceLocal = f;
+            LastAppliedForce = robotBody.transform.TransformVector(f);
+            robotBody.AddForceAtPosition(LastAppliedForce, COM.position, ForceMode.Force);
         }
 
-        void VelocityControl()
+
+        protected virtual Vector3 GetHorizontalForceLocal()
         {
-            Vector3 currentVelocity = robotBody.localVelocity;
-            currentVelocity.y = 0;
-            if(TargetVelocity.magnitude > MaxSpeed)
-            {
-                TargetVelocity = TargetVelocity.normalized * MaxSpeed;
-            }
-
-            Vector3 force = velPID.UpdateVector3(TargetVelocity, currentVelocity, Time.fixedDeltaTime);
-            force.y = 0;
-
-            LastAppliedForceLocal = force;
-            
-            force = robotBody.transform.TransformVector(force);
-            robotBody.AddForceAtPosition(force, COM.position, ForceMode.Force);
-            LastAppliedForce = force;
+            throw new NotImplementedException("GetHorizontalForceLocal() must be implemented in a derived class");
         }
 
-    }
+    }   
 }

@@ -18,9 +18,9 @@ namespace dji
     /// <summary>
     /// This controller bridges between the DJI interface and a simple force-based set of controllers (smarc/generic controllers)
     /// </summary>
-    [RequireComponent(typeof(AltitudeController))]
-    [RequireComponent(typeof(AttitudeController))]
-    [RequireComponent(typeof(HorizontalController))]
+    [RequireComponent(typeof(AltitudeControllerBase))]
+    [RequireComponent(typeof(AttitudeControllerBase))]
+    [RequireComponent(typeof(HorizontalControllerBase))]
     public class DJIController : MonoBehaviour
     {
         [Header("Settings")]
@@ -52,9 +52,9 @@ namespace dji
         float takeOffAltitude = 1.5f; // what the real thing does is 1.5m
         float homeAltitude; // altitude at which the drone took off
 
-        AltitudeController altCtrl;
-        AttitudeController attCtrl;
-        HorizontalController horizCtrl;
+        AltitudeControllerBase altCtrl;
+        AttitudeControllerBase attCtrl;
+        HorizontalControllerBase horizCtrl;
         
         Vector3 commandedHorizontalVelocity = Vector3.zero;
         float lastHorizontalCommandTime = -1f;
@@ -69,9 +69,71 @@ namespace dji
 
         void Awake()
         {
-            altCtrl = GetComponent<AltitudeController>();
-            attCtrl = GetComponent<AttitudeController>();
-            horizCtrl = GetComponent<HorizontalController>();
+            // there might be many, make sure only one is enabled!
+            AltitudeControllerBase[] altCtrls = GetComponents<AltitudeControllerBase>();
+            altCtrl = null;
+            foreach (var ctrl in altCtrls)
+            {
+                if (ctrl.enabled)
+                {
+                    if (altCtrl == null) altCtrl = ctrl;
+                    else
+                    {
+                        Debug.LogWarning($"Multiple AltitudeControllerBase components found on {gameObject.name}, disabling all but one");
+                        ctrl.enabled = false;
+                    }
+                }
+            }
+            if (altCtrl == null)
+            {
+                Debug.LogError($"No enabled AltitudeControllerBase component found on {gameObject.name}, disabling DJIController");
+                enabled = false;
+                return;
+            }
+
+            AttitudeControllerBase[] attCtrls = GetComponents<AttitudeControllerBase>();
+            attCtrl = null;
+            foreach (var ctrl in attCtrls)
+            {
+                if (ctrl.enabled)
+                {
+                    if (attCtrl == null) attCtrl = ctrl;
+                    else
+                    {
+                        Debug.LogWarning($"Multiple AttitudeControllerBase components found on {gameObject.name}, disabling all but one");
+                        ctrl.enabled = false;
+                    }
+                }
+            }
+            if (attCtrl == null)
+            {
+                Debug.LogError($"No enabled AttitudeControllerBase component found on {gameObject.name}, disabling DJIController");
+                enabled = false;
+                return;
+            }
+
+            HorizontalControllerBase[] horizCtrls = GetComponents<HorizontalControllerBase>();
+            horizCtrl = null;
+            foreach (var ctrl in horizCtrls)
+            {
+                if (ctrl.enabled)
+                {
+                    if (horizCtrl == null) horizCtrl = ctrl;
+                    else
+                    {
+                        Debug.LogWarning($"Multiple HorizontalControllerBase components found on {gameObject.name}, disabling all but one");
+                        ctrl.enabled = false;
+                    }
+                }
+            }
+            if (horizCtrl == null)
+            {
+                Debug.LogError($"No enabled HorizontalControllerBase component found on {gameObject.name}, disabling DJIController");
+                enabled = false;
+                return;
+            }
+
+            
             robotBody = new MixedBody(altCtrl.RobotAB, altCtrl.RobotRB);
 
             homeAltitude = robotBody.position.y;
@@ -374,7 +436,7 @@ namespace dji
 
         public void CommandFLUYawRate01(float forward, float left, float up, float yawRate)
         {
-            CommandFLUYawRate(forward * horizCtrl.MaxSpeed, left * horizCtrl.MaxSpeed, up * altCtrl.AscentRate, yawRate * attCtrl.DesiredYawRate);
+            CommandFLUYawRate(forward * horizCtrl.MaxSpeed, left * horizCtrl.MaxSpeed, up * altCtrl.AscentRate, yawRate * attCtrl.MaxYawRateDeg);
         }
     }
 }
