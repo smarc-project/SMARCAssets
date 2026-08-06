@@ -5,7 +5,7 @@ using Smarc.GenericControllers;
 namespace SmarcGUI.KeyboardControllers
 {
     [RequireComponent(typeof(HorizontalController))]
-    [RequireComponent(typeof(AttitudeController))]
+    [RequireComponent(typeof(AttitudeControllerBase))]
     public class MilouKeyboardController : KeyboardControllerBase
     {
         public float Speed = 0.2f;
@@ -17,7 +17,7 @@ namespace SmarcGUI.KeyboardControllers
 
         InputAction forwardAction, strafeAction, boostAction;
         HorizontalController horizontalCtrl;
-        AttitudeController attitudeCtrl;
+        AttitudeControllerBase attitudeCtrl;
 
         public override void OnReset()
         {
@@ -32,7 +32,7 @@ namespace SmarcGUI.KeyboardControllers
             boostAction = InputSystem.actions.FindAction("Robot/Boost");
             
             horizontalCtrl = GetComponent<HorizontalController>();
-            attitudeCtrl = GetComponent<AttitudeController>();
+            attitudeCtrl = GetComponent<AttitudeControllerBase>();
         }
 
         void Update()

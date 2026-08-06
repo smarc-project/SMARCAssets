@@ -19,7 +19,7 @@ namespace dji
     /// This controller bridges between the DJI interface and a simple force-based set of controllers (smarc/generic controllers)
     /// </summary>
     [RequireComponent(typeof(AltitudeControllerBase))]
-    [RequireComponent(typeof(AttitudeController))]
+    [RequireComponent(typeof(AttitudeControllerBase))]
     [RequireComponent(typeof(HorizontalController))]
     public class DJIController : MonoBehaviour
     {
@@ -53,7 +53,7 @@ namespace dji
         float homeAltitude; // altitude at which the drone took off
 
         AltitudeControllerBase altCtrl;
-        AttitudeController attCtrl;
+        AttitudeControllerBase attCtrl;
         HorizontalController horizCtrl;
         
         Vector3 commandedHorizontalVelocity = Vector3.zero;
@@ -91,8 +91,28 @@ namespace dji
                 return;
             }
 
+            AttitudeControllerBase[] attCtrls = GetComponents<AttitudeControllerBase>();
+            attCtrl = null;
+            foreach (var ctrl in attCtrls)
+            {
+                if (ctrl.enabled)
+                {
+                    if (attCtrl == null) attCtrl = ctrl;
+                    else
+                    {
+                        Debug.LogWarning($"Multiple AttitudeControllerBase components found on {gameObject.name}, disabling all but one");
+                        ctrl.enabled = false;
+                    }
+                }
+            }
+            if (attCtrl == null)
+            {
+                Debug.LogError($"No enabled AttitudeControllerBase component found on {gameObject.name}, disabling DJIController");
+                enabled = false;
+                return;
+            }
+
             
-            attCtrl = GetComponent<AttitudeController>();
             horizCtrl = GetComponent<HorizontalController>();
             robotBody = new MixedBody(altCtrl.RobotAB, altCtrl.RobotRB);
 
@@ -396,7 +416,7 @@ namespace dji
 
         public void CommandFLUYawRate01(float forward, float left, float up, float yawRate)
         {
-            CommandFLUYawRate(forward * horizCtrl.MaxSpeed, left * horizCtrl.MaxSpeed, up * altCtrl.AscentRate, yawRate * attCtrl.DesiredYawRate);
+            CommandFLUYawRate(forward * horizCtrl.MaxSpeed, left * horizCtrl.MaxSpeed, up * altCtrl.AscentRate, yawRate * attCtrl.MaxYawRateDeg);
         }
     }
 }
