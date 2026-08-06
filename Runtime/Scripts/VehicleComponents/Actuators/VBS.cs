@@ -12,6 +12,7 @@ namespace VehicleComponents.Actuators
 
         public float maxVolume_l = 0.250f;
         public float density = 997f; //kg/m3
+        public float pistonWeight = 0.3f;
 
         private float _initialMass;
         private float _maximumPos;
@@ -20,9 +21,13 @@ namespace VehicleComponents.Actuators
         public new void Awake()
         {
             base.Awake();
-            //TODO: VBS Starts at 5% in the real world.
+            if(parentMixedBody == null)
+            {
+                Debug.Log($"[{transform.name}] No MixedBody found in parent. VBS needs an xDrive to move the mass. Disabling {gameObject.name}.");
+                gameObject.SetActive(false);
+                return;
+            }
             var xDrive = parentMixedBody.xDrive;
-            //   _initialMass = parentArticulationBody.mass;
             _initialMass = density / 1000 * maxVolume_l;
             _minimumPos = xDrive.upperLimit;
             _maximumPos = xDrive.lowerLimit;
@@ -56,7 +61,7 @@ namespace VehicleComponents.Actuators
 
         public void DoUpdate()
         {
-            mixedBody.mass = 0.300f + _initialMass * GetCurrentValue() / 100; // Piston weight + water weight
+            mixedBody.mass = pistonWeight + _initialMass * GetCurrentValue() / 100; // Piston weight + water weight
             var computeTargetValue = ComputeTargetValue(percentage);
             mixedBody.SetDriveTarget(ArticulationDriveAxis.X, computeTargetValue);
         }
