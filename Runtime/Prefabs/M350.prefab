@@ -226,6 +226,7 @@ GameObject:
   - component: {fileID: 8783040589133010773}
   - component: {fileID: 4016737064677842381}
   - component: {fileID: 6403902960435685848}
+  - component: {fileID: 5927023461733661540}
   m_Layer: 0
   m_Name: M350
   m_TagString: robot
@@ -311,7 +312,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 333827259996945589}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 06a584044257d86b7be1245563a5ed94, type: 3}
   m_Name: 
@@ -324,6 +325,7 @@ MonoBehaviour:
   TargetVelocity: {x: 0, y: 0, z: 0}
   TargetUnityPosition: {x: 0, y: 0, z: 0}
   PositionTolerance: 0.5
+  MaxUpDot: 0.5
   VelKp: 20
   VelKi: 0
   VelKd: 1
@@ -342,20 +344,21 @@ MonoBehaviour:
   m_EditorClassIdentifier: SMARC.SMARCAssets::smarc.genericControllers.AttitudeController
   RobotAB: {fileID: 190108719626823264}
   RobotRB: {fileID: 0}
-  YawTolerance: 2
   YawControlMode: 1
-  TargetYawRate: 0
-  OnlyIfMovingForward: 0
-  TargetCompassHeading: 0
-  DesiredYawRate: 20
   TiltMode: 1
-  PitchDirection: 1
-  RollDirection: 1
+  TargetYawRate: 0
+  MaxYawRateDeg: 45
+  TargetCompassHeading: 0
   TargetUp: {x: 0, y: 1, z: 0}
-  TiltKp: 1.5
+  UpDotLimit: 0.5
+  YawTolerance: 2
+  OnlyIfMovingForward: 0
+  TiltKp: 1
   horizontalController: {fileID: 2789188956278922749}
   MaxTiltAngle: 20
   ExpectedMaxAccel: 20
+  PitchDirection: 1
+  RollDirection: 1
 --- !u!114 &8783040589133010773
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -432,6 +435,37 @@ MonoBehaviour:
   a_Gzd:
   - 1
   - -0.9375490118180505
+--- !u!114 &5927023461733661540
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 333827259996945589}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 15e222d18564123bab3da891c9bb27e0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: SMARC.SMARCAssets::Smarc.GenericControllers.SysidHorizontalController
+  RobotAB: {fileID: 190108719626823264}
+  RobotRB: {fileID: 0}
+  ControlMode: 1
+  MaxForce: 0
+  MaxSpeed: 2
+  TargetVelocity: {x: 0, y: 0, z: 0}
+  TargetUnityPosition: {x: 0, y: 0, z: 0}
+  PositionTolerance: 0.5
+  MaxUpDot: 0.5
+  b_Gxd:
+  - 0.03685537260331673
+  a_Gxd:
+  - 1
+  - -0.9662635006011508
+  b_Gyd:
+  - 0.04243705284439314
+  a_Gyd:
+  - 1
+  - -0.9580934630482146
 --- !u!1 &403156701649502633
 GameObject:
   m_ObjectHideFlags: 0
