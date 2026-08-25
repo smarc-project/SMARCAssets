@@ -7,13 +7,14 @@ namespace SmarcGUI.KeyboardControllers
 {
 
     [RequireComponent(typeof(EvoloController))]
-    [RequireComponent(typeof(GenericTwistCommand_Sub))]
+    //[RequireComponent(typeof(GenericTwistCommand_Sub))]
+    [RequireComponent(typeof(EvoloCommand))]
     public class EvoloKeyboardController : KeyboardControllerBase
     {
         InputAction forwardAction, strafeAction, verticalAction;
         EvoloController evoloCtrl;
-        GenericTwistCommand_Sub twistSub;
-        bool twistSubState;
+        EvoloCommand otherctrl;
+        bool otherctrlState;
 
         public float SpeedChangeRate = 0.1f;
         public float YawChangeRate = 0.1f;
@@ -21,13 +22,13 @@ namespace SmarcGUI.KeyboardControllers
 
         void OnEnable()
         {
-            twistSubState = twistSub.enabled;
-            twistSub.enabled = false;
+            otherctrlState = otherctrl.enabled;
+            otherctrl.enabled = false;
         }
 
         void OnDisable()
         {
-            twistSub.enabled = twistSubState;
+            otherctrl.enabled = otherctrlState;
         }
 
 
@@ -39,7 +40,7 @@ namespace SmarcGUI.KeyboardControllers
             verticalAction = InputSystem.actions.FindAction("Robot/UpDown");
             
             evoloCtrl = GetComponent<EvoloController>();
-            twistSub = GetComponent<GenericTwistCommand_Sub>();
+            otherctrl = GetComponent<EvoloCommand>();
         }
 
         void Update()
