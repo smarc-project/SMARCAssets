@@ -1752,7 +1752,8 @@ MonoBehaviour:
   pitch: 0
   yaw: 0
   FixedRotation: 0
-  reverse: 0
+  reverse_spin: 0
+  reverse_thrust: 0
   orientation: 1
   rpm: 0
   RPMMax: 100000
@@ -6848,7 +6849,8 @@ MonoBehaviour:
   pitch: 0
   yaw: 0
   FixedRotation: 0
-  reverse: 0
+  reverse_spin: 0
+  reverse_thrust: 0
   orientation: 1
   rpm: 0
   RPMMax: 100000
@@ -16087,7 +16089,8 @@ MonoBehaviour:
   pitch: 0
   yaw: 0
   FixedRotation: 0
-  reverse: 1
+  reverse_spin: 0
+  reverse_thrust: 1
   orientation: 1
   rpm: 0
   RPMMax: 100000
@@ -16857,7 +16860,8 @@ MonoBehaviour:
   pitch: 0
   yaw: 0
   FixedRotation: 0
-  reverse: 1
+  reverse_spin: 0
+  reverse_thrust: 1
   orientation: 1
   rpm: 0
   RPMMax: 100000
@@ -18508,7 +18512,8 @@ MonoBehaviour:
   pitch: 0
   yaw: 0
   FixedRotation: 0
-  reverse: 0
+  reverse_spin: 1
+  reverse_thrust: 0
   orientation: 1
   rpm: 0
   RPMMax: 100000
@@ -20245,7 +20250,8 @@ MonoBehaviour:
   pitch: 0
   yaw: 0
   FixedRotation: 0
-  reverse: 0
+  reverse_spin: 1
+  reverse_thrust: 0
   orientation: 1
   rpm: 0
   RPMMax: 100000
@@ -24985,7 +24991,8 @@ MonoBehaviour:
   pitch: 0
   yaw: 0
   FixedRotation: 0
-  reverse: 1
+  reverse_spin: 1
+  reverse_thrust: 1
   orientation: 1
   rpm: 0
   RPMMax: 100000
@@ -34631,7 +34638,8 @@ MonoBehaviour:
   pitch: 0
   yaw: 0
   FixedRotation: 0
-  reverse: 1
+  reverse_spin: 0
+  reverse_thrust: 1
   orientation: 1
   rpm: 0
   RPMMax: 100000
@@ -37245,7 +37253,8 @@ MonoBehaviour:
   pitch: 0
   yaw: 0
   FixedRotation: 0
-  reverse: 0
+  reverse_spin: 0
+  reverse_thrust: 0
   orientation: 1
   rpm: 0
   RPMMax: 100000
@@ -37398,7 +37407,8 @@ MonoBehaviour:
   pitch: 0
   yaw: 0
   FixedRotation: 0
-  reverse: 0
+  reverse_spin: 1
+  reverse_thrust: 0
   orientation: 1
   rpm: 0
   RPMMax: 100000
