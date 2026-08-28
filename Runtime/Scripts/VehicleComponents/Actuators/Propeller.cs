@@ -15,7 +15,10 @@ namespace VehicleComponents.Actuators
     public class Propeller : LinkAttachment, IROSPublishable
     {
         [Header("Propeller")]
-        public bool reverse = false;
+        [Tooltip("If set, the propeller will spin in the opposite direction wihtout changing the direction of thrust.")]
+        public bool reverse_spin = false;
+        [Tooltip("If set, the propeller will apply thrust in the opposite direction of the forward setting.")]
+        public bool reverse_thrust = false;
         [Tooltip("Some props are setup with Z axis up, others with Y axis up...")]
         public PropellerOrientation orientation = PropellerOrientation.ZForward;
         public float rpm;
@@ -78,7 +81,7 @@ namespace VehicleComponents.Actuators
 
             if (FakeSpin)
             {
-                int direction = reverse ? -1 : 1;
+                int direction = reverse_spin ? -1 : 1;
                 Vector3 spinAxis = orientation == PropellerOrientation.ZForward ? direction*Vector3.forward : direction*Vector3.up;
                 // just spin the visual and collision objects
                 if (propVisual != null)
@@ -94,6 +97,7 @@ namespace VehicleComponents.Actuators
 
             float r = rpm * RPMToForceMultiplier * (rpm < 0 ? RPMReverseMultiplier : 1f);
             Vector3 forceDirection = orientation == PropellerOrientation.ZForward ? mixedBody.transform.forward : mixedBody.transform.up;
+            forceDirection *= reverse_thrust ? -1f : 1f;
 
             mixedBody.AddForceAtPosition(r * forceDirection,
                 mixedBody.transform.position,
@@ -111,7 +115,7 @@ namespace VehicleComponents.Actuators
             }
             else
             {
-                int direction = reverse ? -1 : 1;
+                int direction = reverse_spin ? -1 : 1;
                 mixedBody.SetDriveTargetVelocity(ArticulationDriveAxis.X, direction * rpm);
             }
         }
