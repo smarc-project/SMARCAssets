@@ -15428,7 +15428,7 @@ MonoBehaviour:
   pitch: 0
   yaw: 0
   FixedRotation: 0
-  reverse: 0
+  reverse: 1
   orientation: 1
   rpm: 0
   RPMMax: 100000
@@ -16171,7 +16171,7 @@ MonoBehaviour:
   pitch: 0
   yaw: 0
   FixedRotation: 0
-  reverse: 0
+  reverse: 1
   orientation: 1
   rpm: 0
   RPMMax: 100000
@@ -17759,7 +17759,7 @@ MonoBehaviour:
   pitch: 0
   yaw: 0
   FixedRotation: 0
-  reverse: 1
+  reverse: 0
   orientation: 1
   rpm: 0
   RPMMax: 100000
@@ -19429,7 +19429,7 @@ MonoBehaviour:
   pitch: 0
   yaw: 0
   FixedRotation: 0
-  reverse: 1
+  reverse: 0
   orientation: 1
   rpm: 0
   RPMMax: 100000
@@ -25483,8 +25483,8 @@ MonoBehaviour:
   P7: {fileID: 675016981600809709}
   P8: {fileID: 2893784281425625186}
   props: []
-  PropRcMin: 1400
-  PropRcMax: 1600
+  PropRcMin: 1100
+  PropRcMax: 1900
   PropMaxRPM: 500
   CameraTiltRcMin: 1100
   CameraTiltRcMax: 1900
@@ -33230,7 +33230,7 @@ MonoBehaviour:
   pitch: 0
   yaw: 0
   FixedRotation: 0
-  reverse: 0
+  reverse: 1
   orientation: 1
   rpm: 0
   RPMMax: 100000
@@ -35887,7 +35887,7 @@ MonoBehaviour:
   pitch: 0
   yaw: 0
   FixedRotation: 0
-  reverse: 1
+  reverse: 0
   orientation: 1
   rpm: 0
   RPMMax: 100000
