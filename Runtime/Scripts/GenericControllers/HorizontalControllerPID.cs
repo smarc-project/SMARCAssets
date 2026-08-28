@@ -8,6 +8,7 @@ namespace Smarc.GenericControllers
     [AddComponentMenu("Smarc/Generic Controllers/Horizontal Controller PID")]
     public class HorizontalController : HorizontalControllerBase
     {
+        
         [Header("Velocity PID")]
         public float VelKp = 5.0f;
         public float VelKi = 0.0f;

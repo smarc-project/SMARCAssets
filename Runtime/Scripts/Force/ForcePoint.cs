@@ -168,6 +168,17 @@ namespace Force
             if (Physics.simulationMode == SimulationMode.FixedUpdate) DoUpdate();
         }
 
+        public void SetVolumeToNeutral()
+        {
+            body = new MixedBody(ConnectedArticulationBody, ConnectedRigidbody);
+            if (!body.isValid)
+            {
+                Debug.LogWarning($"{gameObject.name} requires at least one of ConnectedArticulationBody or ConnectedRigidBody to be set!");
+                return;
+            }
+            Volume = body.mass / WaterDensity;
+        }
+
         public void DoUpdate()
         {
             var forcePointPosition = transform.position;
@@ -225,4 +236,5 @@ namespace Force
             if (ApplyCustomForce) ApplyForce(CustomForce);
         }
     }
+
 }

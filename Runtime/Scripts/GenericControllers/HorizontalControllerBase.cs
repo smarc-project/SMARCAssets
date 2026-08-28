@@ -20,6 +20,8 @@ namespace Smarc.GenericControllers
         public HorizontalControlMode ControlMode = HorizontalControlMode.UnityPosition;
         public float MaxForce = 0f;
         public float MaxSpeed = 5.0f;
+        public bool CanMoveSideways = true;
+
 
         [Header("Velocity Controller")]
         public Vector3 TargetVelocity = Vector3.zero;
@@ -77,6 +79,7 @@ namespace Smarc.GenericControllers
 
             Vector3 f = GetHorizontalForceLocal();
             f.y = 0;
+            if (!CanMoveSideways) f.x = 0;
             LastAppliedForceLocal = f;
             LastAppliedForce = robotBody.transform.TransformVector(f);
             robotBody.AddForceAtPosition(LastAppliedForce, COM.position, ForceMode.Force);
