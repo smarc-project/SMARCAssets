@@ -1,3 +1,4 @@
+using Unity.EditorCoroutines.Editor;
 using UnityEditor;
 using UnityEngine;
 
@@ -15,10 +16,16 @@ namespace Editor.Scripts
             DrawDefaultInspector();
             container = (WMSTiler)target;
 
+            if (GUILayout.Button("ClearTiles"))
+            {
+                container.ClearTiles();
+            }
+
             if (GUILayout.Button("MakeTiles(Debug)"))
             {
                 container.Awake();
-                container.Start();
+                container.RunCoroutine = r => EditorCoroutineUtility.StartCoroutine(r, container);
+                if (container.LoadSettings()) container.MakeTiles();
             }
         }
     }

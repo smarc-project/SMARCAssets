@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
@@ -34,12 +35,21 @@ namespace GeoRef
 
         GlobalReferencePoint refPt;
 
+        // Set by the editor so MakeTiles can fetch textures outside play mode.
+        public System.Func<IEnumerator, object> RunCoroutine;
+
         public void Awake()
         {
             refPt = GetComponent<GlobalReferencePoint>();
         }
 
         public void Start()
+        {
+            if (!LoadSettings()) return;
+            MakeTiles();
+        }
+
+        public bool LoadSettings()
         {
             string settingsStoragePath = Path.Combine(GUIState.GetStoragePath(), "Settings");
             Directory.CreateDirectory(settingsStoragePath);
@@ -66,22 +76,34 @@ namespace GeoRef
                 var serializer = new YamlDotNet.Serialization.Serializer();
                 var settingsYaml = serializer.Serialize(settingsDict);
                 File.WriteAllText(settingsFile, settingsYaml);
-                return;
+                return false;
             }
 
             if (string.IsNullOrEmpty(WMSUrl) || string.IsNullOrEmpty(LayerName))
             {
                 Debug.LogError($"WMS URL or Layer Name is not set. Please set them in {settingsFile}.");
-                return;
+                return false;
             }
 
             if (!WMSUrl.EndsWith("/"))
             {
                 WMSUrl += "/";
             }
+            return true;
+        }
 
-            // Make the tiles
-            MakeTiles();
+        public void ClearTiles()
+        {
+            var stale = new List<GameObject>();
+            foreach (Transform child in transform)
+            {
+                if (child.name.StartsWith("Tile_")) stale.Add(child.gameObject);
+            }
+            foreach (var go in stale)
+            {
+                if (Application.isPlaying) Destroy(go);
+                else DestroyImmediate(go);
+            }
         }
 
         public string MakeGetMapURL(double eastingMin, double northingMin, double eastingMax, double northingMax)
@@ -168,52 +190,75 @@ namespace GeoRef
                 return;
             }
 
-            // Get the WebMercator coordinates of the reference point
             if (refPt == null) refPt = GetComponent<GlobalReferencePoint>();
-            var (refEasting, refNorthing) = refPt.GetWebMercatorFromLatLon(refPt.Lat, refPt.Lon);
-            // Adjust the reference point by the tile offsets
-            refEasting += TileOffsetEast;
-            refNorthing += TileOffsetNorth;
+            ClearTiles();
+
+            // Quads live in the scene's Unity frame (UTM or WebMercator).
+            // WMS GetMap stays EPSG:3857: convert each Unity tile's corners to
+            // lat/lon, then to Web Mercator. Adding TileSizeMeters onto 3857
+            // easting as if 1 Unity m = 1 WM m is wrong in UTM (≈1.9× at 59°N)
+            // and a no-op in WebMercator (identity). TileOffset* still shifts
+            // the imagery in Web Mercator metres, not the quads.
+            float half = TileSizeMeters / 2f;
 
             for (int x = 0; x < numTiles; x++)
             {
                 for (int z = 0; z < numTiles; z++)
                 {
-                    // Calculate the position of the tiles center
                     var tileX = (x * TileSizeMeters) - Radius;
                     var tileZ = (z * TileSizeMeters) - Radius;
 
-                    // Calculate the bounding box of the tile in WebMercator coordinates
-                    var tileEasting = refEasting + tileX;
-                    var tileNorthing = refNorthing + tileZ;
-                    // Calculate the min and max coordinates of the tile
-                    // in WebMercator coordinates
-                    var eastingMin = tileEasting - TileSizeMeters / 2;
-                    var northingMin = tileNorthing - TileSizeMeters / 2;
-                    var eastingMax = tileEasting + TileSizeMeters / 2;
-                    var northingMax = tileNorthing + TileSizeMeters / 2;
+                    WebMercatorBBoxOfUnityTile(tileX, tileZ, half,
+                        out var eastingMin, out var northingMin,
+                        out var eastingMax, out var northingMax);
+                    eastingMin += TileOffsetEast;
+                    eastingMax += TileOffsetEast;
+                    northingMin += TileOffsetNorth;
+                    northingMax += TileOffsetNorth;
 
-                    // Create a new GameObject for the tile
                     var tileName = $"Tile_{x}_{z}";
 
-                    // If tile already exist, skip it
-                    if (transform.Find(tileName) != null)
-                    {
-                        Debug.Log($"Tile {tileName} already exists, skipping.");
-                        continue;
-                    }
                     var quadObj = new GameObject(tileName);
                     quadObj.transform.SetParent(transform, false);
-                    quadObj.transform.localPosition = new Vector3((float)tileX, 0, (float)tileZ);
+                    quadObj.transform.localPosition = new Vector3(tileX, 0, tileZ);
                     quadObj.transform.position += Vector3.up * 0.01f; // very slightly above the ground so it doesnt clip water
                     quadObj.transform.localScale = Vector3.one * TileSizeMeters;
                     quadObj.transform.rotation = Quaternion.Euler(90, 0, 0);
 
-                    // Request the tile texture
-                    StartCoroutine(RequestAndSetTile(quadObj, eastingMin, northingMin, eastingMax, northingMax));
+                    KickCoroutine(RequestAndSetTile(quadObj, eastingMin, northingMin, eastingMax, northingMax));
                 }
             }
             
+        }
+
+        void KickCoroutine(IEnumerator routine)
+        {
+            if (RunCoroutine != null) RunCoroutine(routine);
+            else StartCoroutine(routine);
+        }
+
+        void WebMercatorBBoxOfUnityTile(float tileX, float tileZ, float half,
+            out double eastingMin, out double northingMin,
+            out double eastingMax, out double northingMax)
+        {
+            var sw = transform.TransformPoint(new Vector3(tileX - half, 0, tileZ - half));
+            var se = transform.TransformPoint(new Vector3(tileX + half, 0, tileZ - half));
+            var nw = transform.TransformPoint(new Vector3(tileX - half, 0, tileZ + half));
+            var ne = transform.TransformPoint(new Vector3(tileX + half, 0, tileZ + half));
+            CornerToWebMercator(sw, out var e0, out var n0);
+            CornerToWebMercator(se, out var e1, out var n1);
+            CornerToWebMercator(nw, out var e2, out var n2);
+            CornerToWebMercator(ne, out var e3, out var n3);
+            eastingMin = System.Math.Min(System.Math.Min(e0, e1), System.Math.Min(e2, e3));
+            eastingMax = System.Math.Max(System.Math.Max(e0, e1), System.Math.Max(e2, e3));
+            northingMin = System.Math.Min(System.Math.Min(n0, n1), System.Math.Min(n2, n3));
+            northingMax = System.Math.Max(System.Math.Max(n0, n1), System.Math.Max(n2, n3));
+        }
+
+        void CornerToWebMercator(Vector3 world, out double easting, out double northing)
+        {
+            var (lat, lon) = refPt.GetLatLonFromUnityXZ(world.x, world.z);
+            (easting, northing) = refPt.GetWebMercatorFromLatLon(lat, lon);
         }
 
         void OnDrawGizmos()

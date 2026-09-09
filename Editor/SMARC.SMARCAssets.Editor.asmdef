@@ -3,7 +3,8 @@
     "rootNamespace": "",
     "references": [
         "SMARC.SMARCAssets",
-        "Unity.Robotics.UrdfImporter"
+        "Unity.Robotics.UrdfImporter",
+        "Unity.EditorCoroutines.Editor"
     ],
     "includePlatforms": [
         "Editor"
