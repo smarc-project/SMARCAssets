@@ -1,0 +1,848 @@
+newmtl material0000
+Ka 1.000000 1.000000 1.000000
+Kd 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Tr 0.000000
+illum 1
+Ns 1.000000
+map_Kd odm_textured_model_geo_material0000_map_Kd.png
+newmtl material0001
+Ka 1.000000 1.000000 1.000000
+Kd 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Tr 0.000000
+illum 1
+Ns 1.000000
+map_Kd odm_textured_model_geo_material0001_map_Kd.png
+newmtl material0002
+Ka 1.000000 1.000000 1.000000
+Kd 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Tr 0.000000
+illum 1
+Ns 1.000000
+map_Kd odm_textured_model_geo_material0002_map_Kd.png
+newmtl material0003
+Ka 1.000000 1.000000 1.000000
+Kd 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Tr 0.000000
+illum 1
+Ns 1.000000
+map_Kd odm_textured_model_geo_material0003_map_Kd.png
+newmtl material0004
+Ka 1.000000 1.000000 1.000000
+Kd 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Tr 0.000000
+illum 1
+Ns 1.000000
+map_Kd odm_textured_model_geo_material0004_map_Kd.png
+newmtl material0005
+Ka 1.000000 1.000000 1.000000
+Kd 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Tr 0.000000
+illum 1
+Ns 1.000000
+map_Kd odm_textured_model_geo_material0005_map_Kd.png
+newmtl material0006
+Ka 1.000000 1.000000 1.000000
+Kd 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Tr 0.000000
+illum 1
+Ns 1.000000
+map_Kd odm_textured_model_geo_material0006_map_Kd.png
+newmtl material0007
+Ka 1.000000 1.000000 1.000000
+Kd 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Tr 0.000000
+illum 1
+Ns 1.000000
+map_Kd odm_textured_model_geo_material0007_map_Kd.png
+newmtl material0008
+Ka 1.000000 1.000000 1.000000
+Kd 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Tr 0.000000
+illum 1
+Ns 1.000000
+map_Kd odm_textured_model_geo_material0008_map_Kd.png
+newmtl material0009
+Ka 1.000000 1.000000 1.000000
+Kd 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Tr 0.000000
+illum 1
+Ns 1.000000
+map_Kd odm_textured_model_geo_material0009_map_Kd.png
+newmtl material0010
+Ka 1.000000 1.000000 1.000000
+Kd 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Tr 0.000000
+illum 1
+Ns 1.000000
+map_Kd odm_textured_model_geo_material0010_map_Kd.png
+newmtl material0011
+Ka 1.000000 1.000000 1.000000
+Kd 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Tr 0.000000
+illum 1
+Ns 1.000000
+map_Kd odm_textured_model_geo_material0011_map_Kd.png
+newmtl material0012
+Ka 1.000000 1.000000 1.000000
+Kd 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Tr 0.000000
+illum 1
+Ns 1.000000
+map_Kd odm_textured_model_geo_material0012_map_Kd.png
+newmtl material0013
+Ka 1.000000 1.000000 1.000000
+Kd 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Tr 0.000000
+illum 1
+Ns 1.000000
+map_Kd odm_textured_model_geo_material0013_map_Kd.png
+newmtl material0014
+Ka 1.000000 1.000000 1.000000
+Kd 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Tr 0.000000
+illum 1
+Ns 1.000000
+map_Kd odm_textured_model_geo_material0014_map_Kd.png
+newmtl material0015
+Ka 1.000000 1.000000 1.000000
+Kd 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Tr 0.000000
+illum 1
+Ns 1.000000
+map_Kd odm_textured_model_geo_material0015_map_Kd.png
+newmtl material0016
+Ka 1.000000 1.000000 1.000000
+Kd 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Tr 0.000000
+illum 1
+Ns 1.000000
+map_Kd odm_textured_model_geo_material0016_map_Kd.png
+newmtl material0017
+Ka 1.000000 1.000000 1.000000
+Kd 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Tr 0.000000
+illum 1
+Ns 1.000000
+map_Kd odm_textured_model_geo_material0017_map_Kd.png
+newmtl material0018
+Ka 1.000000 1.000000 1.000000
+Kd 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Tr 0.000000
+illum 1
+Ns 1.000000
+map_Kd odm_textured_model_geo_material0018_map_Kd.png
+newmtl material0019
+Ka 1.000000 1.000000 1.000000
+Kd 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Tr 0.000000
+illum 1
+Ns 1.000000
+map_Kd odm_textured_model_geo_material0019_map_Kd.png
+newmtl material0020
+Ka 1.000000 1.000000 1.000000
+Kd 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Tr 0.000000
+illum 1
+Ns 1.000000
+map_Kd odm_textured_model_geo_material0020_map_Kd.png
+newmtl material0021
+Ka 1.000000 1.000000 1.000000
+Kd 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Tr 0.000000
+illum 1
+Ns 1.000000
+map_Kd odm_textured_model_geo_material0021_map_Kd.png
+newmtl material0022
+Ka 1.000000 1.000000 1.000000
+Kd 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Tr 0.000000
+illum 1
+Ns 1.000000
+map_Kd odm_textured_model_geo_material0022_map_Kd.png
+newmtl material0023
+Ka 1.000000 1.000000 1.000000
+Kd 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Tr 0.000000
+illum 1
+Ns 1.000000
+map_Kd odm_textured_model_geo_material0023_map_Kd.png
+newmtl material0024
+Ka 1.000000 1.000000 1.000000
+Kd 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Tr 0.000000
+illum 1
+Ns 1.000000
+map_Kd odm_textured_model_geo_material0024_map_Kd.png
+newmtl material0025
+Ka 1.000000 1.000000 1.000000
+Kd 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Tr 0.000000
+illum 1
+Ns 1.000000
+map_Kd odm_textured_model_geo_material0025_map_Kd.png
+newmtl material0026
+Ka 1.000000 1.000000 1.000000
+Kd 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Tr 0.000000
+illum 1
+Ns 1.000000
+map_Kd odm_textured_model_geo_material0026_map_Kd.png
+newmtl material0027
+Ka 1.000000 1.000000 1.000000
+Kd 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Tr 0.000000
+illum 1
+Ns 1.000000
+map_Kd odm_textured_model_geo_material0027_map_Kd.png
+newmtl material0028
+Ka 1.000000 1.000000 1.000000
+Kd 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Tr 0.000000
+illum 1
+Ns 1.000000
+map_Kd odm_textured_model_geo_material0028_map_Kd.png
+newmtl material0029
+Ka 1.000000 1.000000 1.000000
+Kd 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Tr 0.000000
+illum 1
+Ns 1.000000
+map_Kd odm_textured_model_geo_material0029_map_Kd.png
+newmtl material0030
+Ka 1.000000 1.000000 1.000000
+Kd 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Tr 0.000000
+illum 1
+Ns 1.000000
+map_Kd odm_textured_model_geo_material0030_map_Kd.png
+newmtl material0031
+Ka 1.000000 1.000000 1.000000
+Kd 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Tr 0.000000
+illum 1
+Ns 1.000000
+map_Kd odm_textured_model_geo_material0031_map_Kd.png
+newmtl material0032
+Ka 1.000000 1.000000 1.000000
+Kd 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Tr 0.000000
+illum 1
+Ns 1.000000
+map_Kd odm_textured_model_geo_material0032_map_Kd.png
+newmtl material0033
+Ka 1.000000 1.000000 1.000000
+Kd 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Tr 0.000000
+illum 1
+Ns 1.000000
+map_Kd odm_textured_model_geo_material0033_map_Kd.png
+newmtl material0034
+Ka 1.000000 1.000000 1.000000
+Kd 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Tr 0.000000
+illum 1
+Ns 1.000000
+map_Kd odm_textured_model_geo_material0034_map_Kd.png
+newmtl material0035
+Ka 1.000000 1.000000 1.000000
+Kd 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Tr 0.000000
+illum 1
+Ns 1.000000
+map_Kd odm_textured_model_geo_material0035_map_Kd.png
+newmtl material0036
+Ka 1.000000 1.000000 1.000000
+Kd 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Tr 0.000000
+illum 1
+Ns 1.000000
+map_Kd odm_textured_model_geo_material0036_map_Kd.png
+newmtl material0037
+Ka 1.000000 1.000000 1.000000
+Kd 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Tr 0.000000
+illum 1
+Ns 1.000000
+map_Kd odm_textured_model_geo_material0037_map_Kd.png
+newmtl material0038
+Ka 1.000000 1.000000 1.000000
+Kd 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Tr 0.000000
+illum 1
+Ns 1.000000
+map_Kd odm_textured_model_geo_material0038_map_Kd.png
+newmtl material0039
+Ka 1.000000 1.000000 1.000000
+Kd 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Tr 0.000000
+illum 1
+Ns 1.000000
+map_Kd odm_textured_model_geo_material0039_map_Kd.png
+newmtl material0040
+Ka 1.000000 1.000000 1.000000
+Kd 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Tr 0.000000
+illum 1
+Ns 1.000000
+map_Kd odm_textured_model_geo_material0040_map_Kd.png
+newmtl material0041
+Ka 1.000000 1.000000 1.000000
+Kd 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Tr 0.000000
+illum 1
+Ns 1.000000
+map_Kd odm_textured_model_geo_material0041_map_Kd.png
+newmtl material0042
+Ka 1.000000 1.000000 1.000000
+Kd 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Tr 0.000000
+illum 1
+Ns 1.000000
+map_Kd odm_textured_model_geo_material0042_map_Kd.png
+newmtl material0043
+Ka 1.000000 1.000000 1.000000
+Kd 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Tr 0.000000
+illum 1
+Ns 1.000000
+map_Kd odm_textured_model_geo_material0043_map_Kd.png
+newmtl material0044
+Ka 1.000000 1.000000 1.000000
+Kd 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Tr 0.000000
+illum 1
+Ns 1.000000
+map_Kd odm_textured_model_geo_material0044_map_Kd.png
+newmtl material0045
+Ka 1.000000 1.000000 1.000000
+Kd 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Tr 0.000000
+illum 1
+Ns 1.000000
+map_Kd odm_textured_model_geo_material0045_map_Kd.png
+newmtl material0046
+Ka 1.000000 1.000000 1.000000
+Kd 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Tr 0.000000
+illum 1
+Ns 1.000000
+map_Kd odm_textured_model_geo_material0046_map_Kd.png
+newmtl material0047
+Ka 1.000000 1.000000 1.000000
+Kd 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Tr 0.000000
+illum 1
+Ns 1.000000
+map_Kd odm_textured_model_geo_material0047_map_Kd.png
+newmtl material0048
+Ka 1.000000 1.000000 1.000000
+Kd 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Tr 0.000000
+illum 1
+Ns 1.000000
+map_Kd odm_textured_model_geo_material0048_map_Kd.png
+newmtl material0049
+Ka 1.000000 1.000000 1.000000
+Kd 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Tr 0.000000
+illum 1
+Ns 1.000000
+map_Kd odm_textured_model_geo_material0049_map_Kd.png
+newmtl material0050
+Ka 1.000000 1.000000 1.000000
+Kd 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Tr 0.000000
+illum 1
+Ns 1.000000
+map_Kd odm_textured_model_geo_material0050_map_Kd.png
+newmtl material0051
+Ka 1.000000 1.000000 1.000000
+Kd 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Tr 0.000000
+illum 1
+Ns 1.000000
+map_Kd odm_textured_model_geo_material0051_map_Kd.png
+newmtl material0052
+Ka 1.000000 1.000000 1.000000
+Kd 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Tr 0.000000
+illum 1
+Ns 1.000000
+map_Kd odm_textured_model_geo_material0052_map_Kd.png
+newmtl material0053
+Ka 1.000000 1.000000 1.000000
+Kd 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Tr 0.000000
+illum 1
+Ns 1.000000
+map_Kd odm_textured_model_geo_material0053_map_Kd.png
+newmtl material0054
+Ka 1.000000 1.000000 1.000000
+Kd 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Tr 0.000000
+illum 1
+Ns 1.000000
+map_Kd odm_textured_model_geo_material0054_map_Kd.png
+newmtl material0055
+Ka 1.000000 1.000000 1.000000
+Kd 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Tr 0.000000
+illum 1
+Ns 1.000000
+map_Kd odm_textured_model_geo_material0055_map_Kd.png
+newmtl material0056
+Ka 1.000000 1.000000 1.000000
+Kd 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Tr 0.000000
+illum 1
+Ns 1.000000
+map_Kd odm_textured_model_geo_material0056_map_Kd.png
+newmtl material0057
+Ka 1.000000 1.000000 1.000000
+Kd 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Tr 0.000000
+illum 1
+Ns 1.000000
+map_Kd odm_textured_model_geo_material0057_map_Kd.png
+newmtl material0058
+Ka 1.000000 1.000000 1.000000
+Kd 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Tr 0.000000
+illum 1
+Ns 1.000000
+map_Kd odm_textured_model_geo_material0058_map_Kd.png
+newmtl material0059
+Ka 1.000000 1.000000 1.000000
+Kd 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Tr 0.000000
+illum 1
+Ns 1.000000
+map_Kd odm_textured_model_geo_material0059_map_Kd.png
+newmtl material0060
+Ka 1.000000 1.000000 1.000000
+Kd 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Tr 0.000000
+illum 1
+Ns 1.000000
+map_Kd odm_textured_model_geo_material0060_map_Kd.png
+newmtl material0061
+Ka 1.000000 1.000000 1.000000
+Kd 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Tr 0.000000
+illum 1
+Ns 1.000000
+map_Kd odm_textured_model_geo_material0061_map_Kd.png
+newmtl material0062
+Ka 1.000000 1.000000 1.000000
+Kd 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Tr 0.000000
+illum 1
+Ns 1.000000
+map_Kd odm_textured_model_geo_material0062_map_Kd.png
+newmtl material0063
+Ka 1.000000 1.000000 1.000000
+Kd 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Tr 0.000000
+illum 1
+Ns 1.000000
+map_Kd odm_textured_model_geo_material0063_map_Kd.png
+newmtl material0064
+Ka 1.000000 1.000000 1.000000
+Kd 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Tr 0.000000
+illum 1
+Ns 1.000000
+map_Kd odm_textured_model_geo_material0064_map_Kd.png
+newmtl material0065
+Ka 1.000000 1.000000 1.000000
+Kd 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Tr 0.000000
+illum 1
+Ns 1.000000
+map_Kd odm_textured_model_geo_material0065_map_Kd.png
+newmtl material0066
+Ka 1.000000 1.000000 1.000000
+Kd 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Tr 0.000000
+illum 1
+Ns 1.000000
+map_Kd odm_textured_model_geo_material0066_map_Kd.png
+newmtl material0067
+Ka 1.000000 1.000000 1.000000
+Kd 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Tr 0.000000
+illum 1
+Ns 1.000000
+map_Kd odm_textured_model_geo_material0067_map_Kd.png
+newmtl material0068
+Ka 1.000000 1.000000 1.000000
+Kd 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Tr 0.000000
+illum 1
+Ns 1.000000
+map_Kd odm_textured_model_geo_material0068_map_Kd.png
+newmtl material0069
+Ka 1.000000 1.000000 1.000000
+Kd 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Tr 0.000000
+illum 1
+Ns 1.000000
+map_Kd odm_textured_model_geo_material0069_map_Kd.png
+newmtl material0070
+Ka 1.000000 1.000000 1.000000
+Kd 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Tr 0.000000
+illum 1
+Ns 1.000000
+map_Kd odm_textured_model_geo_material0070_map_Kd.png
+newmtl material0071
+Ka 1.000000 1.000000 1.000000
+Kd 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Tr 0.000000
+illum 1
+Ns 1.000000
+map_Kd odm_textured_model_geo_material0071_map_Kd.png
+newmtl material0072
+Ka 1.000000 1.000000 1.000000
+Kd 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Tr 0.000000
+illum 1
+Ns 1.000000
+map_Kd odm_textured_model_geo_material0072_map_Kd.png
+newmtl material0073
+Ka 1.000000 1.000000 1.000000
+Kd 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Tr 0.000000
+illum 1
+Ns 1.000000
+map_Kd odm_textured_model_geo_material0073_map_Kd.png
+newmtl material0074
+Ka 1.000000 1.000000 1.000000
+Kd 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Tr 0.000000
+illum 1
+Ns 1.000000
+map_Kd odm_textured_model_geo_material0074_map_Kd.png
+newmtl material0075
+Ka 1.000000 1.000000 1.000000
+Kd 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Tr 0.000000
+illum 1
+Ns 1.000000
+map_Kd odm_textured_model_geo_material0075_map_Kd.png
+newmtl material0076
+Ka 1.000000 1.000000 1.000000
+Kd 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Tr 0.000000
+illum 1
+Ns 1.000000
+map_Kd odm_textured_model_geo_material0076_map_Kd.png
+newmtl material0077
+Ka 1.000000 1.000000 1.000000
+Kd 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Tr 0.000000
+illum 1
+Ns 1.000000
+map_Kd odm_textured_model_geo_material0077_map_Kd.png
+newmtl material0078
+Ka 1.000000 1.000000 1.000000
+Kd 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Tr 0.000000
+illum 1
+Ns 1.000000
+map_Kd odm_textured_model_geo_material0078_map_Kd.png
+newmtl material0079
+Ka 1.000000 1.000000 1.000000
+Kd 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Tr 0.000000
+illum 1
+Ns 1.000000
+map_Kd odm_textured_model_geo_material0079_map_Kd.png
+newmtl material0080
+Ka 1.000000 1.000000 1.000000
+Kd 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Tr 0.000000
+illum 1
+Ns 1.000000
+map_Kd odm_textured_model_geo_material0080_map_Kd.png
+newmtl material0081
+Ka 1.000000 1.000000 1.000000
+Kd 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Tr 0.000000
+illum 1
+Ns 1.000000
+map_Kd odm_textured_model_geo_material0081_map_Kd.png
+newmtl material0082
+Ka 1.000000 1.000000 1.000000
+Kd 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Tr 0.000000
+illum 1
+Ns 1.000000
+map_Kd odm_textured_model_geo_material0082_map_Kd.png
+newmtl material0083
+Ka 1.000000 1.000000 1.000000
+Kd 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Tr 0.000000
+illum 1
+Ns 1.000000
+map_Kd odm_textured_model_geo_material0083_map_Kd.png
+newmtl material0084
+Ka 1.000000 1.000000 1.000000
+Kd 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Tr 0.000000
+illum 1
+Ns 1.000000
+map_Kd odm_textured_model_geo_material0084_map_Kd.png
+newmtl material0085
+Ka 1.000000 1.000000 1.000000
+Kd 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Tr 0.000000
+illum 1
+Ns 1.000000
+map_Kd odm_textured_model_geo_material0085_map_Kd.png
+newmtl material0086
+Ka 1.000000 1.000000 1.000000
+Kd 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Tr 0.000000
+illum 1
+Ns 1.000000
+map_Kd odm_textured_model_geo_material0086_map_Kd.png
+newmtl material0087
+Ka 1.000000 1.000000 1.000000
+Kd 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Tr 0.000000
+illum 1
+Ns 1.000000
+map_Kd odm_textured_model_geo_material0087_map_Kd.png
+newmtl material0088
+Ka 1.000000 1.000000 1.000000
+Kd 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Tr 0.000000
+illum 1
+Ns 1.000000
+map_Kd odm_textured_model_geo_material0088_map_Kd.png
+newmtl material0089
+Ka 1.000000 1.000000 1.000000
+Kd 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Tr 0.000000
+illum 1
+Ns 1.000000
+map_Kd odm_textured_model_geo_material0089_map_Kd.png
+newmtl material0090
+Ka 1.000000 1.000000 1.000000
+Kd 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Tr 0.000000
+illum 1
+Ns 1.000000
+map_Kd odm_textured_model_geo_material0090_map_Kd.png
+newmtl material0091
+Ka 1.000000 1.000000 1.000000
+Kd 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Tr 0.000000
+illum 1
+Ns 1.000000
+map_Kd odm_textured_model_geo_material0091_map_Kd.png
+newmtl material0092
+Ka 1.000000 1.000000 1.000000
+Kd 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Tr 0.000000
+illum 1
+Ns 1.000000
+map_Kd odm_textured_model_geo_material0092_map_Kd.png
+newmtl material0093
+Ka 1.000000 1.000000 1.000000
+Kd 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Tr 0.000000
+illum 1
+Ns 1.000000
+map_Kd odm_textured_model_geo_material0093_map_Kd.png
+newmtl material0094
+Ka 1.000000 1.000000 1.000000
+Kd 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Tr 0.000000
+illum 1
+Ns 1.000000
+map_Kd odm_textured_model_geo_material0094_map_Kd.png
+newmtl material0095
+Ka 1.000000 1.000000 1.000000
+Kd 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Tr 0.000000
+illum 1
+Ns 1.000000
+map_Kd odm_textured_model_geo_material0095_map_Kd.png
+newmtl material0096
+Ka 1.000000 1.000000 1.000000
+Kd 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Tr 0.000000
+illum 1
+Ns 1.000000
+map_Kd odm_textured_model_geo_material0096_map_Kd.png
+newmtl material0097
+Ka 1.000000 1.000000 1.000000
+Kd 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Tr 0.000000
+illum 1
+Ns 1.000000
+map_Kd odm_textured_model_geo_material0097_map_Kd.png
+newmtl material0098
+Ka 1.000000 1.000000 1.000000
+Kd 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Tr 0.000000
+illum 1
+Ns 1.000000
+map_Kd odm_textured_model_geo_material0098_map_Kd.png
+newmtl material0099
+Ka 1.000000 1.000000 1.000000
+Kd 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Tr 0.000000
+illum 1
+Ns 1.000000
+map_Kd odm_textured_model_geo_material0099_map_Kd.png
+newmtl material0100
+Ka 1.000000 1.000000 1.000000
+Kd 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Tr 0.000000
+illum 1
+Ns 1.000000
+map_Kd odm_textured_model_geo_material0100_map_Kd.png
+newmtl material0101
+Ka 1.000000 1.000000 1.000000
+Kd 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Tr 0.000000
+illum 1
+Ns 1.000000
+map_Kd odm_textured_model_geo_material0101_map_Kd.png
+newmtl material0102
+Ka 1.000000 1.000000 1.000000
+Kd 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Tr 0.000000
+illum 1
+Ns 1.000000
+map_Kd odm_textured_model_geo_material0102_map_Kd.png
+newmtl material0103
+Ka 1.000000 1.000000 1.000000
+Kd 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Tr 0.000000
+illum 1
+Ns 1.000000
+map_Kd odm_textured_model_geo_material0103_map_Kd.png
+newmtl material0104
+Ka 1.000000 1.000000 1.000000
+Kd 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Tr 0.000000
+illum 1
+Ns 1.000000
+map_Kd odm_textured_model_geo_material0104_map_Kd.png
+newmtl material0105
+Ka 1.000000 1.000000 1.000000
+Kd 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Tr 0.000000
+illum 1
+Ns 1.000000
+map_Kd odm_textured_model_geo_material0105_map_Kd.png
