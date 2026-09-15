@@ -1,0 +1,11 @@
+{
+    "name": "SMARC.Sonar.Tests",
+    "references": [
+        "SMARC.SMARCAssets",
+        "Unity.Robotics.ROSTCPConnector",
+        "Unity.Robotics.ROSTCPConnector.Messages"
+    ],
+    "includePlatforms": ["Editor"],
+    "optionalUnityReferences": ["TestAssemblies"],
+    "autoReferenced": false
+}
