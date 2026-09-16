@@ -953,7 +953,7 @@
             ]
         },
         {
-            "name": "VirtualJoy",
+            "name": "GamePad",
             "id": "7db005e5-7363-460b-b8c3-071e6f7b81f2",
             "actions": [
                 {
@@ -1284,6 +1284,17 @@
                     "interactions": "",
                     "processors": "",
                     "groups": ";Gamepad",
+                    "action": "LB",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "20ce64e0-4dab-4fef-b32a-0d1056e002bb",
+                    "path": "<Keyboard>/shift",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Keyboard&Mouse",
                     "action": "LB",
                     "isComposite": false,
                     "isPartOfComposite": false
