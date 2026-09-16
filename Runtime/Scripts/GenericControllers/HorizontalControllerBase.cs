@@ -1,6 +1,7 @@
 using UnityEngine;
 using Force;
 using System;
+using VehicleComponents.Actuators;
 
 namespace Smarc.GenericControllers
 {
@@ -10,7 +11,7 @@ namespace Smarc.GenericControllers
         Velocity
     }
 
-    public class HorizontalControllerBase : MonoBehaviour
+    public class HorizontalControllerBase : MonoBehaviour, IGenericTwistActuator
     {
         [Header("Horizontal Controller Base")]
         public ArticulationBody RobotAB;
@@ -91,5 +92,29 @@ namespace Smarc.GenericControllers
             throw new NotImplementedException("GetHorizontalForceLocal() must be implemented in a derived class");
         }
 
+        public void SetTwist(Vector3 LinearVelocity, Vector3 AngularVelocity)
+        {
+            if(ControlMode != HorizontalControlMode.Velocity)
+            {
+                Debug.LogWarning("SetTwist called, but ControlMode is not set to Velocity. Ignoring command.");
+                return;
+            }
+            TargetVelocity = LinearVelocity;
+        }
+
+        public (Vector3, Vector3) GetResetValue()
+        {
+            return (Vector3.zero, Vector3.zero);
+        }
+
+        public (Vector3, Vector3) GetCurrentValue()
+        {
+            return (robotBody.localVelocity, robotBody.angularVelocity);
+        }
+
+        public bool HasNewData()
+        {
+            return true;
+        }
     }   
 }

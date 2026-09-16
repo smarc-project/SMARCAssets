@@ -1476,6 +1476,8 @@ GameObject:
   - component: {fileID: 4677282375518341277}
   - component: {fileID: 3063484850477615414}
   - component: {fileID: 458380172097286615}
+  - component: {fileID: 3569450040395804481}
+  - component: {fileID: 5614665009553080650}
   m_Layer: 0
   m_Name: LagoonCleaner
   m_TagString: robot
@@ -1573,6 +1575,41 @@ MonoBehaviour:
   MapFrameTransform: {fileID: 0}
   tf_prefix: 
   OnlyRelative: 0
+--- !u!114 &3569450040395804481
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6259671311688705925}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 18caaad4ffbf8d54da54bcdc563f2812, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: SMARC.SMARCAssets::ROS.Subscribers.GenericTwistCommand_Sub
+  topic: cmd_vel
+  NotARobot: 0
+  expectedFrequency: 2
+  resetting: 1
+  receivedFrequency: 0
+  ReceivedFirstMessage: 0
+--- !u!114 &5614665009553080650
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6259671311688705925}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1545974fd88e7c8448c6081c2ed59a80, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: SMARC.SMARCAssets::SmarcGUI.KeyboardControllers.GenericTwistKeyboardController
+  TargetLinearVelocity: {x: 0, y: 0, z: 0}
+  TargetAngularVelocity: {x: 0, y: 0, z: 0}
+  LinearSpeed: 2
+  AngularSpeed: 45
+  BoostMultiplier: 5
 --- !u!1 &6402922775441065011
 GameObject:
   m_ObjectHideFlags: 0

@@ -1,6 +1,7 @@
 using UnityEngine;
 using Force;
 using DefaultNamespace.Water;
+using VehicleComponents.Actuators;
 
 namespace Smarc.GenericControllers
 {
@@ -11,7 +12,7 @@ namespace Smarc.GenericControllers
         AltitudeFromWater
     }
 
-    public class AltitudeControllerBase : MonoBehaviour
+    public class AltitudeControllerBase : MonoBehaviour, IGenericTwistActuator
     {
         [Header("Command")]
         public AltitudeControlMode ControlMode = AltitudeControlMode.AbsoluteAltitude;
@@ -133,5 +134,27 @@ namespace Smarc.GenericControllers
             throw new System.NotImplementedException("VelocityControl() must be implemented in a derived class.");
         }
 
+        public void SetTwist(Vector3 LinearVelocity, Vector3 AngularVelocity)
+        {
+            if (ControlMode == AltitudeControlMode.VerticalVelocity)
+                TargetVelocity = LinearVelocity.y; // the sub must be converting from ros to unity!
+            else
+                Debug.LogWarning("SetTwist() called, but ControlMode is not VerticalVelocity. Ignoring.");
+        }
+
+        public (Vector3, Vector3) GetResetValue()
+        {
+            return (Vector3.zero, Vector3.zero);
+        }
+
+        public (Vector3, Vector3) GetCurrentValue()
+        {
+            return (robotBody.localVelocity, robotBody.angularVelocity);
+        }
+
+        public bool HasNewData()
+        {
+            return true;
+        }
     }
 }

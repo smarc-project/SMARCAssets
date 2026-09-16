@@ -1,5 +1,6 @@
 using UnityEngine;
 using Force;
+using VehicleComponents.Actuators;
 
 namespace Smarc.GenericControllers
 {
@@ -16,7 +17,7 @@ namespace Smarc.GenericControllers
     }
 
 
-    public class AttitudeControllerBase : MonoBehaviour
+    public class AttitudeControllerBase : MonoBehaviour, IGenericTwistActuator
     {
         [Header("Robot Body")]
         public ArticulationBody RobotAB;
@@ -82,7 +83,32 @@ namespace Smarc.GenericControllers
             robotBody.AddTorque(torque, ForceMode.Acceleration);
         }
 
+        public void SetTwist(Vector3 LinearVelocity, Vector3 AngularVelocity)
+        {
+            if(YawControlMode == YawControlMode.YawRate)
+            {
+                TargetYawRate = AngularVelocity.y;
+            }
+            else
+            {
+                Debug.LogWarning("SetTwist() called, but YawControlMode is not YawRate. Ignoring.");
+            }
+        }
 
+        public (Vector3, Vector3) GetResetValue()
+        {
+            return (Vector3.zero, Vector3.zero);
+        }
+
+        public (Vector3, Vector3) GetCurrentValue()
+        {
+            return (robotBody.localVelocity, robotBody.angularVelocity);
+        }
+
+        public bool HasNewData()
+        {
+            return true;
+        }
     }
 
 }
