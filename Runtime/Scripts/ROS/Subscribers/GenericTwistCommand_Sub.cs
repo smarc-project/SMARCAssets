@@ -10,16 +10,16 @@ namespace ROS.Subscribers
     [RequireComponent(typeof(IGenericTwistActuator))]
     public class GenericTwistCommand_Sub : Actuator_Sub<TwistStampedMsg>
     {
-        IGenericTwistActuator twistAct;
+        IGenericTwistActuator[] twistActuators;
 
         void Awake()
         {
-            twistAct = GetComponent<IGenericTwistActuator>();
+            twistActuators = GetComponents<IGenericTwistActuator>();
         }
 
         protected override void UpdateVehicle(bool reset)
         {
-            if(twistAct == null)
+            if(twistActuators == null || twistActuators.Length == 0)
             {
                 Debug.Log($"GenericTwistCommand_Sub found no IGenericTwistActuator to command! Disabling.");
                 enabled = false;
@@ -29,7 +29,10 @@ namespace ROS.Subscribers
 
             if(reset)
             {
-                twistAct.SetTwist(twistAct.GetResetValue().Item1, twistAct.GetResetValue().Item2);
+                foreach(var actuator in twistActuators)
+                {
+                    actuator.SetTwist(actuator.GetResetValue().Item1, actuator.GetResetValue().Item2);
+                }
                 return;
             }
 
@@ -37,20 +40,20 @@ namespace ROS.Subscribers
             // FLU (ROS) to RUF (Unity)
             var linear = ROSMsg.twist.linear;
             var angular = ROSMsg.twist.angular;
-            twistAct.SetTwist(
-                FLU.ConvertToRUF(new Vector3(
-                    (float)linear.x,
-                    (float)linear.y,
-                    (float)linear.z
-                )),
-                FLU.ConvertAngularVelocityToRUF(new Vector3(
-                    (float)angular.x,
-                    (float)angular.y,
-                    (float)angular.z
-                ))
-            );
-
-
+            var linearRUF = FLU.ConvertToRUF(new Vector3(
+                (float)linear.x,
+                (float)linear.y,
+                (float)linear.z
+            ));
+            var angularRUF = FLU.ConvertAngularVelocityToRUF(new Vector3(
+                (float)angular.x,
+                (float)angular.y,
+                (float)angular.z
+            ));
+            foreach(var actuator in twistActuators)
+            {
+                actuator.SetTwist(linearRUF, angularRUF);
+            }
         }
     }
 }
