@@ -37,7 +37,7 @@ namespace SmarcGUI.KeyboardControllers
         {
             horizCtrl.TargetVelocity = Vector3.zero;
             altCtrl.TargetVelocity = 0f;
-            attCtrl.TargetYawRate = 0f;
+            attCtrl.TargetYawRateDeg = 0f;
         }
 
         void Update()
@@ -57,7 +57,7 @@ namespace SmarcGUI.KeyboardControllers
 
             horizCtrl.TargetVelocity = new Vector3(strafeValue * HorizontalSpeed, 0, forwardValue * HorizontalSpeed);
             altCtrl.TargetVelocity = verticalValue * VerticalSpeed;
-            attCtrl.TargetYawRate = yawValue * YawSpeed;
+            attCtrl.TargetYawRateDeg = yawValue * YawSpeed;
         }
 
 

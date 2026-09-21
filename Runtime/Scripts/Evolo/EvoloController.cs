@@ -36,7 +36,7 @@ namespace Evolo
 
             attCtrl = GetComponent<AttitudeControllerPID>();
             attCtrl.YawControlMode = YawControlMode.YawRate;
-            attCtrl.TargetYawRate = 0f;
+            attCtrl.TargetYawRateDeg = 0f;
             attCtrl.TiltMode = TiltMode.ReactToAcceleration;
 
             horizCtrl = GetComponent<HorizontalController>();
@@ -51,7 +51,7 @@ namespace Evolo
             twistLinear.z = Speed;
             YawRate = Mathf.Clamp(YawRate, -MaxYawRate, MaxYawRate);
             twistAngular.y = YawRate;
-            attCtrl.TargetYawRate = Mathf.Clamp(YawRate, -MaxYawRate, MaxYawRate);
+            attCtrl.TargetYawRateDeg = Mathf.Clamp(YawRate, -MaxYawRate, MaxYawRate);
             Altitude = Mathf.Clamp(Altitude, 0, MaxAltitude);
             altCtrl.TargetAltitude = Altitude;
         }

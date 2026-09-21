@@ -31,11 +31,11 @@ namespace Smarc.GenericControllers
         public TiltMode TiltMode = TiltMode.TargetUp;
 
         [Header("Rates")]
-        public float TargetYawRate = 0; // Target yaw rate in degrees per second
+        public float TargetYawRateDeg = 0f; // Target yaw rate in degrees per second
         public float MaxYawRateDeg = 45f;
-        public float TargetRollRate = 0f; // Target roll rate in degrees per second
+        public float TargetRollRateDeg = 0f; // Target roll rate in degrees per second
         public float MaxRollRateDeg = 45f;
-        public float TargetPitchRate = 0f; // Target pitch rate in degrees per second
+        public float TargetPitchRateDeg = 0f; // Target pitch rate in degrees per second
         public float MaxPitchRateDeg = 45f;
 
         [Header("Orientation Hold")]
@@ -55,12 +55,12 @@ namespace Smarc.GenericControllers
             robotBody = new MixedBody(RobotAB, RobotRB);
         }
 
-        protected virtual Vector3 GetTargetTiltRate()
+        protected virtual Vector3 GetTargetTiltRateDeg()
         {
             throw new System.NotImplementedException("GetTargetTiltRate() must be implemented in a derived class.");
         }
 
-        protected virtual Vector3 GetTargetYawRate()
+        protected virtual Vector3 GetTargetYawRateDeg()
         {
             throw new System.NotImplementedException("GetTargetYawRate() must be implemented in a derived class.");
         }
@@ -77,22 +77,22 @@ namespace Smarc.GenericControllers
             {
                 Debug.Log($"Robot too tilted! upDot: {upDot} < UpDotLimit: {UpDotLimit}.");
                 TargetUp = Vector3.up;
-                tiltRate = GetTargetTiltRate();
+                tiltRate = GetTargetTiltRateDeg();
                 yawRate = Vector3.zero;
             }
             else
             {
-                if(TiltMode != TiltMode.RollPitchRate) tiltRate = GetTargetTiltRate();
+                if(TiltMode != TiltMode.RollPitchRate) tiltRate = GetTargetTiltRateDeg();
                 else 
                 {
-                    tiltRate = new Vector3(TargetPitchRate, 0f, TargetRollRate);
+                    tiltRate = new Vector3(TargetPitchRateDeg, 0f, TargetRollRateDeg);
                     tiltRate = robotBody.transform.TransformDirection(tiltRate); // Convert from local to world space
                 }
 
-                if(YawControlMode != YawControlMode.YawRate) yawRate = GetTargetYawRate();
+                if(YawControlMode != YawControlMode.YawRate) yawRate = GetTargetYawRateDeg();
                 else 
                 {
-                    yawRate = new Vector3(0f, TargetYawRate, 0f);
+                    yawRate = new Vector3(0f, TargetYawRateDeg, 0f);
                     yawRate = robotBody.transform.TransformDirection(yawRate); // Convert from local to world space
                 }
             }
@@ -102,6 +102,7 @@ namespace Smarc.GenericControllers
             targetAngularVelocity[0] = Mathf.Clamp(targetAngularVelocity[0], -MaxPitchRateDeg, MaxPitchRateDeg);
             targetAngularVelocity[1] = Mathf.Clamp(targetAngularVelocity[1], -MaxYawRateDeg, MaxYawRateDeg);
             targetAngularVelocity[2] = Mathf.Clamp(targetAngularVelocity[2], -MaxRollRateDeg, MaxRollRateDeg);
+            targetAngularVelocity *= Mathf.Deg2Rad;
             Vector3 torque = (targetAngularVelocity - robotBody.angularVelocity) / Time.fixedDeltaTime;
             robotBody.AddTorque(torque, ForceMode.Acceleration);
         }
@@ -110,7 +111,7 @@ namespace Smarc.GenericControllers
         {
             if(YawControlMode == YawControlMode.YawRate)
             {
-                TargetYawRate = AngularVelocity.y;
+                TargetYawRateDeg = AngularVelocity.y;
             }
             else
             {
@@ -119,8 +120,8 @@ namespace Smarc.GenericControllers
 
             if(TiltMode == TiltMode.RollPitchRate)
             {
-                TargetRollRate = AngularVelocity.z;
-                TargetPitchRate = AngularVelocity.x; 
+                TargetRollRateDeg = AngularVelocity.z;
+                TargetPitchRateDeg = AngularVelocity.x; 
             }
             else
             {
