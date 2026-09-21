@@ -42,7 +42,7 @@ namespace ActiveHook.Mavros
             {
                 horizCtrl.TargetVelocity = Vector3.zero;
                 altCtrl.TargetVelocity = 0f;
-                attCtrl.TargetYawRate = 0f;
+                attCtrl.TargetYawRateDeg = 0f;
                 return;
             }
 
@@ -58,7 +58,7 @@ namespace ActiveHook.Mavros
 
             horizCtrl.TargetVelocity = new Vector3(strafeValue, 0, forwardValue);
             altCtrl.TargetVelocity = verticalValue;
-            attCtrl.TargetYawRate = yawValue;
+            attCtrl.TargetYawRateDeg = yawValue;
         }
     }
 }

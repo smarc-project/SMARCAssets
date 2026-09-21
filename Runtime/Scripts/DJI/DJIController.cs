@@ -142,8 +142,9 @@ namespace dji
             altCtrl.TargetVelocity = 0f;
             altCtrl.TargetAltitude = robotBody.position.y;
 
-            attCtrl.YawControlMode = YawControlMode.YawRate;
-            attCtrl.TargetYawRate = 0f;
+            attCtrl.YawControlMode = YawControlMode.CompassHeading;
+            attCtrl.TargetYawRateDeg = 0f;
+            attCtrl.TargetCompassHeading = robotBody.transform.eulerAngles.y;
             attCtrl.TiltMode = TiltMode.ReactToAcceleration;
 
             horizCtrl.ControlMode = HorizontalControlMode.UnityPosition;
@@ -233,8 +234,22 @@ namespace dji
         void CommandYawRate(float timeout=0.2f)
         {
             attCtrl.YawControlMode = YawControlMode.YawRate;
-            if (Time.time - lastYawCommandTime > timeout) commandedYawRate = 0f;
-            attCtrl.TargetYawRate = commandedYawRate;
+            if (Time.time - lastYawCommandTime > timeout) 
+            {
+                commandedYawRate = 0f;
+                attCtrl.YawControlMode = YawControlMode.CompassHeading;
+                if (lastYawCommandTime > 0)
+                {
+                    attCtrl.TargetYawRateDeg = 0f;
+                    attCtrl.TargetCompassHeading = robotBody.transform.eulerAngles.y;
+                    lastYawCommandTime = -1;
+                }
+            }
+            else
+            {
+                attCtrl.TargetYawRateDeg = commandedYawRate;
+                attCtrl.YawControlMode = YawControlMode.YawRate;
+            }
         }
 
         void TakingOff()

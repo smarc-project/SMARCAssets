@@ -22,7 +22,7 @@ namespace SmarcGUI.KeyboardControllers
         public override void OnReset()
         {
             horizontalCtrl.TargetVelocity = Vector3.zero;
-            attitudeCtrl.TargetYawRate = 0f;
+            attitudeCtrl.TargetYawRateDeg = 0f;
         }
 
         void Awake()
@@ -42,7 +42,7 @@ namespace SmarcGUI.KeyboardControllers
             var boostValue = boostAction.ReadValue<float>();
 
             horizontalCtrl.TargetVelocity = new Vector3(0, 0, forwardValue * Speed * (boostValue > 0 ? BoostMultiplier : 1f));
-            attitudeCtrl.TargetYawRate = yawValue * YawRate * (boostValue > 0 ? BoostMultiplier : 1f);
+            attitudeCtrl.TargetYawRateDeg = yawValue * YawRate * (boostValue > 0 ? BoostMultiplier : 1f);
 
             if (AutoSpeed != 0f)
             {
@@ -51,7 +51,7 @@ namespace SmarcGUI.KeyboardControllers
 
             if (AutoYawRate != 0f)
             {
-                attitudeCtrl.TargetYawRate = AutoYawRate;
+                attitudeCtrl.TargetYawRateDeg = AutoYawRate;
             }
 
         }

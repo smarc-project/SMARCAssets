@@ -25,7 +25,7 @@ namespace Smarc.GenericControllers
         public int RollDirection = 1;
 
 
-        protected override Vector3 GetTargetTiltRate()
+        protected override Vector3 GetTargetTiltRateDeg()
         {
             if (TiltMode == TiltMode.ReactToAcceleration)
             {
@@ -64,23 +64,23 @@ namespace Smarc.GenericControllers
             return TiltControl();
         }
 
-        protected override Vector3 GetTargetYawRate()
+        protected override Vector3 GetTargetYawRateDeg()
         {
             if (YawControlMode == YawControlMode.CompassHeading)
             {
                 float currentHeading = robotBody.transform.eulerAngles.y;
                 // Compute shortest angle difference, so that PID doesn't try to spin the long way around
                 float angleDifference = Mathf.DeltaAngle(currentHeading, TargetCompassHeading);
-                if (Mathf.Abs(angleDifference) <= YawTolerance) TargetYawRate = 0f;
-                else TargetYawRate = Mathf.Sign(angleDifference) * MaxYawRateDeg;
+                if (Mathf.Abs(angleDifference) <= YawTolerance) TargetYawRateDeg = 0f;
+                else TargetYawRateDeg = Mathf.Sign(angleDifference) * MaxYawRateDeg;
             }
 
             if (OnlyIfMovingForward)
             {
-                if (Mathf.Abs(robotBody.localVelocity.z) < 0.1f) TargetYawRate = 0f;
+                if (Mathf.Abs(robotBody.localVelocity.z) < 0.1f) TargetYawRateDeg = 0f;
             }
 
-            return Mathf.Deg2Rad * TargetYawRate * Vector3.up;
+            return TargetYawRateDeg * Vector3.up;
         }
 
 
@@ -129,7 +129,7 @@ namespace Smarc.GenericControllers
 
             float dot2 = Mathf.Clamp(Vector3.Dot(robotBody.transform.up, TargetUp), -1f, 1f);
             float errorDeg = Mathf.Acos(dot2) * Mathf.Rad2Deg;
-            Vector3 vel = TiltKp * errorDeg * Mathf.Deg2Rad * correctiveAxis;
+            Vector3 vel = TiltKp * errorDeg * correctiveAxis;
             return vel;
         }
         
@@ -158,7 +158,7 @@ namespace Smarc.GenericControllers
             if(YawControlMode == YawControlMode.YawRate)
             {
                 Gizmos.color = Color.blue;
-                Vector3 yawDir = Quaternion.Euler(0f, tf.eulerAngles.y + TargetYawRate, 0f) * Vector3.forward;
+                Vector3 yawDir = Quaternion.Euler(0f, tf.eulerAngles.y + TargetYawRateDeg, 0f) * Vector3.forward;
                 Vector3 yawEndPos = tf.position + yawDir.normalized * 2.0f;
                 Gizmos.DrawLine(startPos, yawEndPos);
             }
