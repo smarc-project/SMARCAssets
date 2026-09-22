@@ -4758,7 +4758,7 @@ ParticleSystem:
     vectorLabel1_3: W
 --- !u!199 &8333919738254801454
 ParticleSystemRenderer:
-  serializedVersion: 6
+  serializedVersion: 7
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -4777,6 +4777,8 @@ ParticleSystemRenderer:
   m_RayTracingAccelStructBuildFlagsOverride: 0
   m_RayTracingAccelStructBuildFlags: 1
   m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -4799,9 +4801,11 @@ ParticleSystemRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+  m_MaskInteraction: 0
   m_RenderMode: 4
   m_MeshDistribution: 0
   m_SortMode: 0
@@ -4833,7 +4837,6 @@ ParticleSystemRenderer:
   m_MeshWeighting1: 1
   m_MeshWeighting2: 1
   m_MeshWeighting3: 1
-  m_MaskInteraction: 0
 --- !u!1 &2261597347704335834
 GameObject:
   m_ObjectHideFlags: 0
@@ -10113,7 +10116,7 @@ ParticleSystem:
     vectorLabel1_3: W
 --- !u!199 &6688731599460154991
 ParticleSystemRenderer:
-  serializedVersion: 6
+  serializedVersion: 7
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -10132,6 +10135,8 @@ ParticleSystemRenderer:
   m_RayTracingAccelStructBuildFlagsOverride: 0
   m_RayTracingAccelStructBuildFlags: 1
   m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -10153,9 +10158,11 @@ ParticleSystemRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+  m_MaskInteraction: 0
   m_RenderMode: 4
   m_MeshDistribution: 0
   m_SortMode: 0
@@ -10187,7 +10194,6 @@ ParticleSystemRenderer:
   m_MeshWeighting1: 1
   m_MeshWeighting2: 1
   m_MeshWeighting3: 1
-  m_MaskInteraction: 0
 --- !u!1 &6645972521355096206
 GameObject:
   m_ObjectHideFlags: 0
@@ -10221,6 +10227,7 @@ Transform:
   - {fileID: 8280558347506205101}
   - {fileID: 184805928062597326}
   - {fileID: 3973046976086469217}
+  - {fileID: 3300686750698039053}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &2427749715946387960
@@ -10258,7 +10265,10 @@ MonoBehaviour:
   CurrentOrientationRange: 360
   CurrentSpeedBase: 1
   CurrentSpeedRange: 1
+  RGBOcean: 1
   CamTF: {fileID: 8280558347506205101}
+  WaitForExposure: 2
+  NumShotsPerExposure: 10
   LookAtTarget: {fileID: 0}
   CenterCamerasHorizontallyOnTarget: 1
   LookAtTargetOffsetHorizontalRange: 5
@@ -10268,8 +10278,92 @@ MonoBehaviour:
   CameraRotationRange: 4.28
   CameraFOVBase: 80
   CameraFOVRange: 20
+  YellowNoiseRenderers: []
+  OrangeNoiseRenderers: []
+  RandomizeSurfaceAppearance: 1
+  SurfaceRandomizationStrength: 1
+  WarmShiftedChance: 0.7
+  HardNegativeChance: 0.15
+  FarChance: 0.15
+  TargetYellowHueRange: {x: 0.113, y: 0.179}
+  TargetOrangeHueRange: {x: 0.056, y: 0.122}
   NumImages: 3
-  TimeBetweenImages: 1
+--- !u!1 &8040024624226082387
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3300686750698039053}
+  - component: {fileID: 6551849054679159816}
+  - component: {fileID: 6348148397881797332}
+  m_Layer: 0
+  m_Name: Forces
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3300686750698039053
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8040024624226082387}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: -0.004999995, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 9121558815511782562}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &6551849054679159816
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8040024624226082387}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 9, y: 3, z: 5}
+  m_Center: {x: 0.75042856, y: 0, z: 0}
+--- !u!114 &6348148397881797332
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8040024624226082387}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b791f3722c629b742b0b3ef3e7994f3d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: SMARC.SMARCAssets::Force.ForceFieldStatic
+  onlyUnderwater: 0
+  onlyAboveWater: 0
+  randomizationMode: 1
+  RandomRangeX: 50
+  RandomRangeY: 3
+  RandomRangeZ: 50
+  IncludeInVisualizer: 1
+  mode: 0
+  ForceVector: {x: 0, y: 1, z: 0}
+  ForceMagnitude: 0.2
 --- !u!1 &8533012500890252090
 GameObject:
   m_ObjectHideFlags: 0
