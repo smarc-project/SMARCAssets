@@ -24,12 +24,12 @@ namespace ActiveHook.Mavros
         HorizontalControllerBase horizCtrl;
 
         [Header("Debug")]
-        public float ReceivedForward =0f;
-        public float ReceivedStrafe =0f;
-        public float ReceivedVertical =0f;
-        public float ReceivedYaw =0f;
-        public float ReceivedRoll =0f;
-        public float ReceivedPitch =0f;
+        public float RawForward =0f;
+        public float RawLeft =0f;
+        public float RawUp =0f;
+        public float RawYaw =0f;
+        public float RawRoll =0f;
+        public float RawPitch =0f;
 
         void Awake()
         {
@@ -49,19 +49,19 @@ namespace ActiveHook.Mavros
                 return;
             }
 
-            ReceivedForward = ROSMsg.x;
-            ReceivedStrafe = ROSMsg.y;
-            ReceivedVertical = ROSMsg.z;
-            ReceivedYaw = ROSMsg.r;
-            ReceivedRoll = ROSMsg.s;
-            ReceivedPitch = ROSMsg.t;
+            RawForward = ROSMsg.x;
+            RawLeft = ROSMsg.y;
+            RawUp = ROSMsg.z;
+            RawYaw = ROSMsg.r;
+            RawRoll = ROSMsg.t;
+            RawPitch = ROSMsg.s;
 
-            var forwardValue = ROSMsg.x/1000f * forwardSpeed;
-            var strafeValue = ROSMsg.y/1000f * strafeSpeed;
-            var verticalValue = ((ROSMsg.z/1000f) - 0.5f) * verticalSpeed * 2f; // Map from [0,1] to [-1,1]
-            var yawValue = ROSMsg.r/1000f * yawSpeed;
-            var rollValue = ROSMsg.s/1000f * rollSpeed;
-            var pitchValue = ROSMsg.t/1000f * pitchSpeed;
+            var forwardValue = RawForward/1000f * forwardSpeed;
+            var strafeValue = RawLeft/1000f * strafeSpeed;
+            var verticalValue = ((RawUp/1000f) - 0.5f) * verticalSpeed * 2f; // Map from [0,1] to [-1,1]
+            var yawValue = RawYaw/1000f * yawSpeed;
+            var rollValue = RawRoll/1000f * rollSpeed;
+            var pitchValue = RawPitch/1000f * pitchSpeed;
 
             horizCtrl.TargetVelocity = new Vector3(strafeValue, 0, forwardValue);
             altCtrl.TargetVelocity = verticalValue;
