@@ -30,7 +30,8 @@ namespace VehicleComponents.Sensors
                 ArticulationReducedSpace forces = body.driveForce;
                 if (forces.dofCount == 1) instantForceMagnitude = forces[0];
                 else Debug.LogWarning($"Insert the top rope link!");
-                direction = body.transform.rotation * body.anchorRotation * Vector3.right; // get the direction of the force in world space
+                direction = body.transform.rotation * body.anchorRotation * -Vector3.right; // get the direction of the force in world space
+                // -x because to get the dirrection of the force
                 direction = transform.InverseTransformDirection(direction); // convert to local space
                 instantForce = direction * instantForceMagnitude;
             }
