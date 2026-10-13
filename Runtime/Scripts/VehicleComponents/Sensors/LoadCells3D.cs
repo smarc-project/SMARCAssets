@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using Unity.Mathematics;
 
 namespace VehicleComponents.Sensors
 {
@@ -10,11 +11,16 @@ namespace VehicleComponents.Sensors
         [Header("LoadCells3D")]
         private Queue<Vector3> forceReadings = new(); // Queue to store the last N force readings for moving average
         public int SmoothOverFramesNum = 5; // size of the queue
+        public Vector3 LoadCellReadings; // readings of the individual load cells
         public Vector3 Force;
         public float Weight;
         // public Joint joint; // for now, allow only articulation bodies
         public ArticulationBody body;
 
+        public float TriangleSize = 0.2f; // size of the triangle for load cell placement
+        public float TriangleHeight = 0.05f; // height of the triangle for load cell placement
+
+        private float3x3 equationMatrix; // matrix encoding the equation to convert the force vector to load cell readings
 
         public override bool UpdateSensor(double deltaTime)
         {
@@ -46,7 +52,29 @@ namespace VehicleComponents.Sensors
                 sum += f;
             }
             Force = sum / forceReadings.Count;
+            LoadCellReadings = GetLoadCellReadings(Force);
+            Weight = Force.magnitude / Physics.gravity.magnitude;
             return true;
+        }
+
+        /// <summary>
+        /// Calculates the reading of individual load cells from the force vector.
+        /// </summary>
+        /// <param name="forceVector">The force vector to calculate load cell readings from.</param>
+        /// <returns>The load cell readings.</returns>
+        private Vector3 GetLoadCellReadings(Vector3 forceVector)
+        {
+            // populate the equation matrix
+            // [1   1  1]   [f1]   [-Fy]
+            // [z1 z2 z3] * [f2] = [-h*Fz]
+            // [x1 x2 x3]   [f3]   [-h*Fx]
+            equationMatrix = new float3x3( // created by columns
+                1, 1, 1,
+                TriangleSize, TriangleSize*math.cos(math.PI/3*2), TriangleSize*math.cos(math.PI/3*4),
+                0, TriangleSize*math.sin(math.PI/3*2), TriangleSize*math.sin(math.PI/3*4)
+            );
+            Vector3 b = new Vector3(-forceVector.y, -TriangleHeight*forceVector.z, -TriangleHeight*forceVector.x);
+            return math.mul(math.inverse(equationMatrix), b);
         }
 
     }
