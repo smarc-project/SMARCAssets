@@ -1,30 +1,44 @@
 using System.Collections.Generic;
 using UnityEngine;
 using Unity.Mathematics;
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
 
 namespace VehicleComponents.Sensors
 {
 
+    /// <summary>
+    /// A 3D load cell sensor that measures the force vector applied to a vehicle component.
+    /// Calculates the readings of individual load cells based on the force vector and the load cell placement.
+    /// </summary>
     [AddComponentMenu("Smarc/Sensor/LoadCells3D")]
     public class LoadCells3D : Sensor
     {
         [Header("LoadCells3D")]
-        private Queue<Vector3> forceReadings = new(); // Queue to store the last N force readings for moving average
-        public int SmoothOverFramesNum = 5; // size of the queue
-        public Vector3 LoadCellReadings; // readings of the individual load cells
-        public Vector3 Force;
-        public float Weight;
+        public int SmoothOverFramesNum = 1; // size of the queue
+   
         // public Joint joint; // for now, allow only articulation bodies
         public ArticulationBody body;
 
         public float TriangleSize = 0.2f; // size of the triangle for load cell placement
         public float TriangleHeight = 0.05f; // height of the triangle for load cell placement
+        public bool DebugMode = false; // if true, draw the force vector
+        public float DebugForceScale = 0.5f; // length of the drawn force vector in meters per newton
+        public float DebugLineThickness = 20f; // thickness of the drawn force vector in pixels
+
+        [Header("Outputs")]
+        public Vector3 LoadCellReadings; // readings of the individual load cells
+        public Vector3 Force;
+        public float Weight;
+
 
         private float3x3 equationMatrix; // matrix encoding the equation to convert the force vector to load cell readings
+        private Queue<Vector3> forceReadings = new(); // Queue to store the last N force readings for moving average
 
         public override bool UpdateSensor(double deltaTime)
         {
-            if (SmoothOverFramesNum <= 0) {
+            if (SmoothOverFramesNum < 1) {
                 SmoothOverFramesNum = 1; // prevent division by zero
                 Debug.LogWarning("SmoothOverFramesNum must be greater than 0. Setting to 1.");
             }
@@ -37,7 +51,7 @@ namespace VehicleComponents.Sensors
                 if (forces.dofCount == 1) instantForceMagnitude = forces[0];
                 else Debug.LogWarning($"Insert the top rope link!");
                 direction = body.transform.rotation * body.anchorRotation * -Vector3.right; // get the direction of the force in world space
-                // -x because to get the dirrection of the force
+                // -x because to get the direction of the force
                 direction = transform.InverseTransformDirection(direction); // convert to local space
                 instantForce = direction * instantForceMagnitude;
             }
@@ -57,6 +71,16 @@ namespace VehicleComponents.Sensors
             return true;
         }
 
+#if UNITY_EDITOR
+        void OnDrawGizmos()
+        {
+            if (!DebugMode) return;
+            Handles.zTest = UnityEngine.Rendering.CompareFunction.Always;
+            Handles.color = Color.blue;
+            Handles.DrawLine(transform.position, transform.position + transform.TransformDirection(Force) * DebugForceScale, DebugLineThickness);
+        }
+#endif
+
         /// <summary>
         /// Calculates the reading of individual load cells from the force vector.
         /// </summary>
@@ -68,7 +92,7 @@ namespace VehicleComponents.Sensors
             // [1   1  1]   [f1]   [-Fy]
             // [z1 z2 z3] * [f2] = [-h*Fz]
             // [x1 x2 x3]   [f3]   [-h*Fx]
-            equationMatrix = new float3x3( // created by columns
+            equationMatrix = new float3x3(
                 1, 1, 1,
                 TriangleSize, TriangleSize*math.cos(math.PI/3*2), TriangleSize*math.cos(math.PI/3*4),
                 0, TriangleSize*math.sin(math.PI/3*2), TriangleSize*math.sin(math.PI/3*4)
