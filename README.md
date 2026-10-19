@@ -78,7 +78,7 @@ unity open ./SMARCUnity
 3. Press `Play`
 4. In the game mode, enable **Unity Control** for keyboard control
 
-Key mappings are:
+Example of key mappings for SAM are:
 
 <!-- TODO -->
 | Key | SAM action |
