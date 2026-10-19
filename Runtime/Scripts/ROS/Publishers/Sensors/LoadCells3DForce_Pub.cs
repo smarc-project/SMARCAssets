@@ -1,6 +1,7 @@
 using UnityEngine;
 using SensorLoadCells3D = VehicleComponents.Sensors.LoadCells3D;
 using Unity.Robotics.Core; // Clock
+using Unity.Robotics.ROSTCPConnector.ROSGeometry; // To<FLU>()
 using ROS.Core;
 using RosMessageTypes.Geometry;
 
