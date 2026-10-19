@@ -10,21 +10,20 @@ namespace VehicleComponents.Sensors
 
     /// <summary>
     /// A 3D load cell sensor that measures the force vector applied to a vehicle component.
-    /// Calculates the readings of individual load cells based on the force vector and the load cell placement.
+    /// 
+    /// Place on the Winch component of the vehicle, and set the ArticulationBody to the top rope link
+    /// The sensor will calculate the force vector applied to the top rope link and convert it to load cell readings.
     /// </summary>
     [AddComponentMenu("Smarc/Sensor/LoadCells3D")]
     public class LoadCells3D : Sensor
     {
         [Header("LoadCells3D")]
-        public int SmoothOverFramesNum = 1; // size of the queue
-   
-        // public Joint joint; // for now, allow only articulation bodies
         public ArticulationBody body;
-
-        public float TriangleSize = 0.2f; // size of the triangle for load cell placement
-        public float TriangleHeight = 0.05f; // height of the triangle for load cell placement
+        public int SmoothOverFramesNum = 1; // size of the queue
+        public float LoadCellRadius = 0.2f; // radius of the load cells placement
+        public float PlateWidth = 0.05f; // width of the plate connecting the load cells
         public bool DebugMode = false; // if true, draw the force vector
-        public float DebugForceScale = 0.5f; // length of the drawn force vector in meters per newton
+        public float DebugForceScale = 0.5f; // scales the length of the drawn force vector
         public float DebugLineThickness = 20f; // thickness of the drawn force vector in pixels
 
         [Header("Outputs")]
@@ -44,7 +43,7 @@ namespace VehicleComponents.Sensors
             }
             Vector3 instantForce = new Vector3(0,0,0);
             float instantForceMagnitude = 0;
-            Vector3 direction = new Vector3(0,0,0);
+            Vector3 direction;
             if (body != null && body.transform.parent != null) // articulation body
             {
                 ArticulationReducedSpace forces = body.driveForce;
@@ -94,10 +93,10 @@ namespace VehicleComponents.Sensors
             // [x1 x2 x3]   [f3]   [-h*Fx]
             equationMatrix = new float3x3(
                 1, 1, 1,
-                TriangleSize, TriangleSize*math.cos(math.PI/3*2), TriangleSize*math.cos(math.PI/3*4),
-                0, TriangleSize*math.sin(math.PI/3*2), TriangleSize*math.sin(math.PI/3*4)
+                LoadCellRadius, LoadCellRadius*math.cos(math.PI/3*2), LoadCellRadius*math.cos(math.PI/3*4),
+                0, LoadCellRadius*math.sin(math.PI/3*2), LoadCellRadius*math.sin(math.PI/3*4)
             );
-            Vector3 b = new Vector3(-forceVector.y, -TriangleHeight*forceVector.z, -TriangleHeight*forceVector.x);
+            Vector3 b = new Vector3(-forceVector.y, -PlateWidth*forceVector.z, -PlateWidth*forceVector.x);
             return math.mul(math.inverse(equationMatrix), b);
         }
 
