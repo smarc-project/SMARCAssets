@@ -968,7 +968,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: eee95b5d1413e86d4bed3e951d06a085, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  topic: core/gps
+  topic: core/can_gps
   NotARobot: 0
   frequency: 10
   ignoreSensorState: 0
