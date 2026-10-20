@@ -19,12 +19,19 @@ namespace VehicleComponents.Sensors
     {
         [Header("LoadCells3D")]
         public ArticulationBody body;
-        public int SmoothOverFramesNum = 1; // size of the queue
-        public float LoadCellRadius = 0.2f; // radius of the load cells placement
-        public float PlateWidth = 0.05f; // width of the plate connecting the load cells
-        public bool DebugMode = false; // if true, draw the force vector
-        public float DebugForceScale = 0.5f; // scales the length of the drawn force vector
-        public float DebugLineThickness = 20f; // thickness of the drawn force vector in pixels
+
+        [SerializeField, Min(1)]
+        private int SmoothOverFramesNum = 1; // size of the queue
+        [SerializeField]
+        private float LoadCellRadius = 0.2f; // radius of the load cells placement
+        [SerializeField]
+        private float PlateWidth = 0.05f; // width of the plate connecting the load cells
+        [SerializeField]
+        private bool DebugMode = false; // if true, draw the force vector
+        [SerializeField]
+        private float DebugForceScale = 0.5f; // scales the length of the drawn force vector
+        [SerializeField]
+        private float DebugLineThickness = 10f; // thickness of the drawn force vector in pixels
 
         [Header("Outputs")]
         public Vector3 LoadCellReadings; // readings of the individual load cells
@@ -55,10 +62,6 @@ namespace VehicleComponents.Sensors
 
         public override bool UpdateSensor(double deltaTime)
         {
-            if (SmoothOverFramesNum < 1) {
-                SmoothOverFramesNum = 1; // prevent division by zero
-                Debug.LogWarning("SmoothOverFramesNum must be greater than 0. Setting to 1.");
-            }
             Vector3 instantForce;
             float instantForceMagnitude;
             Vector3 direction;
