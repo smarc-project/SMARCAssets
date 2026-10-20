@@ -35,31 +35,45 @@ namespace VehicleComponents.Sensors
         private float3x3 equationMatrix; // matrix encoding the equation to convert the force vector to load cell readings
         private Queue<Vector3> forceReadings = new(); // Queue to store the last N force readings for moving average
 
+        void Start()
+        {
+            if (body == null || body.transform.parent == null)
+            {
+                Debug.LogWarning($"[LoadCells3D] ArticulationBody not set or has no parent. Disabling sensor.");
+                enabled=false;
+                return;
+            }
+            ArticulationReducedSpace forces = body.driveForce;
+            if (forces.dofCount != 1)
+            {
+                Debug.LogWarning($"[LoadCells3D] ArticulationBody has {forces.dofCount} DOFs. LoadCells3D only supports 1 DOF prismatic joints. Disabling sensor.");
+                enabled=false;
+                return;
+            }
+        } 
+
+
         public override bool UpdateSensor(double deltaTime)
         {
             if (SmoothOverFramesNum < 1) {
                 SmoothOverFramesNum = 1; // prevent division by zero
                 Debug.LogWarning("SmoothOverFramesNum must be greater than 0. Setting to 1.");
             }
-            Vector3 instantForce = new Vector3(0,0,0);
-            float instantForceMagnitude = 0;
+            Vector3 instantForce;
+            float instantForceMagnitude;
             Vector3 direction;
-            if (body != null && body.transform.parent != null) // articulation body
-            {
-                ArticulationReducedSpace forces = body.driveForce;
-                if (forces.dofCount == 1) instantForceMagnitude = forces[0];
-                else Debug.LogWarning($"Insert the top rope link!");
-                direction = body.transform.rotation * body.anchorRotation * -Vector3.right; // get the direction of the force in world space
-                // -x because to get the direction of the force
-                direction = transform.InverseTransformDirection(direction); // convert to local space
-                instantForce = direction * instantForceMagnitude;
-            }
+
+            instantForceMagnitude = body.driveForce[0];
+            direction = body.transform.rotation * body.anchorRotation * -Vector3.right; // get the direction of the force in world space
+            // -x because to get the direction of the force
+            direction = transform.InverseTransformDirection(direction); // convert to local space
+            instantForce = direction * instantForceMagnitude;
 
             forceReadings.Enqueue(instantForce);
             while (forceReadings.Count > SmoothOverFramesNum) forceReadings.Dequeue(); // remove oldest readings
 
             // Calculate the moving average
-            Vector3 sum = new Vector3(0,0,0);
+            Vector3 sum =  Vector3.zero;
             foreach (Vector3 f in forceReadings)
             {
                 sum += f;
