@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using Unity.Mathematics;
+using Unity.Robotics.UrdfImporter;
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
@@ -19,13 +20,16 @@ namespace VehicleComponents.Sensors
     {
         [Header("LoadCells3D")]
         public ArticulationBody body;
-
+        public Transform loadCell1;
+        public Transform loadCell2;
+        public Transform loadCell3;
         [SerializeField, Min(1)]
         private int SmoothOverFramesNum = 1; // size of the queue
         [SerializeField]
         private float LoadCellRadius = 0.2f; // radius of the load cells placement
         [SerializeField]
         private float PlateWidth = 0.05f; // width of the plate connecting the load cells
+        private bool recomputeEquationMtx = true; 
         [SerializeField]
         private bool DebugMode = false; // if true, draw the force vector
         [SerializeField]
@@ -42,6 +46,7 @@ namespace VehicleComponents.Sensors
         private float3x3 equationMatrix; // matrix encoding the equation to convert the force vector to load cell readings
         private Queue<Vector3> forceReadings = new(); // Queue to store the last N force readings for moving average
 
+
         void Start()
         {
             if (body == null || body.transform.parent == null)
@@ -57,7 +62,25 @@ namespace VehicleComponents.Sensors
                 enabled=false;
                 return;
             }
+            if (loadCell1 == null || loadCell2 == null || loadCell3 == null)
+            {
+                Debug.LogWarning($"[LoadCells3D] One or more load cell ArticulationBodies not set. Disabling sensor.");
+                enabled=false;
+                return;
+            }
         } 
+
+        void OnValidate()
+        {
+            // reposition the load cells
+            if (loadCell1 != null && loadCell2 != null && loadCell3 != null)
+            {
+                loadCell1.transform.localPosition = new Vector3(0, 0, LoadCellRadius);
+                loadCell2.transform.localPosition = new Vector3(LoadCellRadius * Mathf.Sin(Mathf.PI / 3 * 2), 0, LoadCellRadius * Mathf.Cos(Mathf.PI / 3 * 2));
+                loadCell3.transform.localPosition = new Vector3(LoadCellRadius * Mathf.Sin(Mathf.PI / 3 * 4), 0, LoadCellRadius * Mathf.Cos(Mathf.PI / 3 * 4));
+            }
+            recomputeEquationMtx = true;
+        }
 
 
         public override bool UpdateSensor(double deltaTime)
@@ -82,9 +105,34 @@ namespace VehicleComponents.Sensors
                 sum += f;
             }
             Force = sum / forceReadings.Count;
+            if (recomputeEquationMtx)
+            {
+                UpdateMatrix();
+                recomputeEquationMtx = false;
+            }
             LoadCellReadings = GetLoadCellReadings(Force);
             Weight = Force.magnitude / Physics.gravity.magnitude;
             return true;
+        }
+
+
+        /// <summary>
+        /// Calculates the reading of individual load cells from the force vector.
+        /// </summary>
+        /// <param name="forceVector">The force vector to calculate load cell readings from.</param>
+        /// <returns>The load cell readings.</returns>
+        private Vector3 GetLoadCellReadings(Vector3 forceVector)
+        {
+            Vector3 b = new Vector3(-forceVector.y, -PlateWidth*forceVector.z, -PlateWidth*forceVector.x);
+            return math.mul(math.inverse(equationMatrix), b);
+        }
+        private void UpdateMatrix()
+        {
+            equationMatrix = new float3x3(
+                1, 1, 1,
+                loadCell1.transform.localPosition.z, loadCell2.transform.localPosition.z, loadCell3.transform.localPosition.z,
+                loadCell1.transform.localPosition.x, loadCell2.transform.localPosition.x, loadCell3.transform.localPosition.x
+            );
         }
 
 #if UNITY_EDITOR
@@ -96,27 +144,5 @@ namespace VehicleComponents.Sensors
             Handles.DrawLine(transform.position, transform.position + transform.TransformDirection(Force) * DebugForceScale, DebugLineThickness);
         }
 #endif
-
-        /// <summary>
-        /// Calculates the reading of individual load cells from the force vector.
-        /// </summary>
-        /// <param name="forceVector">The force vector to calculate load cell readings from.</param>
-        /// <returns>The load cell readings.</returns>
-        private Vector3 GetLoadCellReadings(Vector3 forceVector)
-        {
-            // populate the equation matrix
-            // [1   1  1]   [f1]   [-Fy]
-            // [z1 z2 z3] * [f2] = [-h*Fz]
-            // [x1 x2 x3]   [f3]   [-h*Fx]
-            equationMatrix = new float3x3(
-                1, 1, 1,
-                LoadCellRadius, LoadCellRadius*math.cos(math.PI/3*2), LoadCellRadius*math.cos(math.PI/3*4),
-                0, LoadCellRadius*math.sin(math.PI/3*2), LoadCellRadius*math.sin(math.PI/3*4)
-            );
-            Vector3 b = new Vector3(-forceVector.y, -PlateWidth*forceVector.z, -PlateWidth*forceVector.x);
-            return math.mul(math.inverse(equationMatrix), b);
-        }
-
     }
-
 }
