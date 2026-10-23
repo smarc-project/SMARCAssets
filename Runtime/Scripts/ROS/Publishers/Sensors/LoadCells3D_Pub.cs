@@ -5,19 +5,28 @@ using RosMessageTypes.Std;
 
 namespace ROS.Publishers
 {
-    [AddComponentMenu("Smarc/ROS/LoadCells3D_Pub")]
+    [AddComponentMenu("Smarc/ROS/LoadCells3D_Pub")]  
     [RequireComponent(typeof(SensorLoadCells3D))]
-    class LoadCells3D_Pub : ROSSensorPublisher<Float32MultiArrayMsg, SensorLoadCells3D>
+    class LoadCells3D_Pub : ROSSensorPublisher<Float32Msg, SensorLoadCells3D>
     {
+        private int index = 1;
+
         protected override void InitPublisher()
         {
-            ROSMsg.data = new float[3];
+            // expect the topic name to end with the index of the load cell, e.g. /load_cell_1, /load_cell_2, /load_cell_3
+            char lastChar = topic[topic.Length - 1];
+            if (lastChar < '1' || lastChar > '3')
+            {
+                Debug.LogError($"[LoadCells3D_Pub] Topic name must end with the index of the load cell. Disabling.");
+                enabled = false;
+                return;
+            }
+            index = lastChar - '1'; 
         }
+
         protected override void UpdateMessage()
         {
-            ROSMsg.data[0] = DataSource.LoadCellReadings.x;
-            ROSMsg.data[1] = DataSource.LoadCellReadings.y;
-            ROSMsg.data[2] = DataSource.LoadCellReadings.z;
+            ROSMsg.data = DataSource.LoadCellReadings[index];
         }
     }
 }
