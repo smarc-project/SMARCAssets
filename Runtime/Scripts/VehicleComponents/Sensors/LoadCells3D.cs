@@ -40,8 +40,6 @@ namespace VehicleComponents.Sensors
         [Header("Outputs")]
         public Vector3 LoadCellReadings; // readings of the individual load cells
         public Vector3 Force;
-        public float Weight;
-
 
         private float3x3 equationMatrix; // matrix encoding the equation to convert the force vector to load cell readings
         private Queue<Vector3> forceReadings = new(); // Queue to store the last N force readings for moving average
@@ -111,7 +109,6 @@ namespace VehicleComponents.Sensors
                 recomputeEquationMtx = false;
             }
             LoadCellReadings = GetLoadCellReadings(Force);
-            Weight = Force.magnitude / Physics.gravity.magnitude;
             return true;
         }
 
@@ -120,11 +117,11 @@ namespace VehicleComponents.Sensors
         /// Calculates the reading of individual load cells from the force vector.
         /// </summary>
         /// <param name="forceVector">The force vector to calculate load cell readings from.</param>
-        /// <returns>The load cell readings.</returns>
+        /// <returns>The load cell readings (kg).</returns>
         private Vector3 GetLoadCellReadings(Vector3 forceVector)
         {
             Vector3 b = new Vector3(-forceVector.y, -PlateWidth*forceVector.z, -PlateWidth*forceVector.x);
-            return math.mul(math.inverse(equationMatrix), b);
+            return math.mul(math.inverse(equationMatrix), b)/Physics.gravity.magnitude;;
         }
         private void UpdateMatrix()
         {
