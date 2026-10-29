@@ -96,8 +96,8 @@ MonoBehaviour:
   reverse: 1
   orientation: 0
   rpm: 0
-  RPMMax: 1000
-  RPMMin: 0
+  RPMMax: 2000
+  RPMMin: 200
   RPMToForceMultiplier: 0.005
   RPMReverseMultiplier: 0.6
   HoverDefault: 0
