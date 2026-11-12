@@ -16,6 +16,9 @@ namespace VehicleComponents.Sensors
         public double alt;
         public bool fix;
 
+        [Tooltip("When enabled, GPS measurements remain available underwater.")]
+        public bool ignoreWaterQuery = false;
+
         private GlobalReferencePoint _gpsRef;
         private WaterQueryModel _waterModel;
 
@@ -47,7 +50,7 @@ namespace VehicleComponents.Sensors
         public override bool UpdateSensor(double deltaTime)
         {
             if(_gpsRef == null) return false;
-            if(_waterModel == null) fix = true;
+            if(ignoreWaterQuery || _waterModel == null) fix = true;
             else fix = transform.position.y > _waterModel.GetWaterLevelAt(transform.position);
 
             if(fix) 
