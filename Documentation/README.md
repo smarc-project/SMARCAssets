@@ -36,6 +36,7 @@
       - [Sonar Concepts](#sonar-concepts)
       - [Sonar Configuration](#sonar-configuration)
       - [Sonar Visualization](#sonar-visualization)
+      - [Sonar3D](#sonar3d)
     - [Locked Direction Depth Sensor](#locked-direction-depth-sensor)
     - [Range Receiver](#range-receiver)
   - [ROS](#ros)
@@ -587,6 +588,12 @@ Simply add the component `GameUI/RayViewer` to a sonar and check in its config w
 - **Use Rainbow**: Should the hits be colored according to where they are inside the `[minHeight, maxHeight]` range? If off, they will be red.
 - **Hits Lifetime**: How long, in seconds, should the particles for hits stay around. Limited by Max Particles Multiplier!
 - **Max Particles Multiplier**: How many copies of each hit should be kept on the scene? If you have 256 rays for a MBES, setting this to 100 will result in 25600 particles. Limited by Hits Lifetime!
+
+#### Sonar3D
+
+ML-enhanced 3D sonar (Water Linked 3D-15 style) with ONNX inference and physics fallback. It uses the same ROS point cloud publisher as legacy sonar but publishes NaN for rejected returns (`is_dense=false`).
+
+See **[Sonar3D.md](Sonar3D.md)** for setup (model + ONNX in SMARCUnity), migration from legacy `Sonar`, model contract v1, detection modes, and debugging.
 
 ### Locked Direction Depth Sensor
 A sensor that estimates the depth of an object by raycasting in a given direction and measuring the distance to the first surface hit or, if no surface is hit, by using the water level as a fallback. The sensor adds Gaussian noise to simulate real-world inaccuracies. The depth is measured from the current position of the sensor relative to the water level or surface hit.
