@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using Unity.Mathematics;
-using Unity.Robotics.UrdfImporter;
+
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
@@ -23,13 +23,14 @@ namespace VehicleComponents.Sensors
         public Transform loadCell1;
         public Transform loadCell2;
         public Transform loadCell3;
+        [Tooltip("Optional. Leave empty to use 3 load cells.")]
+        public Transform loadCell4;
         [SerializeField, Min(1)]
         private int SmoothOverFramesNum = 1; // size of the queue
         [SerializeField]
         private float LoadCellRadius = 0.2f; // radius of the load cells placement
         [SerializeField]
-        private float PlateWidth = 0.05f; // width of the plate connecting the load cells
-        private bool recomputeEquationMtx = true; 
+        private float RopeLeverArm = 0.05f; // lever arm of the rope attachment point
         [SerializeField]
         private bool DebugMode = false; // if true, draw the force vector
         [SerializeField]
@@ -38,11 +39,16 @@ namespace VehicleComponents.Sensors
         private float DebugLineThickness = 10f; // thickness of the drawn force vector in pixels
 
         [Header("Outputs")]
-        public Vector3 LoadCellReadings; // readings of the individual load cells
+        public float[] LoadCellReadings = new float[3]; // readings of the individual load cells
         public Vector3 Force;
 
-        private float3x3 equationMatrix; // matrix encoding the equation to convert the force vector to load cell readings
+        private Transform[] loadCells;
+        // we use (pseudo)inverse of matrix encoding the equations to convert the force vector to load cell readings
+        // specifically At(A At)^-1, which equals A^-1 for 3 load cells
+        private float3x3 AAtInv; // (A A^T)^-1
         private Queue<Vector3> forceReadings = new(); // Queue to store the last N force readings for moving average
+        private bool recomputeEquationMtx = true; 
+        private float3[] cellsCols;
 
 
         void Start()
@@ -66,16 +72,32 @@ namespace VehicleComponents.Sensors
                 enabled=false;
                 return;
             }
+            loadCells = GetLoadCells();
+            LoadCellReadings = new float[loadCells.Length];
+            recomputeEquationMtx = true;
         } 
+
+        private Transform[] GetLoadCells()
+        {
+            return loadCell4 == null ? new Transform[] {loadCell1, loadCell2, loadCell3} 
+                                    : new Transform[] {loadCell1, loadCell2, loadCell3, loadCell4};
+        }
 
         void OnValidate()
         {
             // reposition the load cells
             if (loadCell1 != null && loadCell2 != null && loadCell3 != null)
             {
-                loadCell1.transform.localPosition = new Vector3(0, 0, LoadCellRadius);
-                loadCell2.transform.localPosition = new Vector3(LoadCellRadius * Mathf.Sin(Mathf.PI / 3 * 2), 0, LoadCellRadius * Mathf.Cos(Mathf.PI / 3 * 2));
-                loadCell3.transform.localPosition = new Vector3(LoadCellRadius * Mathf.Sin(Mathf.PI / 3 * 4), 0, LoadCellRadius * Mathf.Cos(Mathf.PI / 3 * 4));
+                Transform [] cells = GetLoadCells();
+                float offset = cells.Length == 4 ? Mathf.PI/4 : 0; // offset the angle for 4 LC to start in the corner
+                float angle;
+                for (int i = 0; i < cells.Length; i++)
+                {
+                    angle = i*2*Mathf.PI/cells.Length + offset;
+                    cells[i].transform.localPosition = new Vector3(LoadCellRadius * Mathf.Sin(angle), 0, LoadCellRadius * Mathf.Cos(angle));
+                }
+                loadCells = cells;
+                LoadCellReadings = new float[cells.Length];
             }
             recomputeEquationMtx = true;
         }
@@ -118,18 +140,44 @@ namespace VehicleComponents.Sensors
         /// </summary>
         /// <param name="forceVector">The force vector to calculate load cell readings from.</param>
         /// <returns>The load cell readings (kg).</returns>
-        private Vector3 GetLoadCellReadings(Vector3 forceVector)
+        private float[] GetLoadCellReadings(Vector3 forceVector)
         {
-            Vector3 b = new Vector3(-forceVector.y, -PlateWidth*forceVector.z, -PlateWidth*forceVector.x);
-            return math.mul(math.inverse(equationMatrix), b)/Physics.gravity.magnitude;;
+            float[] res = new float[loadCells.Length];
+            Vector3 b = new Vector3(-forceVector.y, -RopeLeverArm*forceVector.z, -RopeLeverArm*forceVector.x);
+            Vector3 y = math.mul(AAtInv, b);
+            for (int i = 0; i <loadCells.Length; i++)
+            {
+                res[i] = math.dot(cellsCols[i],y)/Physics.gravity.magnitude;
+            }
+
+            return res;
         }
+
+        /// <summary>
+        /// Creates matrix describing the force and torque balance equations that transform the force to load cell readings.
+        /// Equations:
+        /// force balance: sum(F_i) = -F_y
+        /// torque balance 1: sum(z_i * F_i) = - ROPE_LEVER_ARM * F_z
+        /// torque balance 2: sum(x_i * F_i) = - ROPE_LEVER_ARM * F_x
+        /// </summary>
         private void UpdateMatrix()
         {
-            equationMatrix = new float3x3(
-                1, 1, 1,
-                loadCell1.transform.localPosition.z, loadCell2.transform.localPosition.z, loadCell3.transform.localPosition.z,
-                loadCell1.transform.localPosition.x, loadCell2.transform.localPosition.x, loadCell3.transform.localPosition.x
-            );
+            cellsCols = new float3[loadCells.Length]; // columns of the equation matrix
+            for (int i = 0; i < loadCells.Length; i++)
+            {
+                cellsCols[i] = new float3(1, loadCells[i].transform.localPosition.z, loadCells[i].transform.localPosition.x);
+            }
+            float3x3 AAt = new float3x3();
+            // AAt = [c1 c2 c3] * [c1t c2t c3t] = sum(ci * cit)
+            for (int i = 0; i < loadCells.Length; i++)
+            {
+                AAt += new float3x3(cellsCols[i]*cellsCols[i][0], cellsCols[i]*cellsCols[i][1], cellsCols[i]*cellsCols[i][2]);
+            }
+            if (math.abs(math.determinant(AAt)) < 1e-9f)
+            {
+                Debug.LogWarning("[LoadCells3D] The load cells are collinear, readings are invalid.");
+            }
+            AAtInv = math.inverse(AAt);
         }
 
 #if UNITY_EDITOR
