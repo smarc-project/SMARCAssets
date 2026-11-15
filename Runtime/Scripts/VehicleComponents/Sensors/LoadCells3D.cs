@@ -68,7 +68,7 @@ namespace VehicleComponents.Sensors
             }
             if (loadCell1 == null || loadCell2 == null || loadCell3 == null)
             {
-                Debug.LogWarning($"[LoadCells3D] One or more load cell ArticulationBodies not set. Disabling sensor.");
+                Debug.LogWarning($"[LoadCells3D] One or more load cells not set. Disabling sensor.");
                 enabled=false;
                 return;
             }
@@ -130,7 +130,7 @@ namespace VehicleComponents.Sensors
                 UpdateMatrix();
                 recomputeEquationMtx = false;
             }
-            LoadCellReadings = GetLoadCellReadings(Force);
+            ComputeLoadCellReadings(Force, LoadCellReadings);
             return true;
         }
 
@@ -139,18 +139,15 @@ namespace VehicleComponents.Sensors
         /// Calculates the reading of individual load cells from the force vector.
         /// </summary>
         /// <param name="forceVector">The force vector to calculate load cell readings from.</param>
-        /// <returns>The load cell readings (kg).</returns>
-        private float[] GetLoadCellReadings(Vector3 forceVector)
+        /// <param name="readings">Individual readings of the cells (output).</param>
+        private void ComputeLoadCellReadings(Vector3 forceVector, float[] readings)
         {
-            float[] res = new float[loadCells.Length];
-            Vector3 b = new Vector3(-forceVector.y, -RopeLeverArm*forceVector.z, -RopeLeverArm*forceVector.x);
-            Vector3 y = math.mul(AAtInv, b);
-            for (int i = 0; i <loadCells.Length; i++)
+            float3 b = new float3(-forceVector.y, -RopeLeverArm*forceVector.z, -RopeLeverArm*forceVector.x);
+            float3 y = math.mul(AAtInv, b);
+            for (int i = 0; i <cellsCols.Length; i++)
             {
-                res[i] = math.dot(cellsCols[i],y)/Physics.gravity.magnitude;
+                readings[i] = math.dot(cellsCols[i],y)/Physics.gravity.magnitude;
             }
-
-            return res;
         }
 
         /// <summary>
