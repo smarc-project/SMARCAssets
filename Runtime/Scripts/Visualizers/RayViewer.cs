@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 
 using UnityEngine;
 
@@ -17,6 +16,8 @@ namespace Visualizers
         public bool DrawRays = false;
         public Material RayMaterial;
         public float RayThickness = 0.05f;
+        [Tooltip("Sample every Nth ray in row and column. 4 draws roughly 1/16 of the beam grid.")]
+        public int RayDrawStride = 4;
 
         [Header("Hits")]
         [Tooltip("Just draw the hit points as particles?")]
@@ -33,11 +34,14 @@ namespace Visualizers
 
         GameObject RayDrawer;
         LineRenderer RaysLR;
-
+        Vector3[] rayPositions;
+        int cachedRayHorizontalResolution;
+        int cachedRayVerticalResolution;
+        int cachedRayDrawStride;
 
         GameObject HitsDrawer;
         ParticleSystem HitsParticleSystem;
-        ParticleSystem.EmitParams[] HitsEmitParams;
+        ParticleSystem.EmitParams hitsEmitParams;
         int HitsSkipped = 0;
 
 
@@ -126,65 +130,82 @@ namespace Visualizers
                     var shapeModule = HitsParticleSystem.shape;
                     shapeModule.enabled = false;  
                     
-                    HitsEmitParams = new ParticleSystem.EmitParams[sonar.TotalRayCount];
                 }
 
             }
+        }
+
+        void EnsureRayPositionBuffer(int horizontalResolution, int verticalResolution, int stride)
+        {
+            if (rayPositions != null
+                && cachedRayHorizontalResolution == horizontalResolution
+                && cachedRayVerticalResolution == verticalResolution
+                && cachedRayDrawStride == stride)
+                return;
+
+            cachedRayHorizontalResolution = horizontalResolution;
+            cachedRayVerticalResolution = verticalResolution;
+            cachedRayDrawStride = stride;
+
+            int sampledRows = (verticalResolution + stride - 1) / stride;
+            int sampledCols = (horizontalResolution + stride - 1) / stride;
+            rayPositions = new Vector3[sampledRows * sampledCols * 2];
         }
 
         void UpdateRays()
         {
-            if(RaysLR != null)
+            if (RaysLR == null) return;
+            if (!DrawRays)
             {
-                if (!DrawRays) RaysLR.enabled = false;
-                else
+                RaysLR.enabled = false;
+                return;
+            }
+
+            RaysLR.enabled = true;
+            if (sonar.SonarHits == null) return;
+
+            int stride = Mathf.Max(1, RayDrawStride);
+            int horizontal = sonar.HorizontalResolution;
+            int vertical = sonar.VerticalResolution;
+            EnsureRayPositionBuffer(horizontal, vertical, stride);
+
+            Vector3 origin = sonar.transform.position;
+            int positionCount = 0;
+            for (int row = 0; row < vertical; row += stride)
+            {
+                for (int col = 0; col < horizontal; col += stride)
                 {
-                    RaysLR.enabled = true;
-                    // the pattern is [sonar, hit0 hit1 sonar, hit2 hit3 sonar, hit4 hit5 sonar]
-                    var positions = new List<Vector3>();
-                    positions.Add(sonar.transform.position);
+                    int i = row * horizontal + col;
+                    if (i >= sonar.SonarHits.Length || !sonar.SonarHits[i].IsDetected) continue;
 
-                    for (int i=0; i<sonar.SonarHits.Length-1; i+=2)
-                    {
-                        var hit0 = sonar.SonarHits[i].Hit.point;
-                        if (hit0 == Vector3.zero) positions.Add(sonar.transform.position);
-                        else positions.Add(hit0);
-                        var hit1 = sonar.SonarHits[i+1].Hit.point;
-                        if (hit1 == Vector3.zero) positions.Add(sonar.transform.position);
-                        else positions.Add(hit1);
-                        positions.Add(sonar.transform.position);
-                    }
-
-                    RaysLR.positionCount = positions.Count;
-                    RaysLR.material = RayMaterial;
-                    RaysLR.startWidth = RayThickness;
-                    RaysLR.endWidth = RayThickness;
-                    RaysLR.SetPositions(positions.ToArray());
+                    rayPositions[positionCount++] = origin;
+                    rayPositions[positionCount++] = sonar.SonarHits[i].Hit.point;
                 }
             }
+
+            RaysLR.positionCount = positionCount;
+            RaysLR.SetPositions(rayPositions);
         }
 
         void UpdateHits()
         {
-            if (!DrawHits || HitsParticleSystem == null || HitsEmitParams == null) return;
+            if (!DrawHits || HitsParticleSystem == null) return;
             
             for (int i = 0; i < sonar.TotalRayCount; i++)
             {
-                var emitParams = HitsEmitParams[i];
+                if (!sonar.SonarHits[i].IsDetected) continue;
                 var hitPoint = sonar.SonarHits[i].Hit.point;
                 var surfaceNormal = sonar.SonarHits[i].Hit.normal;
-                if(surfaceNormal == null) continue;
                 if(surfaceNormal == Vector3.zero) surfaceNormal = Vector3.up;
 
                 float normalizedZ = Mathf.InverseLerp(sonar.HitsMaxHeight, sonar.HitsMinHeight, hitPoint.y);
-                if (UseRainbow) emitParams.startColor = Rainbow(normalizedZ);
-                else emitParams.startColor = Color.red;
-                emitParams.position = hitPoint + 0.03f*surfaceNormal;
-                emitParams.rotation3D = Quaternion.LookRotation(-surfaceNormal).eulerAngles;
-                emitParams.startSize = HitsSize;
-                emitParams.startLifetime = HitsLifetime;
-                
-                HitsParticleSystem.Emit(emitParams, 1);
+                hitsEmitParams.startColor = UseRainbow ? Rainbow(normalizedZ) : Color.red;
+                hitsEmitParams.position = hitPoint + 0.03f * surfaceNormal;
+                hitsEmitParams.rotation3D = Quaternion.LookRotation(-surfaceNormal).eulerAngles;
+                hitsEmitParams.startSize = HitsSize;
+                hitsEmitParams.startLifetime = HitsLifetime;
+
+                HitsParticleSystem.Emit(hitsEmitParams, 1);
             }
                 
         }
