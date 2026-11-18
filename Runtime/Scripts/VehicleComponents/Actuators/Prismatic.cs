@@ -31,7 +31,7 @@ namespace VehicleComponents.Actuators
 
         public float GetCurrentValue()
         {
-            return (1 - (mixedBody.jointPosition[0] - _minimumPos) / (_maximumPos - _minimumPos)) * 100;
+            return ((mixedBody.jointPosition[0] - _minimumPos) / (_maximumPos - _minimumPos)) * 100;
         }
 
         new public void FixedUpdate()
