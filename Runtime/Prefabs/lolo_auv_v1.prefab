@@ -900,7 +900,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 10a8919bb6be9cfc88e08395412d871b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  topic: actuators/thruster_strb_fb
+  topic: actuators/thruster_stbd_fb
   NotARobot: 0
   frequency: 10
   ignoreSensorState: 0
@@ -916,7 +916,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c429a099bc8d99179a44603b0781227c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  topic: actuators/thruster_strb_cmd
+  topic: actuators/thruster_stbd_cmd
   NotARobot: 0
   expectedFrequency: 2
   resetting: 1
@@ -1492,7 +1492,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 771d0adfb2667593a8c266a12060997f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  topic: actuators/elevon_strb_cmd
+  topic: actuators/elevon_stbd_cmd
   NotARobot: 0
   expectedFrequency: -1
   resetting: 1
@@ -1526,7 +1526,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ba2274c9a2cfbb209949c7493a84c250, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  topic: actuators/elevon_strb_fb
+  topic: actuators/elevon_stbd_fb
   NotARobot: 0
   frequency: 10
   ignoreSensorState: 0
@@ -1608,7 +1608,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 10a8919bb6be9cfc88e08395412d871b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  topic: actuators/vertical_thruster_front_strb_fb
+  topic: actuators/vertical_thruster_front_stbd_fb
   NotARobot: 0
   frequency: 10
   ignoreSensorState: 0
@@ -1624,7 +1624,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c429a099bc8d99179a44603b0781227c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  topic: actuators/vertical_thruster_front_strb_cmd
+  topic: actuators/vertical_thruster_front_stbd_cmd
   NotARobot: 0
   expectedFrequency: 2
   resetting: 1
@@ -1884,7 +1884,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 10a8919bb6be9cfc88e08395412d871b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  topic: actuators/vertical_thruster_back_strb_fb
+  topic: actuators/vertical_thruster_back_stbd_fb
   NotARobot: 0
   frequency: 10
   ignoreSensorState: 0
@@ -1900,7 +1900,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c429a099bc8d99179a44603b0781227c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  topic: actuators/vertical_thruster_back_strb_cmd
+  topic: actuators/vertical_thruster_back_stbd_cmd
   NotARobot: 0
   expectedFrequency: 2
   resetting: 1
